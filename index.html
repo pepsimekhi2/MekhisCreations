@@ -5,24 +5,200 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BloxNet</title>
 <style>
-  body{font-family:'Fredoka One',cursive,sans-serif;margin:0;padding:0;background:#f8f8f8}
-  .container{max-width:800px;margin:0 auto;padding-top:70px}
-  .frame{background:#fff;border-radius:18px;padding:20px;margin:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
-  #welcomeFrame{text-align:center;border:3px solid #5865F2}
-  #playerFrame,#verifyFrame{display:none;animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275)}
-  input{padding:12px 15px;border:2px solid #ddd;border-radius:12px;font:1em 'Fredoka One';width:70%;margin:10px 0}
-  button{background:#5865F2;color:#fff;border:0;padding:10px 20px;border-radius:12px;font:1em 'Fredoka One';cursor:pointer;margin:5px}
-  .dynamic-island{position:fixed;top:15px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:12px 30px;border-radius:30px;display:flex;align-items:center;gap:15px;z-index:1000;cursor:pointer;min-width:200px;justify-content:center;transition:all 0.3s}
-  .dynamic-island:hover{background:#222}
-  .dynamic-menu{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:15px;display:none;z-index:999;width:250px}
-  .verification-code{display:flex;gap:10px;margin:20px 0;justify-content:center}
-  .code-box{width:50px;height:50px;border:2px solid #5865F2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5em}
-  .copy-btn{background:#4CAF50;margin-left:10px}
-  @keyframes popIn{0%{transform:scale(0.9);opacity:0}100%{transform:scale(1);opacity:1}}
+  body {
+    font-family: 'Fredoka One', cursive, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f8f8;
+  }
+  .blur-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 10;
+    display: none;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    z-index: 20;
+  }
+  .frame {
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+  }
+  #welcomeFrame {
+    border: 3px solid #5865F2;
+    position: relative;
+    z-index: 30;
+  }
+  #playerFrame, #verifyFrame, #profileView {
+    display: none;
+    animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  input {
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font: 1em 'Fredoka One';
+    width: 80%;
+    margin: 10px 0;
+    text-align: center;
+  }
+  button {
+    background: #5865F2;
+    color: #fff;
+    border: 0;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font: 1em 'Fredoka One';
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.2s;
+  }
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .dynamic-island {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+    min-width: 200px;
+    justify-content: center;
+    transition: all 0.3s;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .dynamic-island.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .dynamic-menu {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 15px;
+    display: none;
+    z-index: 999;
+    width: 250px;
+    text-align: center;
+  }
+  .verification-code {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+  }
+  .code-box {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #5865F2;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+  }
+  .copy-btn {
+    background: #4CAF50;
+    margin-left: 10px;
+  }
+  .back-btn {
+    background: #f44336;
+  }
+  .loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+  }
+  .loading-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #5865F2;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0 }
+    100% { transform: scale(1); opacity: 1 }
+  }
+  .profile-header {
+    background: #5865F2;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  .profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+  }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<div class="blur-background" id="blurBackground"></div>
+
+<div class="loading" id="loading">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <h3>Loading...</h3>
+  </div>
+</div>
 
 <div class="dynamic-island" id="dynamicIsland" onclick="toggleMenu()">
   <img id="islandHeadshot" style="width:30px;height:30px;border-radius:50%;display:none">
@@ -44,7 +220,7 @@
 
   <div class="frame" id="playerFrame">
     <h1 style="color:#5865F2">Is this you?</h1>
-    <div style="display:flex;gap:20px;align-items:center">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:15px">
       <img id="playerHeadshot" style="width:80px;height:80px;border-radius:12px">
       <div>
         <h2 id="playerUsername"></h2>
@@ -68,6 +244,20 @@
     </div>
     <p>After setting the description, click Verify below:</p>
     <button onclick="verifyAccount()">Verify Account</button>
+    <button class="back-btn" onclick="backToPlayer()">Back</button>
+  </div>
+
+  <div class="frame" id="profileView">
+    <div class="profile-header">
+      <img id="profileHeadshot" class="profile-pic">
+      <h1 id="profileUsername"></h1>
+      <p id="profileDescription"></p>
+    </div>
+    <div style="padding:20px">
+      <h3>User Stats</h3>
+      <p>Verified BloxNet User</p>
+      <button onclick="closeProfile()" style="background:#5865F2">Close</button>
+    </div>
   </div>
 </div>
 
@@ -79,12 +269,25 @@ let verificationCode = "";
 document.addEventListener('DOMContentLoaded', () => {
   if(localStorage.getItem('robloxUsername')) {
     loadUserData();
+    document.getElementById('blurBackground').style.display = 'none';
+  } else {
+    document.getElementById('blurBackground').style.display = 'block';
   }
 });
 
+function showLoading() {
+  document.getElementById('loading').style.display = 'flex';
+}
+
+function hideLoading() {
+  document.getElementById('loading').style.display = 'none';
+}
+
 async function checkUser() {
-  let userId = document.getElementById('userIdInput').value;
+  const userId = document.getElementById('userIdInput').value;
   if(!userId) return;
+  
+  showLoading();
   try {
     let userRes = await fetch(proxy + encodeURIComponent(`https://users.roblox.com/v1/users/${userId}`));
     let userData = await userRes.json();
@@ -102,22 +305,23 @@ async function checkUser() {
       document.getElementById('playerHeadshot').src = currentUser.headshot;
       document.getElementById('welcomeFrame').style.display = 'none';
       document.getElementById('playerFrame').style.display = 'block';
+      document.getElementById('blurBackground').style.display = 'none';
     } else {
       alert("User not found!");
     }
   } catch(err) {
     alert("Error: " + err);
+  } finally {
+    hideLoading();
   }
 }
 
 function generateVerification() {
-  // Generate 5 random digits
   verificationCode = "";
   for(let i = 0; i < 5; i++) {
     verificationCode += Math.floor(Math.random() * 10);
   }
   
-  // Display the code
   for(let i = 0; i < 5; i++) {
     document.getElementById(`code${i+1}`).textContent = verificationCode[i];
   }
@@ -132,12 +336,12 @@ function copyCode() {
 }
 
 async function verifyAccount() {
+  showLoading();
   try {
     let userRes = await fetch(proxy + encodeURIComponent(`https://users.roblox.com/v1/users/${currentUser.id}`));
     let userData = await userRes.json();
     
     if(userData.description && userData.description.includes(verificationCode)) {
-      // Verification successful
       saveUserData();
       alert("Verification successful! Welcome to BloxNet.");
       document.getElementById('verifyFrame').style.display = 'none';
@@ -146,6 +350,8 @@ async function verifyAccount() {
     }
   } catch(err) {
     alert("Error verifying account: " + err);
+  } finally {
+    hideLoading();
   }
 }
 
@@ -162,6 +368,7 @@ function loadUserData() {
   document.getElementById('islandUsername').textContent = localStorage.getItem('robloxUsername');
   document.getElementById('islandHeadshot').style.display = 'inline-block';
   document.getElementById('islandUsername').style.display = 'inline-block';
+  document.getElementById('dynamicIsland').classList.add('active');
   document.getElementById('welcomeFrame').style.display = 'none';
 }
 
@@ -169,6 +376,23 @@ function toggleMenu() {
   let menu = document.getElementById('dynamicMenu');
   menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
   document.getElementById('menuUsername').textContent = localStorage.getItem('robloxUsername');
+}
+
+function viewProfile() {
+  document.getElementById('profileHeadshot').src = localStorage.getItem('robloxHeadshot');
+  document.getElementById('profileUsername').textContent = localStorage.getItem('robloxUsername');
+  document.getElementById('profileDescription').textContent = currentUser?.description || "No description";
+  document.getElementById('profileView').style.display = 'block';
+  document.getElementById('dynamicMenu').style.display = 'none';
+}
+
+function closeProfile() {
+  document.getElementById('profileView').style.display = 'none';
+}
+
+function backToPlayer() {
+  document.getElementById('verifyFrame').style.display = 'none';
+  document.getElementById('playerFrame').style.display = 'block';
 }
 
 function logout() {
@@ -180,6 +404,8 @@ function resetForm() {
   document.getElementById('userIdInput').value = '';
   document.getElementById('playerFrame').style.display = 'none';
   document.getElementById('welcomeFrame').style.display = 'block';
+  document.getElementById('blurBackground').style.display = 'block';
+  document.getElementById('dynamicIsland').classList.remove('active');
 }
 </script>
 </body>
