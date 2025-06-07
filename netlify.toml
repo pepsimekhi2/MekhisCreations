@@ -1,4 +1,0 @@
-[[redirects]]
-  from = "/@:username"
-  to = "/index.html"
-  status = 200
