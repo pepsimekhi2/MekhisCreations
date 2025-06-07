@@ -32,12 +32,126 @@
         }
 
         .container {
-            max-width: 500px;
+            max-width: 900px;
             width: 100%;
             padding: 20px;
             text-align: center;
             position: relative;
             transition: all var(--transition-time) ease-in-out;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.05);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+
+        .profile-headshot {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h1 {
+            font-size: 28px;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .profile-description {
+            margin-top: 10px;
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .profile-content {
+            padding: 20px 0;
+        }
+
+        .profile-section {
+            margin-bottom: 20px;
+        }
+
+        .profile-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .activities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            padding: 15px;
+            background: rgba(0,0,0,.05);
+            border-radius: 10px;
+        }
+
+        .activity-status {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .activity-time {
+            font-size: 14px;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .view-profile-btn {
+            background: var(--secondary);
+            margin-top: 20px;
+        }
+
+        .view-profile-btn:hover {
+            background: var(--primary);
+        }
         }
 
         .step {
@@ -320,6 +434,42 @@
             <h1>Welcome to Mekhis Creations</h1>
             <div class="bounce">🎉</div>
             <p>You're all set! Enjoy the platform.</p>
+            <button id="view-profile" class="view-profile-btn">View Profile</button>
+        </div>
+
+        <div id="profile-view" class="step">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img id="profile-headshot" src="" alt="Profile Picture" class="profile-headshot">
+                    <div class="profile-info">
+                        <h1 id="profile-username"></h1>
+                        <div id="profile-description" class="profile-description"></div>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="profile-friends">0</span>
+                        <span class="stat-label">Friends</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="profile-followers">0</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="profile-following">0</span>
+                        <span class="stat-label">Following</span>
+                    </div>
+                </div>
+                <div class="profile-content">
+                    <div class="profile-section">
+                        <h2>Recent Activities</h2>
+                        <div id="recent-activities" class="activities-list">
+                            <!-- Activities will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+                <button class="back-btn" id="profile-back">Back</button>
+            </div>
         </div>
 
         <div id="onboarding">
@@ -605,6 +755,47 @@
         
         applyStyle(savedStyle);
         applyTheme(savedTheme);
+
+        // Profile view functionality
+        document.getElementById('view-profile').addEventListener('click', () => {
+            showStep('profile-view', 4);
+            loadProfileData();
+        });
+
+        document.getElementById('profile-back').addEventListener('click', () => {
+            showStep('main-app', 4);
+        });
+
+        async function loadProfileData() {
+            const userId = localStorage.getItem('robloxUserId');
+            if (!userId) return;
+
+            try {
+                const [userResponse, friendsResponse] = await Promise.all([
+                    fetchProxy(`https://users.roblox.com/v1/users/${userId}`),
+                    fetchProxy(`https://friends.roblox.com/v1/users/${userId}/friends/count`)
+                ]);
+
+                // Update profile information
+                document.getElementById('profile-headshot').src = localStorage.getItem('robloxHeadshot');
+                document.getElementById('profile-username').textContent = userResponse.name;
+                document.getElementById('profile-description').textContent = userResponse.description || 'No description set';
+                document.getElementById('profile-friends').textContent = friendsResponse.count;
+                
+                // Load recent activities
+                const activitiesResponse = await fetchProxy(`https://users.roblox.com/v1/users/${userId}/status`);
+                const activitiesList = document.getElementById('recent-activities');
+                activitiesList.innerHTML = `
+                    <div class="activity-item">
+                        <span class="activity-status">${activitiesResponse.status || 'Online'}</span>
+                        <span class="activity-time">Last updated ${new Date(activitiesResponse.lastOnline).toLocaleString()}</span>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading profile data:', error);
+                document.getElementById('profile-description').textContent = 'Error loading profile data';
+            }
+        }
     </script>
 </body>
 </html>
