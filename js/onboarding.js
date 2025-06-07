@@ -73,15 +73,39 @@ document.getElementById('verify-btn').addEventListener('click', async () => {
                 localStorage.removeItem(item);
             });
 
+            // Show success with profile button
             document.getElementById('onboarding').style.display = 'none';
             document.getElementById('main-app').classList.add('active');
-        } else {
-            document.getElementById('verification-status').textContent = 'Code not found in description. Please try again.';
+            
+            // Add profile button
+            const mainApp = document.getElementById('main-app');
+            mainApp.innerHTML += `
+                <div id="profile-loading" style="display:none;">
+                    <div class="bounce">⏳</div>
+                    <p>Setting Up Profile...</p>
+                    <p>Requesting Roblox API...</p>
+                    <p>Almost there...</p>
+                </div>
+                <button id="go-to-profile" style="margin-top:20px;">Take me to my Profile</button>
+            `;
+            
+            document.getElementById('go-to-profile').addEventListener('click', goToProfile);
         }
     } catch (e) {
         document.getElementById('verification-status').textContent = 'Error verifying. Please try again.';
     }
 });
+
+function goToProfile() {
+    const username = localStorage.getItem('robloxUsername');
+    document.getElementById('main-app').style.display = 'none';
+    document.getElementById('profile-loading').style.display = 'block';
+    
+    // Simulate loading steps
+    setTimeout(() => {
+        window.location.href = `/@${username}`;
+    }, 2500); // 2.5 second delay for effect
+}
 
 // Back button
 document.getElementById('back-btn').addEventListener('click', () => {
