@@ -118,20 +118,24 @@ styleElement.textContent = `
     }
 `;
 document.head.appendChild(styleElement);
+
 function updateBackgroundGradient(styleName, themeName) {
     const style = styles[styleName] || styles.light;
     const theme = themes[themeName] || themes.default;
-    // Shorter gradient: 0% to 60%, then fade to transparent at 100%
-    const gradient = `linear-gradient(to bottom, 
-        ${style.topColor} 0%, 
-        ${theme.bottomColor} 60%, 
-        transparent 100%)`;
+    
+    // Create vertical gradient from style topColor to theme bottomColor
+    const gradient = `linear-gradient(to bottom, ${style.topColor}, ${theme.bottomColor})`;
+    
+    // Add transition class for smooth gradient change
     document.body.classList.add('gradient-transition');
     document.body.style.background = gradient;
+    
+    // Remove transition class after animation completes
     setTimeout(() => {
         document.body.classList.remove('gradient-transition');
     }, 300);
 }
+
 function applyTheme(themeName) {
     const theme = themes[themeName] || themes.default;
     
@@ -235,6 +239,5 @@ document.querySelectorAll('.theme-option[data-style]').forEach(option => {
 
 // Set initial background gradient
 updateBackgroundGradient(savedStyle, savedTheme);
-
 applyStyle(savedStyle);
 applyTheme(savedTheme);
