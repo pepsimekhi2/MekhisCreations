@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <style>
         :root {
             --primary: #4285F4;
@@ -21,45 +20,44 @@
         }
         body {
             font-family: 'Fredoka One', cursive;
-            background: var(--bg) fixed;
+            background: var(--bg);
             color: var(--text);
             margin: 0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all .5s ease
+            transition: all 0.3s;
         }
         .container {
             max-width: 500px;
             width: 100%;
             padding: 20px;
             text-align: center;
-            position: relative
         }
         .step {
             display: none;
-            animation: fadeIn .5s ease
         }
         .active {
-            display: block
+            display: block;
+            animation: fadeIn 0.5s;
         }
         .progress-bar {
             height: 10px;
-            background: rgba(0,0,0,.1);
+            background: rgba(0,0,0,0.1);
             border-radius: 5px;
             margin: 20px 0;
-            overflow: hidden
+            overflow: hidden;
         }
         .progress {
             height: 100%;
             background: var(--secondary);
             width: 0%;
-            transition: width .5s ease
+            transition: width 0.5s;
         }
         h1, h2 {
             color: var(--primary);
-            text-shadow: 2px 2px 0 rgba(0,0,0,.1)
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
         }
         button {
             font-family: 'Fredoka One', cursive;
@@ -71,23 +69,23 @@
             margin: 5px;
             cursor: pointer;
             font-size: 16px;
-            transition: all .3s ease;
-            box-shadow: 0 4px 0 rgba(0,0,0,.1);
-            min-width: 120px
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            min-width: 120px;
         }
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 0 rgba(0,0,0,.1)
+            box-shadow: 0 6px 0 rgba(0,0,0,0.1);
         }
         button:active {
             transform: translateY(1px);
-            box-shadow: 0 2px 0 rgba(0,0,0,.1)
+            box-shadow: 0 2px 0 rgba(0,0,0,0.1);
         }
         #no-btn {
-            background: var(--accent)
+            background: var(--accent);
         }
         #yes-btn, #verify-btn {
-            background: var(--secondary)
+            background: var(--secondary);
         }
         .back-btn {
             background: transparent;
@@ -95,11 +93,7 @@
             box-shadow: none;
             text-decoration: underline;
             padding: 8px;
-            min-width: auto
-        }
-        .back-btn:hover {
-            transform: none;
-            box-shadow: none
+            min-width: auto;
         }
         input {
             font-family: 'Fredoka One', cursive;
@@ -111,15 +105,13 @@
             font-size: 16px;
             margin: 15px 0;
             background: var(--input-bg);
-            transition: all .3s ease
         }
         #user-info {
             background: var(--card-bg);
             border-radius: 20px;
             padding: 20px;
             margin: 20px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,.05);
-            transition: all .3s ease
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         #headshot {
             width: 150px;
@@ -127,25 +119,23 @@
             border-radius: 50%;
             object-fit: cover;
             border: 5px solid var(--primary);
-            transition: all .3s ease
         }
         #username {
             font-size: 24px;
             margin: 10px 0;
-            color: var(--primary)
+            color: var(--primary);
         }
         #description {
             background: var(--bg);
             padding: 15px;
             border-radius: 10px;
             margin: 10px 0;
-            transition: all .3s ease
         }
         .code-container {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin: 20px 0
+            margin: 20px 0;
         }
         #verification-code {
             font-size: 32px;
@@ -156,7 +146,6 @@
             border-radius: 10px;
             display: flex;
             align-items: center;
-            transition: all .3s ease
         }
         .copy-btn {
             background: var(--primary);
@@ -167,95 +156,29 @@
             font-size: 12px;
             cursor: pointer;
             margin-left: 10px;
-            transition: all .3s ease
-        }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap
         }
         #verification-status {
             min-height: 24px;
             color: var(--accent);
-            margin-top: 10px
+            margin-top: 10px;
         }
         .bounce {
-            animation: bounce .5s ease infinite alternate
-        }
-        .version {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            font-size: 12px;
-            opacity: .7
-        }
-        .theme-btn {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 12px;
-            padding: 8px 12px;
-            transition: all .3s ease
-        }
-        .theme-menu {
-            position: fixed;
-            bottom: 40px;
-            right: 10px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,.2);
-            z-index: 100;
-            width: 150px;
-            max-height: 60vh;
-            overflow-y: auto;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all .3s ease
-        }
-        .theme-menu.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0)
-        }
-        .theme-category {
-            grid-column: 1/-1;
-            font-weight: bold;
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(0,0,0,.1)
-        }
-        .theme-option {
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 2px 0;
-            font-size: 12px;
-            text-align: center;
-            transition: all .2s ease
-        }
-        .theme-option:hover {
-            background: rgba(0,0,0,.1)
-        }
-        .theme-option.selected {
-            background: var(--primary);
-            color: var(--btn-text)
+            animation: bounce 0.5s infinite alternate;
         }
         #home-content {
             display: none;
-            text-align: center
+            text-align: center;
         }
         #title-bar {
             font-size: 28px;
-            margin-bottom: 10px
+            margin-bottom: 10px;
         }
         #divider {
             height: 3px;
             background: var(--primary);
             border-radius: 3px;
             width: 80%;
-            margin: 0 auto 20px
+            margin: 0 auto 20px;
         }
         #profile-container {
             background: var(--card-bg);
@@ -263,7 +186,7 @@
             padding: 20px;
             margin: 20px auto;
             max-width: 400px;
-            box-shadow: 0 5px 15px rgba(0,0,0,.05)
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         #profile-headshot {
             width: 120px;
@@ -271,71 +194,53 @@
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid var(--primary);
-            margin-bottom: 15px
+            margin-bottom: 15px;
         }
         #profile-username {
             font-size: 22px;
             color: var(--primary);
-            margin-bottom: 15px
+            margin-bottom: 15px;
         }
         #profile-description {
             background: var(--bg);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
-            min-height: 60px
+            min-height: 60px;
         }
         #profile-stats {
             display: flex;
             justify-content: space-around;
-            margin: 15px 0
+            margin: 15px 0;
         }
         .stat-value {
             font-size: 20px;
             font-weight: bold;
-            color: var(--primary)
+            color: var(--primary);
         }
         .stat-label {
             font-size: 14px;
-            color: var(--text)
+            color: var(--text);
         }
         #edit-btn {
             background: var(--primary);
-            margin-right: 10px
+            margin-right: 10px;
         }
         #save-btn {
-            background: var(--secondary)
-        }
-        .button-group-profile {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px
+            background: var(--secondary);
+            display: none;
         }
         @keyframes bounce {
-            from { transform: translateY(0) }
-            to { transform: translateY(-5px) }
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px) }
-            to { opacity: 1; transform: translateY(0) }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="version">Mekhis Creations v1.0</div>
-    <button class="theme-btn" id="theme-btn">Themes</button>
-    <div class="theme-menu" id="theme-menu">
-        <div class="theme-category">Style</div>
-        <div class="theme-option" data-style="light">Light</div>
-        <div class="theme-option" data-style="dark">Dark</div>
-        <div class="theme-category">Theme</div>
-        <div class="theme-option" data-theme="chrome">Chrome</div>
-        <div class="theme-option" data-theme="neon">Neon</div>
-        <div class="theme-option" data-theme="crimson">Crimson</div>
-        <div class="theme-option" data-theme="gold">Gold</div>
-        <div class="theme-option" data-theme="silver">Silver</div>
-        <div class="theme-option" data-theme="bronze">Bronze</div>
-    </div>
     <div class="container">
         <div id="main-app" class="step">
             <h1>Welcome to Mekhis Creations</h1>
@@ -343,11 +248,13 @@
             <p>You're all set! Enjoy the platform.</p>
             <button id="go-home-btn" style="margin-top:20px">Go to Home</button>
         </div>
+        
         <div id="onboarding">
             <div class="progress-bar">
                 <div class="progress" id="progress"></div>
             </div>
-            <div id="step1" class="step">
+            
+            <div id="step1" class="step active">
                 <h1>Welcome to Mekhis Creations!</h1>
                 <div class="bounce">👋</div>
                 <p>Let's get you set up!</p>
@@ -355,6 +262,7 @@
                 <input type="text" id="roblox-id" placeholder="123456789">
                 <button id="confirm-id">Let's Go!</button>
             </div>
+            
             <div id="step2" class="step">
                 <h2>Is this you?</h2>
                 <div id="user-info">
@@ -365,6 +273,7 @@
                 <button id="yes-btn">Yes, that's me!</button>
                 <button id="no-btn">No, try again</button>
             </div>
+            
             <div id="step3" class="step">
                 <h2>Almost there!</h2>
                 <p>Let's verify this is really you:</p>
@@ -379,16 +288,13 @@
                         <button class="copy-btn">Copy</button>
                     </div>
                 </div>
-                <div class="button-group">
-                    <button id="refresh-code">New Code</button>
-                    <button id="verify-btn">Verify</button>
-                </div>
                 <div style="margin-top:15px">
                     <button class="back-btn" id="back-btn">Back</button>
                 </div>
                 <div id="verification-status"></div>
             </div>
         </div>
+        
         <div id="home-content">
             <div id="title-bar">Mekhis Creations</div>
             <div id="divider"></div>
@@ -406,48 +312,45 @@
                         <div class="stat-label">Following</div>
                     </div>
                 </div>
-                <div class="button-group-profile">
+                <div>
                     <button id="edit-btn">Edit</button>
-                    <button id="save-btn" style="display:none">Save</button>
+                    <button id="save-btn">Save</button>
                 </div>
             </div>
             <div id="divider"></div>
         </div>
     </div>
+
     <script>
-        // Initialize Firebase with your actual config
+        // Initialize Firebase with just the database URL
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            databaseURL: "https://cloud-fbd6b-default-rtdb.firebaseio.com"
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const auth = firebase.auth();
 
-        // Sign in anonymously (no longer strictly needed with open rules)
-        auth.signInAnonymously().catch(error => {
-            console.log("Anonymous sign-in error:", error);
-        });
-
-        async function fetchProxy(url) {
-            try {
-                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
-                return await res.json();
-            } catch(e) {
-                console.error(e);
-                throw e;
-            }
+        // Onboarding flow functions
+        function updateProgress(step) {
+            document.getElementById('progress').style.width = step * 33.33 + '%';
         }
 
-        function updateProgress(e) {
-            document.getElementById('progress').style.width = e * 33.33 + '%';
+        function showStep(stepId, progressStep) {
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.getElementById(stepId).classList.add('active');
+            updateProgress(progressStep);
         }
 
+        // Generate verification code
+        function generateVerificationCode() {
+            const code = Math.floor(10000 + 90000 * Math.random());
+            document.getElementById('code-text').textContent = code;
+            localStorage.setItem('verificationCode', code.toString());
+            return code;
+        }
+
+        // Show home content
         function showHomeContent() {
             document.getElementById('onboarding').style.display = 'none';
             document.getElementById('main-app').style.display = 'none';
@@ -455,32 +358,26 @@
             
             const userId = localStorage.getItem('robloxUserId');
             if (userId) {
-                database.ref('users/' + userId).once('value')
-                    .then(snapshot => {
-                        const userData = snapshot.val();
-                        if (userData) {
-                            updateProfileUI(userData);
-                        } else {
-                            createNewUser(userId);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Database read error:", error);
-                        loadFromLocalStorage();
-                    });
-            } else {
-                loadFromLocalStorage();
+                loadUserData(userId);
             }
         }
 
-        function updateProfileUI(userData) {
-            document.getElementById('profile-headshot').src = userData.headshot;
-            document.getElementById('profile-username').textContent = userData.username;
-            document.getElementById('profile-description').textContent = userData.description || 'No description yet';
-            document.getElementById('followers-count').textContent = userData.followers || 0;
-            document.getElementById('following-count').textContent = userData.following || 0;
+        // Load user data from Firebase
+        function loadUserData(userId) {
+            database.ref('users/' + userId).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    updateProfileUI(userData);
+                } else {
+                    createNewUser(userId);
+                }
+            }).catch(error => {
+                console.error("Database error:", error);
+                loadFromLocalStorage();
+            });
         }
 
+        // Create new user in Firebase
         function createNewUser(userId) {
             const userData = {
                 userId: userId,
@@ -488,9 +385,10 @@
                 headshot: localStorage.getItem('robloxHeadshot'),
                 description: "",
                 followers: 0,
-                following: 0
+                following: 0,
+                createdAt: Date.now()
             };
-
+            
             database.ref('users/' + userId).set(userData)
                 .then(() => {
                     updateProfileUI(userData);
@@ -501,6 +399,16 @@
                 });
         }
 
+        // Update profile UI
+        function updateProfileUI(userData) {
+            document.getElementById('profile-headshot').src = userData.headshot;
+            document.getElementById('profile-username').textContent = userData.username;
+            document.getElementById('profile-description').textContent = userData.description || 'No description yet';
+            document.getElementById('followers-count').textContent = userData.followers || 0;
+            document.getElementById('following-count').textContent = userData.following || 0;
+        }
+
+        // Fallback to local storage
         function loadFromLocalStorage() {
             const headshot = localStorage.getItem('robloxHeadshot');
             const username = localStorage.getItem('robloxUsername');
@@ -511,31 +419,15 @@
             }
         }
 
-        if (localStorage.getItem('newUser') === 'false') {
-            showHomeContent();
-        } else {
-            if (localStorage.getItem('newUser') === null) {
-                localStorage.setItem('newUser', 'true');
-            }
-            document.getElementById('step1').classList.add('active');
-            updateProgress(1);
-        }
-
-        function showStep(e, t) {
-            document.querySelectorAll('.step').forEach(n => {
-                n.classList.remove('active');
-            });
-            document.getElementById(e).classList.add('active');
-            updateProgress(t);
-        }
-
+        // Event listeners
         document.getElementById('confirm-id').addEventListener('click', async () => {
-            const e = document.getElementById('roblox-id').value.trim();
-            if (!e) return;
+            const userId = document.getElementById('roblox-id').value.trim();
+            if (!userId) return;
+            
             try {
                 const [userData, headshotData] = await Promise.all([
-                    fetchProxy(`https://users.roblox.com/v1/users/${e}`),
-                    fetchProxy(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${e}&size=150x150&format=Png`)
+                    fetch(`https://users.roblox.com/v1/users/${userId}`).then(res => res.json()),
+                    fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`).then(res => res.json())
                 ]);
                 
                 if (userData.errors || headshotData.errors) throw new Error('User not found');
@@ -543,11 +435,13 @@
                 document.getElementById('username').textContent = userData.name;
                 document.getElementById('description').textContent = userData.description || '(No description)';
                 document.getElementById('headshot').src = headshotData.data[0].imageUrl;
-                localStorage.setItem('tempUserId', e);
+                
+                localStorage.setItem('tempUserId', userId);
                 localStorage.setItem('tempUsername', userData.name);
                 localStorage.setItem('tempHeadshot', headshotData.data[0].imageUrl);
+                
                 showStep('step2', 2);
-            } catch(e) {
+            } catch(error) {
                 alert("Oops! Couldn't find that user. Please check the ID and try again.");
             }
         });
@@ -565,20 +459,13 @@
             showStep('step2', 2);
         });
 
-        function generateVerificationCode() {
-            const e = Math.floor(10000 + 90000 * Math.random());
-            document.getElementById('code-text').textContent = e;
-            localStorage.setItem('verificationCode', e.toString());
-        }
-
-        document.getElementById('refresh-code').addEventListener('click', generateVerificationCode);
-
         document.getElementById('verify-btn').addEventListener('click', async () => {
             const userId = localStorage.getItem('tempUserId');
             const verificationCode = localStorage.getItem('verificationCode');
             
             try {
-                const userData = await fetchProxy(`https://users.roblox.com/v1/users/${userId}`);
+                const userData = await fetch(`https://users.roblox.com/v1/users/${userId}`).then(res => res.json());
+                
                 if (userData.description && userData.description.includes(verificationCode)) {
                     localStorage.setItem('newUser', 'false');
                     localStorage.setItem('robloxUserId', userId);
@@ -586,7 +473,9 @@
                     localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
                     
                     // Clear temp data
-                    ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(e => localStorage.removeItem(e));
+                    ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(item => {
+                        localStorage.removeItem(item);
+                    });
                     
                     document.getElementById('verification-status').textContent = 'Verification successful!';
                     setTimeout(() => {
@@ -595,9 +484,41 @@
                 } else {
                     document.getElementById('verification-status').textContent = 'Code not found in description. Please try again.';
                 }
-            } catch(e) {
+            } catch(error) {
                 document.getElementById('verification-status').textContent = 'Error verifying. Please try again.';
             }
+        });
+
+        document.getElementById('go-home-btn').addEventListener('click', () => {
+            showHomeContent();
+        });
+
+        document.getElementById('edit-btn').addEventListener('click', () => {
+            const desc = document.getElementById('profile-description');
+            desc.contentEditable = true;
+            desc.focus();
+            document.getElementById('edit-btn').style.display = 'none';
+            document.getElementById('save-btn').style.display = 'inline-block';
+        });
+
+        document.getElementById('save-btn').addEventListener('click', () => {
+            const desc = document.getElementById('profile-description');
+            const text = desc.textContent;
+            const userId = localStorage.getItem('robloxUserId');
+            
+            desc.contentEditable = false;
+            document.getElementById('edit-btn').style.display = 'inline-block';
+            document.getElementById('save-btn').style.display = 'none';
+            
+            database.ref('users/' + userId).update({ description: text })
+                .then(() => {
+                    console.log("Description updated successfully");
+                })
+                .catch(error => {
+                    console.error("Save error:", error);
+                    alert('Error saving description. Please try again.');
+                    document.getElementById('edit-btn').click();
+                });
         });
 
         document.querySelector('.copy-btn').addEventListener('click', () => {
@@ -611,141 +532,13 @@
             });
         });
 
-        if (document.getElementById('step3').classList.contains('active')) {
+        // Initialize
+        if (localStorage.getItem('newUser') === 'false') {
+            showHomeContent();
+        } else {
+            localStorage.setItem('newUser', 'true');
             generateVerificationCode();
         }
-
-        document.getElementById('go-home-btn').addEventListener('click', () => {
-            showHomeContent();
-        });
-
-        document.getElementById('edit-btn').addEventListener('click', () => {
-            const desc = document.getElementById('profile-description');
-            desc.contentEditable = "true";
-            desc.focus();
-            document.getElementById('edit-btn').style.display = "none";
-            document.getElementById('save-btn').style.display = "inline-block";
-        });
-
-        document.getElementById('save-btn').addEventListener('click', () => {
-            const desc = document.getElementById('profile-description');
-            const text = desc.textContent;
-            const userId = localStorage.getItem('robloxUserId');
-            
-            desc.contentEditable = "false";
-            document.getElementById('edit-btn').style.display = "inline-block";
-            document.getElementById('save-btn').style.display = "none";
-            
-            database.ref('users/' + userId).update({ description: text })
-                .then(() => {
-                    alert('Description saved successfully!');
-                })
-                .catch(error => {
-                    console.error("Save error:", error);
-                    alert('Error saving description. Please try again.');
-                    // Re-enable editing if save fails
-                    document.getElementById('edit-btn').click();
-                });
-        });
-
-        // Theme switching functionality
-        const themeBtn = document.getElementById('theme-btn');
-        const themeMenu = document.getElementById('theme-menu');
-        themeBtn.addEventListener('click', () => {
-            themeMenu.classList.toggle('active');
-        });
-
-        const styles = {
-            light: {
-                text: '#202124',
-                bg: '#F8F9FA',
-                cardBg: '#fff',
-                btnText: '#fff',
-                inputBg: '#fff'
-            },
-            dark: {
-                text: '#F8F9FA',
-                bg: '#202124',
-                cardBg: '#303134',
-                btnText: '#fff',
-                inputBg: '#303134'
-            }
-        };
-
-        const themes = {
-            chrome: {
-                primary: '#4285F4',
-                secondary: '#0F9D58',
-                accent: '#DB4437'
-            },
-            neon: {
-                primary: '#00F0FF',
-                secondary: '#FF00F0',
-                accent: '#F0FF00'
-            },
-            crimson: {
-                primary: '#DC143C',
-                secondary: '#8B0000',
-                accent: '#FF6347'
-            },
-            gold: {
-                primary: '#FFD700',
-                secondary: '#D4AF37',
-                accent: '#C0C0C0'
-            },
-            silver: {
-                primary: '#C0C0C0',
-                secondary: '#A8A8A8',
-                accent: '#808080'
-            },
-            bronze: {
-                primary: '#CD7F32',
-                secondary: '#B87333',
-                accent: '#8B4513'
-            }
-        };
-
-        function applyTheme(themeName) {
-            const theme = themes[themeName] || themes.chrome;
-            document.documentElement.style.setProperty('--primary', theme.primary);
-            document.documentElement.style.setProperty('--secondary', theme.secondary);
-            document.documentElement.style.setProperty('--accent', theme.accent);
-            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
-            document.querySelectorAll(`.theme-option[data-theme="${themeName}"]`).forEach(opt => opt.classList.add('selected'));
-            localStorage.setItem('selectedTheme', themeName);
-        }
-
-        function applyStyle(styleName) {
-            const style = styles[styleName] || styles.light;
-            document.documentElement.style.setProperty('--text', style.text);
-            document.documentElement.style.setProperty('--bg', style.bg);
-            document.documentElement.style.setProperty('--card-bg', style.cardBg);
-            document.documentElement.style.setProperty('--btn-text', style.btnText);
-            document.documentElement.style.setProperty('--input-bg', style.inputBg);
-            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
-            document.querySelectorAll(`.theme-option[data-style="${styleName}"]`).forEach(opt => opt.classList.add('selected'));
-            localStorage.setItem('selectedStyle', styleName);
-        }
-
-        document.querySelectorAll('.theme-option[data-style]').forEach(option => {
-            option.addEventListener('click', () => {
-                applyStyle(option.dataset.style);
-            });
-        });
-
-        document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
-            option.addEventListener('click', () => {
-                applyTheme(option.dataset.theme);
-            });
-        });
-
-        // Apply saved theme/style
-        const savedStyle = localStorage.getItem('selectedStyle') || 'light';
-        const savedTheme = localStorage.getItem('selectedTheme') || 'chrome';
-        applyStyle(savedStyle);
-        applyTheme(savedTheme);
-        document.querySelector(`.theme-option[data-style="${savedStyle}"]`).classList.add('selected');
-        document.querySelector(`.theme-option[data-theme="${savedTheme}"]`).classList.add('selected');
     </script>
 </body>
 </html>
