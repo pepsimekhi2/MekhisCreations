@@ -687,40 +687,76 @@
             }, 3000);
         }
 
-         async function getRobloxUserData(userId) {
+        async function getRobloxUserData(userId) {
+    try {
+        showNotification('Fetching Roblox user data...', 'info');
+        
+        // First try the API endpoint with CORS proxy
         try {
-            showNotification('Fetching Roblox user data...', 'info');
+            const corsProxy = 'https://corsproxy.io/?';
+            const userUrl = `${corsProxy}https://users.roblox.com/v1/users/${userId}`;
+            const headshotUrl = `${corsProxy}https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`;
             
-            // Use a CORS proxy to bypass restrictions
-            const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+            const [userResponse, headshotResponse] = await Promise.all([
+                fetch(userUrl),
+                fetch(headshotUrl)
+            ]);
             
-            // Get user info
-            const userResponse = await fetch(`${corsProxy}https://users.roblox.com/v1/users/${userId}`);
-            if (!userResponse.ok) throw new Error('User not found');
-            const userData = await userResponse.json();
-            
-            // Get avatar headshot
-            const headshotResponse = await fetch(`${corsProxy}https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`);
-            if (!headshotResponse.ok) throw new Error('Failed to get avatar');
-            const headshotData = await headshotResponse.json();
-            
-            return {
-                username: userData.name || `User${userId}`,
-                description: userData.description || 'No description available',
-                headshot: headshotData.data[0]?.imageUrl || `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`
-            };
-        } catch (error) {
-            console.error('Error fetching Roblox data:', error);
-            
-            // Fallback to placeholder data if API fails
-            return {
-                username: `User${userId}`,
-                description: 'Verified Mekhis Creations user',
-                headshot: `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`
-            };
+            if (userResponse.ok && headshotResponse.ok) {
+                const userData = await userResponse.json();
+                const headshotData = await headshotResponse.json();
+                
+                return {
+                    username: userData.name || `User${userId}`,
+                    description: userData.description || 'No description available',
+                    headshot: headshotData.data[0]?.imageUrl
+                };
+            }
+        } catch (apiError) {
+            console.log('API request failed, falling back to alternative methods');
         }
+        
+        // Fallback 1: Use Roblox's web interface
+        try {
+            const webUrl = `https://www.roblox.com/users/${userId}/profile`;
+            const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(webUrl)}`);
+            const data = await response.json();
+            
+            // Parse the HTML response to extract username and headshot
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data.contents, 'text/html');
+            const username = doc.querySelector('.profile-display-name')?.textContent || `User${userId}`;
+            const headshot = doc.querySelector('.avatar-image')?.src || 
+                           `https://tr.rbxcdn.com/${userId}/150/150/AvatarHeadshot/Png`;
+            
+            return {
+                username,
+                description: 'Verified Mekhis Creations user',
+                headshot
+            };
+        } catch (webError) {
+            console.log('Web fallback failed, using final fallback');
+        }
+        
+        // Final fallback - basic placeholder
+        return {
+            username: `User${userId}`,
+            description: 'Verified Mekhis Creations user',
+            headshot: `https://tr.rbxcdn.com/${userId}/150/150/AvatarHeadshot/Png`
+        };
+        
+    } catch (error) {
+        console.error('Error fetching Roblox data:', error);
+        showNotification('Failed to load user data', 'error');
+        
+        // Return default data if all methods fail
+        return {
+            username: `User${userId}`,
+            description: 'Verified Mekhis Creations user',
+            headshot: `https://tr.rbxcdn.com/${userId}/150/150/AvatarHeadshot/Png`
+        };
     }
-
+}
         // Theme management
         function applyTheme(theme, mode) {
             // Remove all theme classes
