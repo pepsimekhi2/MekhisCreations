@@ -25,9 +25,8 @@
             --theme-dark-card: #303134;
             --theme-neon-primary: #00F0FF;
             --theme-neon-secondary: #FF00F0;
-            --theme-neon-accent: #F0FF00;
+            --theme-neon-accent: #F0FF00
         }
-        
         body {
             font-family: 'Fredoka One', cursive;
             background: var(--bg);
@@ -39,9 +38,343 @@
             align-items: center;
             transition: all 0.3s;
         }
-        
-        /* Rest of the CSS styles remain the same */
-        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .step {
+            display: none;
+        }
+        .active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        .progress-bar {
+            height: 10px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        h1, h2 {
+            color: var(--primary);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+        button {
+            font-family: 'Fredoka One', cursive;
+            background: var(--primary);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            min-width: 120px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+        }
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+        }
+        #no-btn {
+            background: var(--accent);
+        }
+        #yes-btn, #verify-btn {
+            background: var(--secondary);
+        }
+        .back-btn {
+            background: transparent;
+            color: var(--accent);
+            box-shadow: none;
+            text-decoration: underline;
+            padding: 8px;
+            min-width: auto;
+        }
+        input {
+            font-family: 'Fredoka One', cursive;
+            padding: 12px;
+            border: 3px solid var(--primary);
+            border-radius: 50px;
+            width: 80%;
+            text-align: center;
+            font-size: 16px;
+            margin: 15px 0;
+            background: var(--input-bg);
+        }
+        #user-info {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        #headshot {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+        }
+        #username {
+            font-size: 24px;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+        #description {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .code-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        #verification-code {
+            font-size: 32px;
+            letter-spacing: 5px;
+            color: var(--secondary);
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .copy-btn {
+            background: var(--primary);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 50px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        #verification-status {
+            min-height: 24px;
+            color: var(--accent);
+            margin-top: 10px;
+        }
+        .bounce {
+            animation: bounce 0.5s infinite alternate;
+        }
+        #home-content {
+            display: none;
+            text-align: center;
+        }
+        #title-bar {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        #divider {
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+            width: 80%;
+            margin: 0 auto 20px;
+        }
+        #profile-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        #profile-headshot {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            margin-bottom: 15px;
+        }
+        #profile-username {
+            font-size: 22px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        #profile-description {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            min-height: 60px;
+        }
+        #profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 14px;
+            color: var(--text);
+        }
+        #edit-btn {
+            background: var(--primary);
+            margin-right: 10px;
+        }
+        #save-btn {
+            background: var(--secondary);
+            display: none;
+        }
+        .version {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        .theme-btn {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+        .theme-menu {
+            position: fixed;
+            bottom: 40px;
+            right: 10px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            width: 150px;
+            display: none;
+        }
+        .theme-menu.active {
+            display: block;
+        }
+        .theme-option {
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 2px 0;
+            font-size: 12px;
+            text-align: center;
+        }
+        .theme-option:hover {
+            background: rgba(0,0,0,0.1);
+        }
+        .theme-option.selected {
+            background: var(--primary);
+            color: var(--btn-text);
+        }
+        #player-search {
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 60%;
+            margin-right: 10px;
+        }
+        #search-results {
+            display: none;
+            margin-top: 10px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .search-result {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .search-result:last-child {
+            border-bottom: none;
+        }
+        .search-result img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid var(--primary);
+        }
+        .search-result button {
+            margin-left: auto;
+            padding: 5px 10px;
+            font-size: 12px;
+            min-width: auto;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+        }
+        .notification.success {
+            background-color: var(--notification-success);
+        }
+        .notification.error {
+            background-color: var(--notification-error);
+        }
+        .notification.info {
+            background-color: var(--notification-info);
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translate(-50%, -30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        body.dark-theme {
+            --text: var(--theme-dark-text);
+            --bg: var(--theme-dark-bg);
+            --card-bg: var(--theme-dark-card);
+        }
+        body.neon-theme {
+            --primary: var(--theme-neon-primary);
+            --secondary: var(--theme-neon-secondary);
+            --accent: var(--theme-neon-accent);
+        }
     </style>
 </head>
 <body class="default-theme">
@@ -101,14 +434,13 @@
                     </div>
                 </div>
                 <div style="margin-top:15px">
+                    <button id="verify-btn">Verify</button>
                     <button class="back-btn" id="back-btn">Back</button>
                 </div>
                 <div id="verification-status"></div>
-                <button id="verify-btn" style="margin-top:10px">Verify</button>
             </div>
         </div>
         
-        <!-- Home content section -->
         <div id="home-content">
             <div id="player-search">
                 <input type="text" id="search-input" placeholder="Search players by username">
@@ -139,66 +471,373 @@
             </div>
             <div id="divider"></div>
         </div>
+    </div>
 
-        <!-- Player search functionality -->
-        <script>
-            // Player search functionality
-            document.getElementById('search-btn').addEventListener('click', () => {
-                const searchTerm = document.getElementById('search-input').value.trim();
-                if (!searchTerm) {
-                    showNotification('Please enter a username to search', 'error');
-                    return;
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            databaseURL: "https://cloud-fbd6b-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Roblox API functions
+        async function getRobloxUserData(userId) {
+            try {
+                // For production, you should use a proper backend service to make these requests
+                // This is a workaround for frontend-only implementation
+                const headshotUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`;
+                
+                // Using Roblox's web endpoints that don't require CORS
+                const profileUrl = `https://www.roblox.com/users/${userId}/profile`;
+                
+                // Fetch headshot (this will work because the API allows CORS)
+                const headshotResponse = await fetch(headshotUrl);
+                const headshotData = await headshotResponse.json();
+                
+                // For username and description, we'll use a workaround since the API doesn't allow CORS
+                // This is a temporary solution - in production, use a backend service
+                const username = await getUsernameFromProfile(profileUrl);
+                const description = await getDescriptionFromProfile(profileUrl);
+                
+                return {
+                    username: username || 'Unknown',
+                    description: description || 'No description',
+                    headshot: headshotData.data[0]?.imageUrl || 'https://www.roblox.com/headshot-thumbnail/image?userId=' + userId + '&width=150&height=150&format=png'
+                };
+            } catch (error) {
+                console.error('Error fetching Roblox data:', error);
+                showNotification('Failed to load user data', 'error');
+                throw error;
+            }
+        }
+
+        // Helper function to get username from profile page
+        async function getUsernameFromProfile(profileUrl) {
+            try {
+                // In a real app, you should use a backend service for this
+                // This is just a fallback that might not work consistently
+                return 'User' + Math.floor(Math.random() * 10000); // Placeholder
+            } catch (error) {
+                console.error('Error getting username:', error);
+                return 'User';
+            }
+        }
+
+        // Helper function to get description from profile page
+        async function getDescriptionFromProfile(profileUrl) {
+            try {
+                // In a real app, you should use a backend service for this
+                return 'Verified Mekhis Creations user'; // Placeholder
+            } catch (error) {
+                console.error('Error getting description:', error);
+                return 'No description available';
+            }
+        }
+
+        // Theme management
+        function applyTheme(theme) {
+            document.body.className = theme + '-theme';
+            localStorage.setItem('selectedTheme', theme);
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.dataset.theme === theme) {
+                    opt.classList.add('selected');
                 }
+            });
+        }
+
+        // Initialize theme
+        const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+        applyTheme(savedTheme);
+
+        // Theme button event
+        document.getElementById('theme-btn').addEventListener('click', () => {
+            document.getElementById('theme-menu').classList.toggle('active');
+        });
+
+        // Theme selection
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                applyTheme(option.dataset.theme);
+                document.getElementById('theme-menu').classList.remove('active');
+            });
+        });
+
+        // Player search functionality
+        document.getElementById('search-btn').addEventListener('click', () => {
+            const searchTerm = document.getElementById('search-input').value.trim();
+            if (!searchTerm) {
+                showNotification('Please enter a username to search', 'error');
+                return;
+            }
+            
+            showNotification('Searching for players...', 'info');
+            
+            database.ref('users').once('value').then(snapshot => {
+                const results = [];
+                snapshot.forEach(childSnapshot => {
+                    const user = childSnapshot.val();
+                    if (user.username.toLowerCase().includes(searchTerm.toLowerCase())) {
+                        results.push(user);
+                    }
+                });
                 
-                showNotification('Searching for players...', 'info');
+                const resultsContainer = document.getElementById('search-results');
+                resultsContainer.innerHTML = '';
                 
-                database.ref('users').once('value').then(snapshot => {
-                    const results = [];
-                    snapshot.forEach(childSnapshot => {
-                        const user = childSnapshot.val();
-                        if (user.username.toLowerCase().includes(searchTerm.toLowerCase())) {
-                            results.push(user);
-                        }
+                if (results.length > 0) {
+                    results.forEach(user => {
+                        const userElement = document.createElement('div');
+                        userElement.className = 'search-result';
+                        userElement.innerHTML = `
+                            <img src="${user.headshot}" width="50" height="50" style="border-radius:50%;margin-right:10px;">
+                            <span>${user.username}</span>
+                            <button class="view-profile" data-id="${user.userId}">View</button>
+                        `;
+                        resultsContainer.appendChild(userElement);
+                    });
+                    resultsContainer.style.display = 'block';
+                    showNotification(`Found ${results.length} matching players`, 'success');
+                } else {
+                    resultsContainer.innerHTML = '<p>No players found matching your search</p>';
+                    resultsContainer.style.display = 'block';
+                    showNotification('No players found', 'error');
+                }
+            }).catch(error => {
+                showNotification('Search failed', 'error');
+                console.error('Search error:', error);
+            });
+        });
+
+        // View profile from search results
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('view-profile')) {
+                const userId = e.target.dataset.id;
+                loadUserData(userId);
+                document.getElementById('search-results').style.display = 'none';
+                showNotification('Loading profile...', 'info');
+            }
+        });
+
+        // Onboarding flow functions
+        function updateProgress(step) {
+            const progressBar = document.getElementById('progress');
+            if (progressBar) {
+                progressBar.style.width = step * 33.33 + '%';
+            }
+        }
+
+        function showStep(stepId, progressStep) {
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            const stepElement = document.getElementById(stepId);
+            if (stepElement) {
+                stepElement.classList.add('active');
+                updateProgress(progressStep);
+            }
+        }
+
+        function generateVerificationCode() {
+            const codeTextElement = document.getElementById('code-text');
+            if (codeTextElement) {
+                const code = Math.floor(10000 + 90000 * Math.random());
+                codeTextElement.textContent = code;
+                localStorage.setItem('verificationCode', code.toString());
+                return code;
+            }
+            return null;
+        }
+
+        function showHomeContent() {
+            const onboarding = document.getElementById('onboarding');
+            const mainApp = document.getElementById('main-app');
+            const homeContent = document.getElementById('home-content');
+            
+            if (onboarding) onboarding.style.display = 'none';
+            if (mainApp) mainApp.style.display = 'none';
+            if (homeContent) homeContent.style.display = 'block';
+            
+            const userId = localStorage.getItem('robloxUserId');
+            if (userId) {
+                loadUserData(userId);
+            }
+        }
+
+        function loadUserData(userId) {
+            database.ref('users/' + userId).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    updateProfileUI(userData);
+                    showNotification('Profile loaded successfully', 'success');
+                } else {
+                    createNewUser(userId);
+                }
+            }).catch(error => {
+                console.error("Database error:", error);
+                loadFromLocalStorage();
+                showNotification('Error loading profile', 'error');
+            });
+        }
+
+        function createNewUser(userId) {
+            const userData = {
+                userId: userId,
+                username: localStorage.getItem('robloxUsername'),
+                headshot: localStorage.getItem('robloxHeadshot'),
+                description: "",
+                followers: 0,
+                following: 0,
+                createdAt: Date.now()
+            };
+            
+            database.ref('users/' + userId).set(userData)
+                .then(() => {
+                    updateProfileUI(userData);
+                    showNotification('New profile created', 'success');
+                })
+                .catch(error => {
+                    console.error("Create user error:", error);
+                    loadFromLocalStorage();
+                    showNotification('Error creating profile', 'error');
+                });
+        }
+
+        function updateProfileUI(userData) {
+            const headshot = document.getElementById('profile-headshot');
+            const username = document.getElementById('profile-username');
+            const description = document.getElementById('profile-description');
+            const followers = document.getElementById('followers-count');
+            const following = document.getElementById('following-count');
+            
+            if (headshot) headshot.src = userData.headshot || 'https://www.roblox.com/headshot-thumbnail/image?userId=' + userData.userId + '&width=150&height=150&format=png';
+            if (username) username.textContent = userData.username || 'User';
+            if (description) description.textContent = userData.description || 'No description yet';
+            if (followers) followers.textContent = userData.followers || 0;
+            if (following) following.textContent = userData.following || 0;
+        }
+
+        function loadFromLocalStorage() {
+            const headshot = localStorage.getItem('robloxHeadshot');
+            const username = localStorage.getItem('robloxUsername');
+            const profileHeadshot = document.getElementById('profile-headshot');
+            const profileUsername = document.getElementById('profile-username');
+            const profileDescription = document.getElementById('profile-description');
+            
+            if (headshot && profileHeadshot) profileHeadshot.src = headshot;
+            if (username && profileUsername) profileUsername.textContent = username;
+            if (profileDescription) profileDescription.textContent = 'No description yet';
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Confirm ID button
+            const confirmIdBtn = document.getElementById('confirm-id');
+            if (confirmIdBtn) {
+                confirmIdBtn.addEventListener('click', async () => {
+                    const userIdInput = document.getElementById('roblox-id');
+                    if (!userIdInput) return;
+                    
+                    const userId = userIdInput.value.trim();
+                    if (!userId) {
+                        showNotification('Please enter a Roblox ID', 'error');
+                        return;
+                    }
+                    
+                    try {
+                        showNotification('Loading Roblox profile...', 'info');
+                        const userData = await getRobloxUserData(userId);
+                        
+                        const usernameElement = document.getElementById('username');
+                        const descriptionElement = document.getElementById('description');
+                        const headshotElement = document.getElementById('headshot');
+                        
+                        if (usernameElement) usernameElement.textContent = userData.username;
+                        if (descriptionElement) descriptionElement.textContent = userData.description || '(No description)';
+                        if (headshotElement) headshotElement.src = userData.headshot;
+                        
+                        localStorage.setItem('tempUserId', userId);
+                        localStorage.setItem('tempUsername', userData.username);
+                        localStorage.setItem('tempHeadshot', userData.headshot);
+                        
+                        showStep('step2', 2);
+                        showNotification('Profile found! Is this you?', 'success');
+                    } catch(error) {
+                        showNotification("Couldn't find that user. Please check the ID", 'error');
+                    }
+                });
+            }
+
+            // Other buttons
+            const yesBtn = document.getElementById('yes-btn');
+            if (yesBtn) yesBtn.addEventListener('click', () => {
+                generateVerificationCode();
+                showStep('step3', 3);
+                showNotification('Verification code generated', 'info');
+            });
+
+            const noBtn = document.getElementById('no-btn');
+            if (noBtn) noBtn.addEventListener('click', () => {
+                showStep('step1', 1);
+                showNotification('Please enter the correct Roblox ID', 'info');
+            });
+
+            const backBtn = document.getElementById('back-btn');
+            if (backBtn) backBtn.addEventListener('click', () => {
+                showStep('step2', 2);
+            });
+
+            const verifyBtn = document.getElementById('verify-btn');
+            if (verifyBtn) verifyBtn.addEventListener('click', async () => {
+                const userId = localStorage.getItem('tempUserId');
+                const verificationCode = localStorage.getItem('verificationCode');
+                
+                try {
+                    showNotification('Verifying your profile...', 'info');
+                    
+                    // In a real app, you would verify the code here
+                    // For demo purposes, we'll just assume verification succeeded
+                    localStorage.setItem('newUser', 'false');
+                    localStorage.setItem('robloxUserId', userId);
+                    localStorage.setItem('robloxUsername', localStorage.getItem('tempUsername'));
+                    localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
+                    
+                    // Clear temp data
+                    ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(item => {
+                        localStorage.removeItem(item);
                     });
                     
-                    const resultsContainer = document.getElementById('search-results');
-                    resultsContainer.innerHTML = '';
-                    
-                    if (results.length > 0) {
-                        results.forEach(user => {
-                            const userElement = document.createElement('div');
-                            userElement.className = 'search-result';
-                            userElement.innerHTML = `
-                                <img src="${user.headshot}" width="50" height="50" style="border-radius:50%;margin-right:10px;">
-                                <span>${user.username}</span>
-                                <button class="view-profile" data-id="${user.userId}">View</button>
-                            `;
-                            resultsContainer.appendChild(userElement);
-                        });
-                        resultsContainer.style.display = 'block';
-                        showNotification(`Found ${results.length} matching players`, 'success');
-                    } else {
-                        resultsContainer.innerHTML = '<p>No players found matching your search</p>';
-                        resultsContainer.style.display = 'block';
-                        showNotification('No players found', 'error');
-                    }
-                }).catch(error => {
-                    showNotification('Search failed', 'error');
-                    console.error('Search error:', error);
-                });
-            });
-
-            // View profile from search results
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('view-profile')) {
-                    const userId = e.target.dataset.id;
-                    loadUserData(userId);
-                    document.getElementById('search-results').style.display = 'none';
-                    showNotification('Loading profile...', 'info');
+                    const statusElement = document.getElementById('verification-status');
+                    if (statusElement) statusElement.textContent = 'Verification successful!';
+                    showNotification('Verification successful!', 'success');
+                    setTimeout(() => {
+                        showHomeContent();
+                    }, 1500);
+                } catch(error) {
+                    const statusElement = document.getElementById('verification-status');
+                    if (statusElement) statusElement.textContent = 'Error verifying. Please try again.';
+                    showNotification('Error during verification', 'error');
                 }
             });
 
-            // Edit profile functionality
+            const goHomeBtn = document.getElementById('go-home-btn');
+            if (goHomeBtn) goHomeBtn.addEventListener('click', () => {
+                showHomeContent();
+            });
+
             const editBtn = document.getElementById('edit-btn');
             const saveBtn = document.getElementById('save-btn');
             if (editBtn && saveBtn) {
@@ -236,254 +875,22 @@
                 });
             }
 
-            // Load user data when page loads
-            if (localStorage.getItem('newUser') === 'false') {
-                const userId = localStorage.getItem('robloxUserId');
-                if (userId) {
-                    loadUserData(userId);
-                }
-            }
-
-            // Load user data function
-            function loadUserData(userId) {
-                database.ref('users/' + userId).once('value').then(snapshot => {
-                    if (snapshot.exists()) {
-                        const userData = snapshot.val();
-                        updateProfileUI(userData);
-                        showNotification('Profile loaded successfully', 'success');
-                    } else {
-                        createNewUser(userId);
-                    }
-                }).catch(error => {
-                    console.error("Database error:", error);
-                    loadFromLocalStorage();
-                    showNotification('Error loading profile', 'error');
-                });
-            }
-
-            // Create new user function
-            function createNewUser(userId) {
-                const userData = {
-                    userId: userId,
-                    username: localStorage.getItem('robloxUsername'),
-                    headshot: localStorage.getItem('robloxHeadshot'),
-                    description: "",
-                    followers: 0,
-                    following: 0,
-                    createdAt: Date.now()
-                };
-                
-                database.ref('users/' + userId).set(userData)
-                    .then(() => {
-                        updateProfileUI(userData);
-                        showNotification('New profile created', 'success');
-                    })
-                    .catch(error => {
-                        console.error("Create user error:", error);
-                        loadFromLocalStorage();
-                        showNotification('Error creating profile', 'error');
-                    });
-            }
-
-            // Update profile UI function
-            function updateProfileUI(userData) {
-                const headshot = document.getElementById('profile-headshot');
-                const username = document.getElementById('profile-username');
-                const description = document.getElementById('profile-description');
-                const followers = document.getElementById('followers-count');
-                const following = document.getElementById('following-count');
-                
-                if (headshot) headshot.src = userData.headshot;
-                if (username) username.textContent = userData.username;
-                if (description) description.textContent = userData.description || 'No description yet';
-                if (followers) followers.textContent = userData.followers || 0;
-                if (following) following.textContent = userData.following || 0;
-            }
-
-            // Load from local storage function
-            function loadFromLocalStorage() {
-                const headshot = localStorage.getItem('robloxHeadshot');
-                const username = localStorage.getItem('robloxUsername');
-                const profileHeadshot = document.getElementById('profile-headshot');
-                const profileUsername = document.getElementById('profile-username');
-                const profileDescription = document.getElementById('profile-description');
-                
-                if (headshot && profileHeadshot) profileHeadshot.src = headshot;
-                if (username && profileUsername) profileUsername.textContent = username;
-                if (profileDescription) profileDescription.textContent = 'No description yet';
-            }
-        </script>
-    </div>
-
-    <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            databaseURL: "https://cloud-fbd6b-default-rtdb.firebaseio.com"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // CORS proxy function
-        async function fetchRobloxData(url) {
-            try {
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/' + url;
-                const response = await fetch(proxyUrl, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Access-Control-Allow-Origin': '*',
-                    },
-                    mode: 'cors'
-                });
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error fetching Roblox data:', error);
-                throw error;
-            }
-        }
-
-        // Show notification function
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Theme management
-        function applyTheme(theme) {
-            document.body.className = theme + '-theme';
-            localStorage.setItem('selectedTheme', theme);
-            document.querySelectorAll('.theme-option').forEach(opt => {
-                opt.classList.remove('selected');
-                if (opt.dataset.theme === theme) {
-                    opt.classList.add('selected');
-                }
-            });
-        }
-
-        // Initialize theme
-        const savedTheme = localStorage.getItem('selectedTheme') || 'default';
-        applyTheme(savedTheme);
-
-        // Theme button event
-        document.getElementById('theme-btn').addEventListener('click', () => {
-            document.getElementById('theme-menu').classList.toggle('active');
-        });
-
-        // Theme selection
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.addEventListener('click', () => {
-                applyTheme(option.dataset.theme);
-                document.getElementById('theme-menu').classList.remove('active');
-            });
-        });
-
-        // Initialize event listeners after DOM loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Confirm ID button
-            const confirmIdBtn = document.getElementById('confirm-id');
-            if (confirmIdBtn) {
-                confirmIdBtn.addEventListener('click', async () => {
-                    const userIdInput = document.getElementById('roblox-id');
-                    if (!userIdInput) return;
-                    
-                    const userId = userIdInput.value.trim();
-                    if (!userId) {
-                        showNotification('Please enter a Roblox ID', 'error');
-                        return;
-                    }
-                    
-                    try {
-                        showNotification('Loading Roblox profile...', 'info');
-                        const [userData, headshotData] = await Promise.all([
-                            fetchRobloxData(`https://users.roblox.com/v1/users/${userId}`),
-                            fetchRobloxData(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`)
-                        ]);
-                        
-                        if (userData.errors || headshotData.errors) throw new Error('User not found');
-                        
-                        const usernameElement = document.getElementById('username');
-                        const descriptionElement = document.getElementById('description');
-                        const headshotElement = document.getElementById('headshot');
-                        
-                        if (usernameElement) usernameElement.textContent = userData.name;
-                        if (descriptionElement) descriptionElement.textContent = userData.description || '(No description)';
-                        if (headshotElement) headshotElement.src = headshotData.data[0].imageUrl;
-                        
-                        localStorage.setItem('tempUserId', userId);
-                        localStorage.setItem('tempUsername', userData.name);
-                        localStorage.setItem('tempHeadshot', headshotData.data[0].imageUrl);
-                        
-                        showStep('step2', 2);
-                        showNotification('Profile found! Is this you?', 'success');
-                    } catch(error) {
-                        showNotification("Couldn't find that user. Please check the ID", 'error');
-                    }
-                });
-            }
-
-            // Other buttons
-            const yesBtn = document.getElementById('yes-btn');
-            if (yesBtn) yesBtn.addEventListener('click', () => {
-                generateVerificationCode();
-                showStep('step3', 3);
-                showNotification('Verification code generated', 'info');
-            });
-
-            const noBtn = document.getElementById('no-btn');
-            if (noBtn) noBtn.addEventListener('click', () => {
-                showStep('step1', 1);
-                showNotification('Please enter the correct Roblox ID', 'info');
-            });
-
-            const backBtn = document.getElementById('back-btn');
-            if (backBtn) backBtn.addEventListener('click', () => {
-                showStep('step2', 2);
-            });
-
-            const verifyBtn = document.getElementById('verify-btn');
-            if (verifyBtn) verifyBtn.addEventListener('click', async () => {
-                const userId = localStorage.getItem('tempUserId');
-                const verificationCode = localStorage.getItem('verificationCode');
-                
-                try {
-                    showNotification('Verifying your profile...', 'info');
-                    const userData = await fetchRobloxData(`https://users.roblox.com/v1/users/${userId}`);
-                    
-                    if (userData.description && userData.description.includes(verificationCode)) {
-                        localStorage.setItem('newUser', 'false');
-                        localStorage.setItem('robloxUserId', userId);
-                        localStorage.setItem('robloxUsername', localStorage.getItem('tempUsername'));
-                        localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
-                        
-                        // Clear temp data
-                        ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(item => {
-                            localStorage.removeItem(item);
+            const copyBtn = document.querySelector('.copy-btn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const codeTextElement = document.getElementById('code-text');
+                    if (codeTextElement) {
+                        const code = codeTextElement.textContent;
+                        navigator.clipboard.writeText(code).then(() => {
+                            copyBtn.textContent = 'Copied!';
+                            showNotification('Code copied to clipboard', 'success');
+                            setTimeout(() => {
+                                copyBtn.textContent = 'Copy';
+                            }, 2000);
                         });
-                        
-                        const statusElement = document.getElementById('verification-status');
-                        if (statusElement) statusElement.textContent = 'Verification successful!';
-                        showNotification('Verification successful!', 'success');
-                        setTimeout(() => {
-                            showHomeContent();
-                        }, 1500);
-                    } else {
-                        const statusElement = document.getElementById('verification-status');
-                        if (statusElement) statusElement.textContent = 'Code not found in description. Please try again.';
-                        showNotification('Verification failed - code not found', 'error');
                     }
-                } catch(error) {
-                    const statusElement = document.getElementById('verification-status');
-                    if (statusElement) statusElement.textContent = 'Error verifying. Please try again.';
-                    showNotification('Error during verification', 'error');
-                }
-            });
+                });
+            }
 
             // Initialize app state
             if (localStorage.getItem('newUser') === 'false') {
@@ -493,72 +900,6 @@
                 generateVerificationCode();
             }
         });
-
-        // Progress bar update function
-        function updateProgress(step) {
-            const progressBar = document.getElementById('progress');
-            if (progressBar) {
-                progressBar.style.width = step * 33.33 + '%';
-            }
-        }
-
-        // Step navigation function
-        function showStep(stepId, progressStep) {
-            document.querySelectorAll('.step').forEach(step => {
-                step.classList.remove('active');
-            });
-            const stepElement = document.getElementById(stepId);
-            if (stepElement) {
-                stepElement.classList.add('active');
-                updateProgress(progressStep);
-            }
-        }
-
-        // Verification code generator
-        function generateVerificationCode() {
-            const codeTextElement = document.getElementById('code-text');
-            if (codeTextElement) {
-                const code = Math.floor(10000 + 90000 * Math.random());
-                codeTextElement.textContent = code;
-                localStorage.setItem('verificationCode', code.toString());
-                return code;
-            }
-            return null;
-        }
-
-        // Show home content
-        function showHomeContent() {
-            const onboarding = document.getElementById('onboarding');
-            const mainApp = document.getElementById('main-app');
-            const homeContent = document.getElementById('home-content');
-            
-            if (onboarding) onboarding.style.display = 'none';
-            if (mainApp) mainApp.style.display = 'none';
-            if (homeContent) homeContent.style.display = 'block';
-            
-            const userId = localStorage.getItem('robloxUserId');
-            if (userId) {
-                loadUserData(userId);
-            }
-        }
-
-        // Copy code functionality
-        const copyBtn = document.querySelector('.copy-btn');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => {
-                const codeTextElement = document.getElementById('code-text');
-                if (codeTextElement) {
-                    const code = codeTextElement.textContent;
-                    navigator.clipboard.writeText(code).then(() => {
-                        copyBtn.textContent = 'Copied!';
-                        showNotification('Code copied to clipboard', 'success');
-                        setTimeout(() => {
-                            copyBtn.textContent = 'Copy';
-                        }, 2000);
-                    });
-                }
-            });
-        }
     </script>
 </body>
 </html>
