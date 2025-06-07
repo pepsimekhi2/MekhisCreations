@@ -687,37 +687,20 @@
             }, 3000);
         }
 
-        // Roblox API functions with CORS workaround
         async function getRobloxUserData(userId) {
-            try {
-                // Use Roblox's thumbnail API which allows CORS
-                const headshotUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`;
-                const headshotResponse = await fetch(headshotUrl);
-                
-                if (!headshotResponse.ok) {
-                    throw new Error('Failed to fetch headshot');
-                }
-                
-                const headshotData = await headshotResponse.json();
-                const headshot = headshotData.data[0]?.imageUrl || 
-                                 `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`;
-                
-                // For username and description, we'll use a fallback approach
-                // In a production app, you should use a backend service for this
-                const username = `User${userId.slice(0, 4)}`; // Temporary placeholder
-                const description = "Verified Mekhis Creations user"; // Temporary placeholder
-                
-                return {
-                    username,
-                    description,
-                    headshot
-                };
-            } catch (error) {
-                console.error('Error fetching Roblox data:', error);
-                showNotification('Failed to load user data', 'error');
-                throw error;
-            }
-        }
+    try {
+        // Use the legacy image endpoint directly
+        const headshot = `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`;
+        // Username and description are placeholders unless you build a backend
+        const username = `User${userId.slice(0, 4)}`;
+        const description = "Verified Mekhis Creations user";
+        return { username, description, headshot };
+    } catch (error) {
+        console.error('Error fetching Roblox data:', error);
+        showNotification('Failed to load user data', 'error');
+        throw error;
+    }
+}
 
         // Theme management
         function applyTheme(theme, mode) {
