@@ -10,18 +10,19 @@
     --theme-gradient: linear-gradient(#F8F9FA, #F8F9FA)
 }
 
+/* Remove the fixed gradient from body and let JS handle it */
 body {
     font-family: 'Fredoka One', cursive;
-    background: var(--theme-gradient) fixed;
     color: var(--text);
     margin: 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all .3s
+    transition: all .3s;
+    background-size: 100% 100%;
+    background-attachment: fixed;
 }
-
 .container {
     max-width: 500px;
     width: 100%;
