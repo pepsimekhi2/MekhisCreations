@@ -6,8 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadProfile() {
-    const username = window.location.pathname.split('/@')[1];
-    const profileContainer = document.getElementById('profile-container');
+  // Show the profile page first!
+  document.getElementById('profile-page').style.display = 'block';
+  
+  const username = window.location.pathname.split('/@')[1];
+  const profileContainer = document.getElementById('profile-container');
     
     // Show loading state
     profileContainer.innerHTML = `
