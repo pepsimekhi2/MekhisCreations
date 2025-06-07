@@ -72,20 +72,75 @@ const themes = {
     }
 };
 
+// Add CSS for transitions dynamically
+const styleElement = document.createElement('style');
+styleElement.textContent = `
+    :root {
+        --transition-duration: 0.3s;
+        --transition-timing: ease-in-out;
+    }
+
+    body {
+        transition: 
+            background var(--transition-duration) var(--transition-timing),
+            color var(--transition-duration) var(--transition-timing);
+    }
+
+    .card, button, input, textarea, select {
+        transition: 
+            background-color var(--transition-duration) var(--transition-timing),
+            border-color var(--transition-duration) var(--transition-timing),
+            color var(--transition-duration) var(--transition-timing);
+    }
+
+    h1, h2, h3, h4, h5, h6, p, span, a, li {
+        transition: color var(--transition-duration) var(--transition-timing);
+    }
+
+    .theme-transition {
+        transition: 
+            --primary var(--transition-duration) var(--transition-timing),
+            --secondary var(--transition-duration) var(--transition-timing),
+            --accent var(--transition-duration) var(--transition-timing);
+    }
+
+    .style-transition {
+        transition: 
+            --text var(--transition-duration) var(--transition-timing),
+            --bg var(--transition-duration) var(--transition-timing),
+            --card-bg var(--transition-duration) var(--transition-timing),
+            --btn-text var(--transition-duration) var(--transition-timing),
+            --input-bg var(--transition-duration) var(--transition-timing);
+    }
+
+    .gradient-transition {
+        transition: background var(--transition-duration) var(--transition-timing);
+    }
+`;
+document.head.appendChild(styleElement);
+
 function updateBackgroundGradient(styleName, themeName) {
     const style = styles[styleName] || styles.light;
     const theme = themes[themeName] || themes.default;
     
-    // Very subtle gradient with theme only appearing at the very bottom
-    const gradient = `linear-gradient(to bottom, 
-        ${style.topColor} 0%, 
-        ${style.topColor} 70%, 
-        ${theme.bottomColor} 100%)`;
+    // Create vertical gradient from style topColor to theme bottomColor
+    const gradient = `linear-gradient(to bottom, ${style.topColor}, ${theme.bottomColor})`;
+    
+    // Add transition class for smooth gradient change
+    document.body.classList.add('gradient-transition');
     document.body.style.background = gradient;
+    
+    // Remove transition class after animation completes
+    setTimeout(() => {
+        document.body.classList.remove('gradient-transition');
+    }, 300);
 }
 
 function applyTheme(themeName) {
     const theme = themes[themeName] || themes.default;
+    
+    // Add transition class to root element
+    document.documentElement.classList.add('theme-transition');
     
     document.documentElement.style.setProperty('--primary', theme.primary);
     document.documentElement.style.setProperty('--secondary', theme.secondary);
@@ -104,10 +159,18 @@ function applyTheme(themeName) {
     // Update gradient with current style and new theme
     const currentStyle = localStorage.getItem('selectedStyle') || 'light';
     updateBackgroundGradient(currentStyle, themeName);
+    
+    // Remove transition class after animation completes
+    setTimeout(() => {
+        document.documentElement.classList.remove('theme-transition');
+    }, 300);
 }
 
 function applyStyle(styleName) {
     const style = styles[styleName] || styles.light;
+    
+    // Add transition class to root element
+    document.documentElement.classList.add('style-transition');
     
     document.documentElement.style.setProperty('--text', style.text);
     document.documentElement.style.setProperty('--bg', style.bg);
@@ -128,6 +191,11 @@ function applyStyle(styleName) {
     // Update gradient with new style and current theme
     const currentTheme = localStorage.getItem('selectedTheme') || 'default';
     updateBackgroundGradient(styleName, currentTheme);
+    
+    // Remove transition class after animation completes
+    setTimeout(() => {
+        document.documentElement.classList.remove('style-transition');
+    }, 300);
 }
 
 // Theme option click handlers
@@ -146,6 +214,31 @@ document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
 // Apply saved theme and style
 const savedStyle = localStorage.getItem('selectedStyle') || 'light';
 const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+
+// Initial apply without transitions
+document.documentElement.style.setProperty('--primary', themes[savedTheme].primary);
+document.documentElement.style.setProperty('--secondary', themes[savedTheme].secondary);
+document.documentElement.style.setProperty('--accent', themes[savedTheme].accent);
+document.documentElement.style.setProperty('--text', styles[savedStyle].text);
+document.documentElement.style.setProperty('--bg', styles[savedStyle].bg);
+document.documentElement.style.setProperty('--card-bg', styles[savedStyle].cardBg);
+document.documentElement.style.setProperty('--btn-text', styles[savedStyle].btnText);
+document.documentElement.style.setProperty('--input-bg', styles[savedStyle].inputBg);
+
+// Set active states
+document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
+    if (option.dataset.theme === savedTheme) {
+        option.classList.add('active');
+    }
+});
+document.querySelectorAll('.theme-option[data-style]').forEach(option => {
+    if (option.dataset.style === savedStyle) {
+        option.classList.add('active');
+    }
+});
+
+// Set initial background gradient
+updateBackgroundGradient(savedStyle, savedTheme);
 
 applyStyle(savedStyle);
 applyTheme(savedTheme);
