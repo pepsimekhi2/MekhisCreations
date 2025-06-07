@@ -170,7 +170,6 @@
         .view-profile-btn:hover {
             background: var(--primary);
         }
-        }
 
         .step {
             display: none;
@@ -373,33 +372,29 @@
             box-shadow: 0 5px 15px rgba(0,0,0,.2);
             display: none;
             z-index: 100;
-            width: 150px;
+            width: 200px;
             max-height: 60vh;
             overflow-y: auto;
             transition: all var(--transition-time) ease-in-out;
         }
 
         .theme-menu.active {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
-            transition: all var(--transition-time) ease-in-out;
+            display: block;
         }
 
         .theme-category {
-            grid-column: 1/-1;
             font-weight: bold;
-            padding: 5px 0;
+            padding: 10px 0;
             border-bottom: 1px solid rgba(0,0,0,.1);
-            transition: all var(--transition-time) ease-in-out;
+            text-align: center;
         }
 
         .theme-option {
-            padding: 5px 10px;
+            padding: 10px 15px;
             cursor: pointer;
             border-radius: 5px;
-            margin: 2px 0;
-            font-size: 12px;
+            margin: 5px 0;
+            font-size: 14px;
             text-align: center;
             transition: all var(--transition-time) ease-in-out;
         }
@@ -412,6 +407,40 @@
         .theme-option.selected {
             background: var(--primary);
             color: var(--btn-text);
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,.2);
+        }
+
+        .theme-option[data-style="light"] {
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+        }
+
+        .theme-option[data-style="dark"] {
+            background: linear-gradient(45deg, #202124, #303134);
+        }
+
+        .theme-option[data-theme="chrome"] {
+            background: linear-gradient(45deg, #4285F4, #34A853, #EA4335);
+        }
+
+        .theme-option[data-theme="neon"] {
+            background: linear-gradient(45deg, #00F0FF, #FF00F0, #F0FF00);
+        }
+
+        .theme-option[data-theme="crimson"] {
+            background: linear-gradient(45deg, #DC143C, #8B0000, #FF6347);
+        }
+
+        .theme-option[data-theme="gold"] {
+            background: linear-gradient(45deg, #FFD700, #D4AF37, #C0C0C0);
+        }
+
+        .theme-option[data-theme="silver"] {
+            background: linear-gradient(45deg, #C0C0C0, #A8A8A8, #808080);
+        }
+
+        .theme-option[data-theme="bronze"] {
+            background: linear-gradient(45deg, #CD7F32, #B87333, #8B4513);
         }
 
         @keyframes bounce {
@@ -436,8 +465,8 @@
     <button class="theme-btn" id="theme-btn">Themes</button>
     <div class="theme-menu" id="theme-menu">
         <div class="theme-category">Style</div>
-        <div class="theme-option" data-style="light" data-gradient="linear-gradient(135deg, #F8F9FA, #E9ECEF)">Light</div>
-        <div class="theme-option" data-style="dark" data-gradient="linear-gradient(135deg, #202124, #1a1a1a)">Dark</div>
+        <div class="theme-option" data-style="light">Light</div>
+        <div class="theme-option" data-style="dark">Dark</div>
         <div class="theme-category">Theme</div>
         <div class="theme-option" data-theme="chrome">Chrome</div>
         <div class="theme-option" data-theme="neon">Neon</div>
@@ -471,6 +500,20 @@
                             <span class="stat-label">Followers</span>
                         </div>
                         <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Following</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="back-btn" id="profile-back">Back</button>
+            </div>
+        </div>
+
+        <div id="onboarding">
             <div class="progress-bar">
                 <div class="progress" id="progress"></div>
             </div>
@@ -517,35 +560,6 @@
                     <button class="back-btn" id="back-btn">Back</button>
                 </div>
                 <div id="verification-status"></div>
-            </div>
-        </div>
-
-        <div id="profile-view" class="step">
-            <div class="profile-container">
-                <div class="profile-header">
-                    <img id="profile-headshot" src="" alt="Profile Picture" class="profile-headshot">
-                    <div class="profile-info">
-                        <h1 id="profile-username"></h1>
-                        <div id="profile-description" class="profile-description"></div>
-                    </div>
-                </div>
-                <div class="profile-stats">
-                    <div class="stat-grid">
-                        <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Followers</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Following</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Posts</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="back-btn" id="profile-back">Back</button>
             </div>
         </div>
     </div>
@@ -757,7 +771,20 @@
             document.documentElement.style.setProperty('--secondary', theme.secondary);
             document.documentElement.style.setProperty('--accent', theme.accent);
             document.body.style.background = theme.gradient;
+            document.body.classList.remove('theme-active');
+            document.body.classList.add(`theme-${themeName}`);
             localStorage.setItem('selectedTheme', themeName);
+
+            // Update UI feedback
+            document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.theme === themeName) {
+                    option.classList.add('selected');
+                }
+            });
+
+            // Smooth transition
+            document.body.style.transition = 'background 0.5s ease-in-out';
         }
 
         function applyStyle(styleName) {
