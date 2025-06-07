@@ -1,61 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Theme Switcher Website</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BloxNet</title>
+<style>
+  body{font-family:'Fredoka One',cursive,sans-serif;margin:0;padding:0;background:#f8f8f8}
+  .container{max-width:800px;margin:0 auto;padding-top:70px}
+  .frame{background:#fff;border-radius:18px;padding:20px;margin:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+  #welcomeFrame{text-align:center;border:3px solid #5865F2}
+  #playerFrame,#verifyFrame{display:none;animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275)}
+  input{padding:12px 15px;border:2px solid #ddd;border-radius:12px;font:1em 'Fredoka One';width:70%;margin:10px 0}
+  button{background:#5865F2;color:#fff;border:0;padding:10px 20px;border-radius:12px;font:1em 'Fredoka One';cursor:pointer;margin:5px}
+  .dynamic-island{position:fixed;top:15px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:12px 30px;border-radius:30px;display:flex;align-items:center;gap:15px;z-index:1000;cursor:pointer;min-width:200px;justify-content:center;transition:all 0.3s}
+  .dynamic-island:hover{background:#222}
+  .dynamic-menu{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:15px;display:none;z-index:999;width:250px}
+  .verification-code{display:flex;gap:10px;margin:20px 0;justify-content:center}
+  .code-box{width:50px;height:50px;border:2px solid #5865F2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5em}
+  .copy-btn{background:#4CAF50;margin-left:10px}
+  @keyframes popIn{0%{transform:scale(0.9);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
-<body class="light-theme neon-theme">
-    <div class="content">
-        <h1>Welcome to My Website</h1>
-        <p>This is some sample content that will change with the themes.</p>
-        <div class="sample-box">
-            <p>This box demonstrates the current theme colors.</p>
-        </div>
+<body>
+
+<div class="dynamic-island" id="dynamicIsland" onclick="toggleMenu()">
+  <img id="islandHeadshot" style="width:30px;height:30px;border-radius:50%;display:none">
+  <span id="islandUsername" style="display:none">Guest</span>
+</div>
+
+<div class="dynamic-menu" id="dynamicMenu">
+  <div style="padding:5px 12px;font-weight:bold;border-bottom:1px solid #eee" id="menuUsername"></div>
+  <button onclick="viewProfile()">View Profile</button>
+  <button onclick="logout()" style="background:#f44336">Logout</button>
+</div>
+
+<div class="container">
+  <div class="frame" id="welcomeFrame">
+    <h1 style="color:#5865F2">Welcome to BloxNet!</h1>
+    <input type="number" id="userIdInput" placeholder="Roblox User ID">
+    <button onclick="checkUser()">Submit</button>
+  </div>
+
+  <div class="frame" id="playerFrame">
+    <h1 style="color:#5865F2">Is this you?</h1>
+    <div style="display:flex;gap:20px;align-items:center">
+      <img id="playerHeadshot" style="width:80px;height:80px;border-radius:12px">
+      <div>
+        <h2 id="playerUsername"></h2>
+        <p id="playerDescription" style="color:#666"></p>
+      </div>
     </div>
+    <button style="background:#4CAF50" onclick="generateVerification()">Yes, that's me!</button>
+    <button style="background:#f44336" onclick="resetForm()">No, try again</button>
+  </div>
 
-    <!-- Theme Button -->
-    <button id="themeButton" class="theme-button">Themes</button>
-
-    <!-- Theme Panel -->
-    <div id="themePanel" class="theme-panel">
-        <button class="close-button">&times;</button>
-        <h3>Theme Settings</h3>
-        
-        <!-- Styles section (at the top) -->
-        <div class="theme-section">
-            <h4>Styles</h4>
-            <div class="style-buttons">
-                <button class="style-button active" data-style="light">Light</button>
-                <button class="style-button" data-style="dark">Dark</button>
-            </div>
-        </div>
-
-        <!-- Themes section (at the bottom) -->
-        <div class="theme-section">
-            <h4>Themes</h4>
-            <div class="theme-buttons">
-                <button class="theme-option active" data-theme="neon">Neon</button>
-                <button class="theme-option" data-theme="crimson">Crimson</button>
-                <button class="theme-option" data-theme="gold">Gold</button>
-                <button class="theme-option" data-theme="silver">Silver</button>
-                <button class="theme-option" data-theme="bronze">Bronze</button>
-                <button class="theme-option" data-theme="chrome">Chrome</button>
-            </div>
-        </div>
-
-        <!-- Animated Themes section -->
-        <div class="theme-section">
-            <h4>Animated Themes</h4>
-            <div class="animated-theme-buttons">
-                <button class="animated-theme-option fire-btn" data-theme="fire">🔥 Fire</button>
-                <button class="animated-theme-option galaxy-btn" data-theme="galaxy">🌌 Galaxy</button>
-            </div>
-        </div>
+  <div class="frame" id="verifyFrame">
+    <h1 style="color:#5865F2">Account Verification</h1>
+    <p>Copy this code and set it as your Roblox profile description:</p>
+    <div class="verification-code">
+      <div class="code-box" id="code1"></div>
+      <div class="code-box" id="code2"></div>
+      <div class="code-box" id="code3"></div>
+      <div class="code-box" id="code4"></div>
+      <div class="code-box" id="code5"></div>
+      <button class="copy-btn" onclick="copyCode()">Copy</button>
     </div>
+    <p>After setting the description, click Verify below:</p>
+    <button onclick="verifyAccount()">Verify Account</button>
+  </div>
+</div>
 
-    <script src="script.js"></script>
+<script>
+const proxy = "https://api.allorigins.win/raw?url=";
+let currentUser = null;
+let verificationCode = "";
+
+document.addEventListener('DOMContentLoaded', () => {
+  if(localStorage.getItem('robloxUsername')) {
+    loadUserData();
+  }
+});
+
+async function checkUser() {
+  let userId = document.getElementById('userIdInput').value;
+  if(!userId) return;
+  try {
+    let userRes = await fetch(proxy + encodeURIComponent(`https://users.roblox.com/v1/users/${userId}`));
+    let userData = await userRes.json();
+    if(userData.id) {
+      let headshotRes = await fetch(proxy + encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`));
+      let headshotData = await headshotRes.json();
+      currentUser = {
+        id: userId,
+        name: userData.name || userData.displayName,
+        description: userData.description || "",
+        headshot: headshotData.data[0].imageUrl
+      };
+      document.getElementById('playerUsername').textContent = currentUser.name;
+      document.getElementById('playerDescription').textContent = currentUser.description;
+      document.getElementById('playerHeadshot').src = currentUser.headshot;
+      document.getElementById('welcomeFrame').style.display = 'none';
+      document.getElementById('playerFrame').style.display = 'block';
+    } else {
+      alert("User not found!");
+    }
+  } catch(err) {
+    alert("Error: " + err);
+  }
+}
+
+function generateVerification() {
+  // Generate 5 random digits
+  verificationCode = "";
+  for(let i = 0; i < 5; i++) {
+    verificationCode += Math.floor(Math.random() * 10);
+  }
+  
+  // Display the code
+  for(let i = 0; i < 5; i++) {
+    document.getElementById(`code${i+1}`).textContent = verificationCode[i];
+  }
+  
+  document.getElementById('playerFrame').style.display = 'none';
+  document.getElementById('verifyFrame').style.display = 'block';
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(verificationCode);
+  alert("Verification code copied to clipboard!");
+}
+
+async function verifyAccount() {
+  try {
+    let userRes = await fetch(proxy + encodeURIComponent(`https://users.roblox.com/v1/users/${currentUser.id}`));
+    let userData = await userRes.json();
+    
+    if(userData.description && userData.description.includes(verificationCode)) {
+      // Verification successful
+      saveUserData();
+      alert("Verification successful! Welcome to BloxNet.");
+      document.getElementById('verifyFrame').style.display = 'none';
+    } else {
+      alert("Verification failed. Please make sure you've added the code to your Roblox profile description.");
+    }
+  } catch(err) {
+    alert("Error verifying account: " + err);
+  }
+}
+
+function saveUserData() {
+  localStorage.setItem('robloxUsername', currentUser.name);
+  localStorage.setItem('robloxUserId', currentUser.id);
+  localStorage.setItem('robloxHeadshot', currentUser.headshot);
+  localStorage.setItem('verified', 'true');
+  loadUserData();
+}
+
+function loadUserData() {
+  document.getElementById('islandHeadshot').src = localStorage.getItem('robloxHeadshot');
+  document.getElementById('islandUsername').textContent = localStorage.getItem('robloxUsername');
+  document.getElementById('islandHeadshot').style.display = 'inline-block';
+  document.getElementById('islandUsername').style.display = 'inline-block';
+  document.getElementById('welcomeFrame').style.display = 'none';
+}
+
+function toggleMenu() {
+  let menu = document.getElementById('dynamicMenu');
+  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  document.getElementById('menuUsername').textContent = localStorage.getItem('robloxUsername');
+}
+
+function logout() {
+  localStorage.clear();
+  location.reload();
+}
+
+function resetForm() {
+  document.getElementById('userIdInput').value = '';
+  document.getElementById('playerFrame').style.display = 'none';
+  document.getElementById('welcomeFrame').style.display = 'block';
+}
+</script>
 </body>
 </html>
