@@ -1,93 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>BloxNet Onboarding</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; }
-    #step2 img { border-radius: 50%; }
-    input, button { padding: 8px; margin: 5px; }
+    body {
+      background: linear-gradient(145deg, #0f172a, #1e293b);
+      color: #f1f5f9;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px;
+    }
+    h1 { font-size: 2rem; margin-bottom: 10px; }
+    h2 { font-size: 1.2rem; margin: 5px 0; }
+    input, button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 8px;
+    }
+    input { width: 300px; }
+    button {
+      background: #6366f1;
+      color: white;
+      cursor: pointer;
+    }
+    img {
+      border-radius: 50%;
+      margin: 10px;
+      width: 120px;
+      height: 120px;
+    }
+    .box {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+      max-width: 400px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div id="content"></div>
+  <div class="box" id="app"></div>
 
   <script>
     const LS = localStorage;
-    const el = id => document.getElementById(id);
-    const randCode = () => Math.floor(10000 + Math.random() * 89999).toString();
-    let code = randCode();
+    const app = document.getElementById("app");
+    let tmpUser = {}, code = randCode();
 
-    const apiUser = async (id) => {
-      const u = await fetch("https://users.roblox.com/v1/users/" + id).then(r => r.json());
-      const h = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${id}&size=150x150&format=Png&isCircular=false`).then(r => r.json());
-      return { id: u.id, name: u.name, desc: u.description, headshot: h.data[0].imageUrl };
-    };
+    function randCode() {
+      return Math.floor(10000 + Math.random() * 89999).toString();
+    }
 
-    const step1 = () => {
-      document.getElementById('content').innerHTML = `
-        <h2>Welcome to BloxNet!</h2>
-        <p>Please enter your Roblox User ID:</p>
-        <input id="uid" placeholder="User ID">
-        <button onclick="checkUser()">Confirm</button>
+    async function fetchRobloxUser(userId) {
+      const user = await fetch('/api/userinfo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      }).then(r => r.json());
+
+      const headshot = await fetch(`/api/headshot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      }).then(r => r.json());
+
+      return {
+        id: user.id,
+        name: user.name,
+        desc: user.description,
+        headshot: headshot.data[0].imageUrl
+      };
+    }
+
+    function step1() {
+      app.innerHTML = `
+        <h1>Welcome to BloxNet</h1>
+        <h2>Enter your Roblox User ID:</h2>
+        <input id="uid" placeholder="Roblox User ID" />
+        <br>
+        <button onclick="step2()">Confirm</button>
       `;
-    };
+    }
 
-    const checkUser = async () => {
-      const id = el("uid").value;
-      if (!id) return alert("Enter ID");
-      try {
-        const u = await apiUser(id);
-        window.tmpUser = u;
-        document.getElementById('content').innerHTML = `
-          <div id="step2">
-            <h2>Is this you?</h2>
-            <img src="${u.headshot}" width="100"><br>
-            <b>${u.name}</b><br>
-            <i>${u.desc || "(No description)"}</i><br><br>
-            <button onclick="step1()">No</button>
-            <button onclick="step3()">Yes</button>
-          </div>
-        `;
-      } catch {
-        alert("User not found");
-      }
-    };
+    async function step2() {
+      const id = document.getElementById("uid").value;
+      if (!id) return alert("Please enter a valid user ID.");
+      tmpUser = await fetchRobloxUser(id);
+      app.innerHTML = `
+        <h1>Is this you?</h1>
+        <img src="${tmpUser.headshot}" alt="Headshot">
+        <h2>${tmpUser.name}</h2>
+        <p>${tmpUser.desc || "(no description)"}</p>
+        <button onclick="step1()">No</button>
+        <button onclick="step3()">Yes</button>
+      `;
+    }
 
-    const step3 = () => {
+    function step3() {
       code = randCode();
-      document.getElementById('content').innerHTML = `
-        <h2>Verification</h2>
+      app.innerHTML = `
+        <h1>Verify Ownership</h1>
         <p>Add this code to your Roblox profile description:</p>
-        <h1>${code}</h1>
+        <h2>${code}</h2>
         <button onclick="verify()">Verify</button>
         <button onclick="step3()">Refresh Code</button>
       `;
-    };
+    }
 
-    const verify = async () => {
-      const u = await apiUser(window.tmpUser.id);
-      if (u.desc.includes(code)) {
+    async function verify() {
+      const refreshed = await fetchRobloxUser(tmpUser.id);
+      if (refreshed.desc.includes(code)) {
         LS.setItem("newUser", "false");
-        LS.setItem("robloxId", u.id);
-        LS.setItem("robloxName", u.name);
-        LS.setItem("robloxHeadshot", u.headshot);
-        document.getElementById('content').innerHTML = `
-          <h2>✅ Verification Complete!</h2>
-          <p>Welcome, ${u.name}.</p>
-          <img src="${u.headshot}" width="100">
+        LS.setItem("robloxId", refreshed.id);
+        LS.setItem("robloxName", refreshed.name);
+        LS.setItem("robloxHeadshot", refreshed.headshot);
+        app.innerHTML = `
+          <h1>✅ Verification Complete!</h1>
+          <img src="${refreshed.headshot}" />
+          <h2>Welcome, ${refreshed.name}!</h2>
         `;
       } else {
-        alert("Code not found in description.");
+        alert("Code not found in description. Try again.");
       }
-    };
+    }
 
-    // On load
+    // init
     if (LS.getItem("newUser") === "false") {
-      document.getElementById('content').innerHTML = `
-        <h2>Welcome back, ${LS.getItem("robloxName")}!</h2>
-        <img src="${LS.getItem("robloxHeadshot")}" width="100">
-        <p>You're already verified.</p>
+      app.innerHTML = `
+        <h1>Welcome back!</h1>
+        <img src="${LS.getItem("robloxHeadshot")}" />
+        <h2>${LS.getItem("robloxName")}</h2>
+        <p>You are already verified.</p>
       `;
     } else {
       LS.setItem("newUser", "true");
