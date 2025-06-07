@@ -82,10 +82,10 @@
         }
 
         .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 30px 0;
             border-bottom: 1px solid rgba(0,0,0,.1);
         }
 
@@ -447,13 +447,19 @@
                     </div>
                 </div>
                 <div class="profile-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">0</span>
-                        <span class="stat-label">Followers</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">0</span>
-                        <span class="stat-label">Following</span>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Following</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
                     </div>
                 </div>
                 <button class="back-btn" id="profile-back">Back</button>
@@ -761,6 +767,48 @@
         document.getElementById('profile-back').addEventListener('click', () => {
             showStep('main-app', 4);
         });
+        // Profile view functionality
+        document.getElementById('view-profile').addEventListener('click', () => {
+            const username = localStorage.getItem('robloxUsername');
+            if (username) {
+                window.location.href = `/?user=${username}`;
+            }
+        });
+
+        // Handle URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('user');
+
+        if (username) {
+            // Load profile for the specified user
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('profile-view').style.display = 'block';
+            
+            // Load profile data from localStorage
+            const headshot = localStorage.getItem('robloxHeadshot');
+            const description = localStorage.getItem('robloxDescription') || 'No description set';
+            
+            // Update profile information
+            document.getElementById('profile-headshot').src = headshot;
+            document.getElementById('profile-username').textContent = username;
+            document.getElementById('profile-description').textContent = description;
+        }
+
+        // Add back button functionality when coming from URL
+        document.getElementById('profile-back').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // Handle direct access to profile page
+        if (window.location.pathname === '/profile') {
+            const username = localStorage.getItem('robloxUsername');
+            if (username) {
+                window.location.href = `/?user=${username}`;
+            } else {
+                // Redirect to main page if no user is logged in
+                window.location.href = '/';
+            }
+        }
     </script>
 </body>
 </html>
