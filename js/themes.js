@@ -76,10 +76,10 @@ function updateBackgroundGradient(styleName, themeName) {
     const style = styles[styleName] || styles.light;
     const theme = themes[themeName] || themes.default;
     
-    // Create vertical gradient with theme color appearing in the bottom 1/3
+    // Very subtle gradient with theme only appearing at the very bottom
     const gradient = `linear-gradient(to bottom, 
         ${style.topColor} 0%, 
-        ${style.topColor} 66%, 
+        ${style.topColor} 70%, 
         ${theme.bottomColor} 100%)`;
     document.body.style.background = gradient;
 }
