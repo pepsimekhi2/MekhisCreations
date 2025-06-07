@@ -788,20 +788,49 @@
                 if (isStyle) {
                     applyStyle(value);
                 } else {
-                    applyTheme(value);
-                }
-                
-                // Close menu after selection
-                themeMenu.classList.remove('active');
+        const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+        const savedStyle = localStorage.getItem('selectedStyle') || 'light';
+        
+        // Apply initial theme and style
+        applyTheme(savedTheme);
+        applyStyle(savedStyle);
+
+        // Add selected class to theme buttons after DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeBtn = document.querySelector(`[data-theme="${savedTheme}"]`);
+            const styleBtn = document.querySelector(`[data-style="${savedStyle}"]`);
+            
+            if (themeBtn) {
+                themeBtn.classList.add('selected');
+            }
+            if (styleBtn) {
+                styleBtn.classList.add('selected');
+            }
+        });
+
+        // Theme button click handlers
+        document.querySelectorAll('[data-theme]').forEach(button => {
+            button.addEventListener('click', () => {
+                const theme = button.dataset.theme;
+                applyTheme(theme);
+                // Remove selected class from all theme buttons
+                document.querySelectorAll('[data-theme]').forEach(btn => btn.classList.remove('selected'));
+                // Add selected class to clicked button
+                button.classList.add('selected');
             });
         });
 
-        const savedStyle = localStorage.getItem('selectedStyle') || 'light';
-        const savedTheme = localStorage.getItem('selectedTheme') || 'default';
-        
-        // Apply saved styles and mark them as selected
-        document.querySelector(`[data-style="${savedStyle}"]`).classList.add('selected');
-        document.querySelector(`[data-theme="${savedTheme}"]`).classList.add('selected');
+        // Style button click handlers
+        document.querySelectorAll('[data-style]').forEach(button => {
+            button.addEventListener('click', () => {
+                const style = button.dataset.style;
+                applyStyle(style);
+                // Remove selected class from all style buttons
+                document.querySelectorAll('[data-style]').forEach(btn => btn.classList.remove('selected'));
+                // Add selected class to clicked button
+                button.classList.add('selected');
+            });
+        });
         
         applyStyle(savedStyle);
         applyTheme(savedTheme);
