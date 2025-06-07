@@ -574,12 +574,35 @@
             updateProgress(1);
         }
 
-        function showStep(e, t) {
-            document.querySelectorAll('.step').forEach(n => {
-                n.classList.remove('active');
+        function showStep(stepId, progress) {
+            // Remove active class from all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
             });
-            document.getElementById(e).classList.add('active');
-            updateProgress(t);
+
+            // Add active class to target step
+            const targetStep = document.getElementById(stepId);
+            if (targetStep) {
+                targetStep.classList.add('active');
+            }
+
+            // Update progress only for onboarding steps
+            if (stepId.startsWith('step')) {
+                document.getElementById('progress').style.width = `${progress * 25}%`;
+            }
+
+            // Handle profile view
+            if (stepId === 'profile-view') {
+                const profileContainer = document.querySelector('.profile-container');
+                if (profileContainer) {
+                    profileContainer.classList.add('active');
+                }
+            } else {
+                const profileContainer = document.querySelector('.profile-container');
+                if (profileContainer) {
+                    profileContainer.classList.remove('active');
+                }
+            }
         }
 
         document.getElementById('confirm-id').addEventListener('click', async () => {
@@ -852,14 +875,35 @@
 
         // Initialize steps
         function initSteps() {
-            if (localStorage.getItem('newUser') === 'false') {
-                showStep('main-app', 4);
-            } else if (localStorage.getItem('newUser') === 'true') {
-                showStep('step1', 1);
+            // Check URL parameters first
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('user');
+
+            if (username) {
+                // If user parameter exists, show profile view
+                showStep('profile-view', 4);
+                
+                // Load profile data from localStorage
+                const headshot = localStorage.getItem('robloxHeadshot');
+                const description = localStorage.getItem('robloxDescription') || 'No description set';
+                
+                // Update profile information
+                document.getElementById('profile-headshot').src = headshot;
+                document.getElementById('profile-username').textContent = username;
+                document.getElementById('profile-description').textContent = description;
+            } else {
+                // No URL parameter, check localStorage
+                const newUser = localStorage.getItem('newUser');
+                if (newUser === 'false') {
+                    showStep('main-app', 4);
+                } else if (newUser === 'true') {
+                    showStep('step1', 1);
+                }
             }
         }
 
-        initSteps();
+        // Initialize steps when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initSteps);
     </script>
 </body>
 </html>
