@@ -1,0 +1,218 @@
+/* Base Styles & Variables */
+:root {
+  --primary-color: #6e48aa;
+  --secondary-color: #9d50bb;
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --panel-bg: white;
+  --box-bg: rgba(255, 255, 255, 0.9);
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --transition: all 0.5s ease;
+}
+
+/* Main Body & Background Gradient */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, 
+    var(--primary-color) 0%,
+    var(--secondary-color) 50%,
+    var(--bg-color) 100%
+  );
+  background-attachment: fixed;
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+/* Content Area */
+.content {
+  padding: 30px;
+  max-width: 800px;
+  margin: 30px auto;
+  background-color: var(--box-bg);
+  border-radius: 15px;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+  backdrop-filter: blur(5px);
+}
+
+.sample-box {
+  padding: 20px;
+  margin: 20px 0;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition);
+}
+
+/* Theme Button */
+.theme-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: var(--box-shadow);
+  z-index: 1000;
+  transition: var(--transition);
+}
+
+.theme-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Theme Panel */
+.theme-panel {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  background: var(--panel-bg);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  transform: translateY(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.theme-panel.active {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+.close-button:hover {
+  color: var(--primary-color);
+  transform: rotate(90deg);
+}
+
+.theme-section {
+  margin-bottom: 20px;
+}
+
+.theme-section h4 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.style-buttons, .theme-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.style-button, .theme-option {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Fredoka One', cursive;
+}
+
+.style-button {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+}
+
+.style-button.active {
+  background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+  color: white;
+}
+
+.theme-option {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-option::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  transition: var(--transition);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.theme-option.active::after {
+  transform: scaleX(1);
+}
+
+/* Theme Definitions */
+/* Light Style */
+.light-theme {
+  --text-color: #333;
+  --bg-color: #f5f5f5;
+  --panel-bg: rgba(255, 255, 255, 0.9);
+  --box-bg: rgba(255, 255, 255, 0.8);
+}
+
+/* Dark Style */
+.dark-theme {
+  --text-color: #f5f5f5;
+  --bg-color: #121212;
+  --panel-bg: rgba(30, 30, 30, 0.9);
+  --box-bg: rgba(45, 45, 45, 0.8);
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Color Themes */
+.neon-theme {
+  --primary-color: #6e48aa;
+  --secondary-color: #9d50bb;
+}
+
+.crimson-theme {
+  --primary-color: #c31432;
+  --secondary-color: #240b36;
+}
+
+.gold-theme {
+  --primary-color: #FFD700;
+  --secondary-color: #D4AF37;
+}
+
+.silver-theme {
+  --primary-color: #C0C0C0;
+  --secondary-color: #A8A8A8;
+}
+
+.bronze-theme {
+  --primary-color: #CD7F32;
+  --secondary-color: #B87333;
+}
+
+.chrome-theme {
+  --primary-color: #E8E8E8;
+  --secondary-color: #D0D0D0;
+}
