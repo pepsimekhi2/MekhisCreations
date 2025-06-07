@@ -687,20 +687,39 @@
             }, 3000);
         }
 
-        async function getRobloxUserData(userId) {
-    try {
-        // Use the legacy image endpoint directly
-        const headshot = `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`;
-        // Username and description are placeholders unless you build a backend
-        const username = `User${userId.slice(0, 4)}`;
-        const description = "Verified Mekhis Creations user";
-        return { username, description, headshot };
-    } catch (error) {
-        console.error('Error fetching Roblox data:', error);
-        showNotification('Failed to load user data', 'error');
-        throw error;
+         async function getRobloxUserData(userId) {
+        try {
+            showNotification('Fetching Roblox user data...', 'info');
+            
+            // Use a CORS proxy to bypass restrictions
+            const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+            
+            // Get user info
+            const userResponse = await fetch(`${corsProxy}https://users.roblox.com/v1/users/${userId}`);
+            if (!userResponse.ok) throw new Error('User not found');
+            const userData = await userResponse.json();
+            
+            // Get avatar headshot
+            const headshotResponse = await fetch(`${corsProxy}https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`);
+            if (!headshotResponse.ok) throw new Error('Failed to get avatar');
+            const headshotData = await headshotResponse.json();
+            
+            return {
+                username: userData.name || `User${userId}`,
+                description: userData.description || 'No description available',
+                headshot: headshotData.data[0]?.imageUrl || `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`
+            };
+        } catch (error) {
+            console.error('Error fetching Roblox data:', error);
+            
+            // Fallback to placeholder data if API fails
+            return {
+                username: `User${userId}`,
+                description: 'Verified Mekhis Creations user',
+                headshot: `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`
+            };
+        }
     }
-}
 
         // Theme management
         function applyTheme(theme, mode) {
