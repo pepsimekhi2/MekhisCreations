@@ -40,6 +40,24 @@
             transition: all var(--transition-time) ease-in-out;
         }
 
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .profile-container {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .profile-container.active {
+            display: block;
+        }
+
         .profile-container {
             max-width: 800px;
             margin: 0 auto;
@@ -453,25 +471,11 @@
                             <span class="stat-label">Followers</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Following</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Posts</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="back-btn" id="profile-back">Back</button>
-            </div>
-        </div>
-
-        <div id="onboarding">
             <div class="progress-bar">
                 <div class="progress" id="progress"></div>
             </div>
 
-            <div id="step1" class="step">
+            <div id="step1">
                 <h1>Welcome to Mekhis Creations!</h1>
                 <div class="bounce">👋</div>
                 <p>Let's get you set up!</p>
@@ -480,7 +484,7 @@
                 <button id="confirm-id">Let's Go!</button>
             </div>
 
-            <div id="step2" class="step">
+            <div id="step2">
                 <h2>Is this you?</h2>
                 <div id="user-info">
                     <img id="headshot" src="" alt="Roblox avatar">
@@ -491,7 +495,7 @@
                 <button id="no-btn">No, try again</button>
             </div>
 
-            <div id="step3" class="step">
+            <div id="step3">
                 <h2>Almost there!</h2>
                 <p>Let's verify this is really you:</p>
                 <ol style="text-align:left;display:inline-block">
@@ -513,6 +517,35 @@
                     <button class="back-btn" id="back-btn">Back</button>
                 </div>
                 <div id="verification-status"></div>
+            </div>
+        </div>
+
+        <div id="profile-view" class="step">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img id="profile-headshot" src="" alt="Profile Picture" class="profile-headshot">
+                    <div class="profile-info">
+                        <h1 id="profile-username"></h1>
+                        <div id="profile-description" class="profile-description"></div>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Following</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="back-btn" id="profile-back">Back</button>
             </div>
         </div>
     </div>
@@ -781,8 +814,7 @@
 
         if (username) {
             // Load profile for the specified user
-            document.getElementById('main-app').style.display = 'none';
-            document.getElementById('profile-view').style.display = 'block';
+            showStep('profile-view', 4);
             
             // Load profile data from localStorage
             const headshot = localStorage.getItem('robloxHeadshot');
@@ -809,6 +841,25 @@
                 window.location.href = '/';
             }
         }
+
+        // Profile view functionality
+        document.getElementById('view-profile').addEventListener('click', () => {
+            const username = localStorage.getItem('robloxUsername');
+            if (username) {
+                window.location.href = `/?user=${username}`;
+            }
+        });
+
+        // Initialize steps
+        function initSteps() {
+            if (localStorage.getItem('newUser') === 'false') {
+                showStep('main-app', 4);
+            } else if (localStorage.getItem('newUser') === 'true') {
+                showStep('step1', 1);
+            }
+        }
+
+        initSteps();
     </script>
 </body>
 </html>
