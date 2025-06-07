@@ -448,24 +448,12 @@
                 </div>
                 <div class="profile-stats">
                     <div class="stat-item">
-                        <span class="stat-number" id="profile-friends">0</span>
-                        <span class="stat-label">Friends</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="profile-followers">0</span>
+                        <span class="stat-number">0</span>
                         <span class="stat-label">Followers</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number" id="profile-following">0</span>
+                        <span class="stat-number">0</span>
                         <span class="stat-label">Following</span>
-                    </div>
-                </div>
-                <div class="profile-content">
-                    <div class="profile-section">
-                        <h2>Recent Activities</h2>
-                        <div id="recent-activities" class="activities-list">
-                            <!-- Activities will be populated dynamically -->
-                        </div>
                     </div>
                 </div>
                 <button class="back-btn" id="profile-back">Back</button>
@@ -759,43 +747,20 @@
         // Profile view functionality
         document.getElementById('view-profile').addEventListener('click', () => {
             showStep('profile-view', 4);
-            loadProfileData();
+            // Load profile data from localStorage
+            const headshot = localStorage.getItem('robloxHeadshot');
+            const username = localStorage.getItem('robloxUsername');
+            const description = localStorage.getItem('robloxDescription') || 'No description set';
+            
+            // Update profile information
+            document.getElementById('profile-headshot').src = headshot;
+            document.getElementById('profile-username').textContent = username;
+            document.getElementById('profile-description').textContent = description;
         });
 
         document.getElementById('profile-back').addEventListener('click', () => {
             showStep('main-app', 4);
         });
-
-        async function loadProfileData() {
-            const userId = localStorage.getItem('robloxUserId');
-            if (!userId) return;
-
-            try {
-                const [userResponse, friendsResponse] = await Promise.all([
-                    fetchProxy(`https://users.roblox.com/v1/users/${userId}`),
-                    fetchProxy(`https://friends.roblox.com/v1/users/${userId}/friends/count`)
-                ]);
-
-                // Update profile information
-                document.getElementById('profile-headshot').src = localStorage.getItem('robloxHeadshot');
-                document.getElementById('profile-username').textContent = userResponse.name;
-                document.getElementById('profile-description').textContent = userResponse.description || 'No description set';
-                document.getElementById('profile-friends').textContent = friendsResponse.count;
-                
-                // Load recent activities
-                const activitiesResponse = await fetchProxy(`https://users.roblox.com/v1/users/${userId}/status`);
-                const activitiesList = document.getElementById('recent-activities');
-                activitiesList.innerHTML = `
-                    <div class="activity-item">
-                        <span class="activity-status">${activitiesResponse.status || 'Online'}</span>
-                        <span class="activity-time">Last updated ${new Date(activitiesResponse.lastOnline).toLocaleString()}</span>
-                    </div>
-                `;
-            } catch (error) {
-                console.error('Error loading profile data:', error);
-                document.getElementById('profile-description').textContent = 'Error loading profile data';
-            }
-        }
     </script>
 </body>
 </html>
