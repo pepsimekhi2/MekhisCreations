@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
             this.querySelector('.island-content').innerHTML = `
                 <div class="expanded-content">
                     <div class="notification">
-                        <p>Welcome to BloxNet!</p>
+                        <p>Welcome @PepsiM3khi!</p>
+                        <small>You have 3 new notifications</small>
                     </div>
                 </div>
             `;
