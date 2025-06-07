@@ -3,7 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('newUser') === null) {
         localStorage.setItem('newUser', 'true');
     }
-
+        if (window.location.pathname.startsWith('/@')) {
+        document.getElementById('main-app').style.display = 'none';
+        document.getElementById('onboarding').style.display = 'none';
+        document.getElementById('profile-page').style.display = 'block';
+    } 
     if (localStorage.getItem('newUser') === 'false') {
         document.getElementById('main-app').classList.add('active');
         document.getElementById('onboarding').style.display = 'none';
