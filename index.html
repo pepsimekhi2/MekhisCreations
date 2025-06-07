@@ -5,11 +5,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BloxNet</title>
 <style>
-  body {
-    font-family: 'Fredoka One', cursive, sans-serif;
+  * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+  }
+  body {
+    font-family: 'Fredoka One', cursive, sans-serif;
     background: #f8f8f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   .blur-background {
     position: fixed;
@@ -21,35 +29,30 @@
     z-index: 10;
     display: none;
   }
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    position: relative;
-    z-index: 20;
-  }
   .frame {
     background: #fff;
     border-radius: 18px;
-    padding: 20px;
-    margin: 20px;
+    padding: 30px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     width: 90%;
     max-width: 500px;
     text-align: center;
+    margin: 20px auto;
+    position: relative;
+    z-index: 20;
   }
   #welcomeFrame {
     border: 3px solid #5865F2;
-    position: relative;
     z-index: 30;
   }
   #playerFrame, #verifyFrame, #profileView {
     display: none;
     animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  h1 {
+    color: #5865F2;
+    margin-bottom: 20px;
+    font-size: 2em;
   }
   input {
     padding: 12px 15px;
@@ -64,20 +67,90 @@
     background: #5865F2;
     color: #fff;
     border: 0;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border-radius: 12px;
     font: 1em 'Fredoka One';
     cursor: pointer;
-    margin: 5px;
+    margin: 10px 5px;
     transition: all 0.2s;
   }
   button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
+  .player-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .player-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    border: 3px solid #5865F2;
+  }
+  .verification-code {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 25px 0;
+  }
+  .code-box {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #5865F2;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+  }
+  .copy-btn {
+    background: #4CAF50;
+  }
+  .back-btn {
+    background: #f44336;
+  }
+  .loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+  .loading-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #5865F2;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0 }
+    100% { transform: scale(1); opacity: 1 }
+  }
   .dynamic-island {
     position: fixed;
-    top: 15px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     background: #000;
@@ -112,68 +185,10 @@
     width: 250px;
     text-align: center;
   }
-  .verification-code {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
-    justify-content: center;
-  }
-  .code-box {
-    width: 50px;
-    height: 50px;
-    border: 2px solid #5865F2;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5em;
-  }
-  .copy-btn {
-    background: #4CAF50;
-    margin-left: 10px;
-  }
-  .back-btn {
-    background: #f44336;
-  }
-  .loading {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-  }
-  .loading-content {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    text-align: center;
-  }
-  .spinner {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #5865F2;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  @keyframes popIn {
-    0% { transform: scale(0.9); opacity: 0 }
-    100% { transform: scale(1); opacity: 1 }
-  }
   .profile-header {
     background: #5865F2;
     color: #fff;
-    padding: 20px;
+    padding: 25px;
     border-radius: 12px 12px 0 0;
     display: flex;
     flex-direction: column;
@@ -181,8 +196,8 @@
     gap: 15px;
   }
   .profile-pic {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     border: 3px solid #fff;
   }
@@ -196,7 +211,7 @@
 <div class="loading" id="loading">
   <div class="loading-content">
     <div class="spinner"></div>
-    <h3>Loading...</h3>
+    <h3>Verifying...</h3>
   </div>
 </div>
 
@@ -211,53 +226,51 @@
   <button onclick="logout()" style="background:#f44336">Logout</button>
 </div>
 
-<div class="container">
-  <div class="frame" id="welcomeFrame">
-    <h1 style="color:#5865F2">Welcome to BloxNet!</h1>
-    <input type="number" id="userIdInput" placeholder="Roblox User ID">
-    <button onclick="checkUser()">Submit</button>
-  </div>
+<div class="frame" id="welcomeFrame">
+  <h1>Welcome to BloxNet!</h1>
+  <input type="number" id="userIdInput" placeholder="Roblox User ID">
+  <button onclick="checkUser()">Submit</button>
+</div>
 
-  <div class="frame" id="playerFrame">
-    <h1 style="color:#5865F2">Is this you?</h1>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:15px">
-      <img id="playerHeadshot" style="width:80px;height:80px;border-radius:12px">
-      <div>
-        <h2 id="playerUsername"></h2>
-        <p id="playerDescription" style="color:#666"></p>
-      </div>
+<div class="frame" id="playerFrame">
+  <h1>Is this you?</h1>
+  <div class="player-display">
+    <img id="playerHeadshot" class="player-avatar">
+    <div>
+      <h2 id="playerUsername"></h2>
+      <p id="playerDescription" style="color:#666"></p>
     </div>
-    <button style="background:#4CAF50" onclick="generateVerification()">Yes, that's me!</button>
-    <button style="background:#f44336" onclick="resetForm()">No, try again</button>
   </div>
+  <button style="background:#4CAF50" onclick="generateVerification()">Yes, that's me!</button>
+  <button style="background:#f44336" onclick="resetForm()">No, try again</button>
+</div>
 
-  <div class="frame" id="verifyFrame">
-    <h1 style="color:#5865F2">Account Verification</h1>
-    <p>Copy this code and set it as your Roblox profile description:</p>
-    <div class="verification-code">
-      <div class="code-box" id="code1"></div>
-      <div class="code-box" id="code2"></div>
-      <div class="code-box" id="code3"></div>
-      <div class="code-box" id="code4"></div>
-      <div class="code-box" id="code5"></div>
-      <button class="copy-btn" onclick="copyCode()">Copy</button>
-    </div>
-    <p>After setting the description, click Verify below:</p>
-    <button onclick="verifyAccount()">Verify Account</button>
-    <button class="back-btn" onclick="backToPlayer()">Back</button>
+<div class="frame" id="verifyFrame">
+  <h1>Account Verification</h1>
+  <p>Copy this code and set it as your Roblox profile description:</p>
+  <div class="verification-code">
+    <div class="code-box" id="code1"></div>
+    <div class="code-box" id="code2"></div>
+    <div class="code-box" id="code3"></div>
+    <div class="code-box" id="code4"></div>
+    <div class="code-box" id="code5"></div>
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
   </div>
+  <p>After setting the description, click Verify below:</p>
+  <button onclick="verifyAccount()">Verify Account</button>
+  <button class="back-btn" onclick="backToPlayer()">Back</button>
+</div>
 
-  <div class="frame" id="profileView">
-    <div class="profile-header">
-      <img id="profileHeadshot" class="profile-pic">
-      <h1 id="profileUsername"></h1>
-      <p id="profileDescription"></p>
-    </div>
-    <div style="padding:20px">
-      <h3>User Stats</h3>
-      <p>Verified BloxNet User</p>
-      <button onclick="closeProfile()" style="background:#5865F2">Close</button>
-    </div>
+<div class="frame" id="profileView">
+  <div class="profile-header">
+    <img id="profileHeadshot" class="profile-pic">
+    <h1 id="profileUsername"></h1>
+    <p id="profileDescription"></p>
+  </div>
+  <div style="padding:20px">
+    <h3>User Stats</h3>
+    <p>Verified BloxNet User</p>
+    <button onclick="closeProfile()" style="background:#5865F2">Close</button>
   </div>
 </div>
 
@@ -266,6 +279,7 @@ const proxy = "https://api.allorigins.win/raw?url=";
 let currentUser = null;
 let verificationCode = "";
 
+// Initialize page
 document.addEventListener('DOMContentLoaded', () => {
   if(localStorage.getItem('robloxUsername')) {
     loadUserData();
@@ -283,45 +297,54 @@ function hideLoading() {
   document.getElementById('loading').style.display = 'none';
 }
 
+// Check Roblox user
 async function checkUser() {
-  const userId = document.getElementById('userIdInput').value;
+  const userId = document.getElementById('userIdInput').value.trim();
   if(!userId) return;
   
   showLoading();
   try {
-    let userRes = await fetch(proxy + encodeURIComponent(`https://users.roblox.com/v1/users/${userId}`));
-    let userData = await userRes.json();
+    const userRes = await fetch(proxy + encodeURIComponent(`https://users.roblox.com/v1/users/${userId}`));
+    const userData = await userRes.json();
+    
     if(userData.id) {
-      let headshotRes = await fetch(proxy + encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`));
-      let headshotData = await headshotRes.json();
+      const headshotRes = await fetch(proxy + encodeURIComponent(
+        `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`
+      ));
+      const headshotData = await headshotRes.json();
+      
       currentUser = {
         id: userId,
         name: userData.name || userData.displayName,
         description: userData.description || "",
         headshot: headshotData.data[0].imageUrl
       };
+      
       document.getElementById('playerUsername').textContent = currentUser.name;
       document.getElementById('playerDescription').textContent = currentUser.description;
       document.getElementById('playerHeadshot').src = currentUser.headshot;
+      
       document.getElementById('welcomeFrame').style.display = 'none';
       document.getElementById('playerFrame').style.display = 'block';
       document.getElementById('blurBackground').style.display = 'none';
     } else {
-      alert("User not found!");
+      alert("User not found! Please check the User ID.");
     }
   } catch(err) {
-    alert("Error: " + err);
+    alert("Error fetching user data: " + err);
   } finally {
     hideLoading();
   }
 }
 
+// Generate verification code
 function generateVerification() {
   verificationCode = "";
   for(let i = 0; i < 5; i++) {
     verificationCode += Math.floor(Math.random() * 10);
   }
   
+  // Display code boxes
   for(let i = 0; i < 5; i++) {
     document.getElementById(`code${i+1}`).textContent = verificationCode[i];
   }
@@ -330,18 +353,26 @@ function generateVerification() {
   document.getElementById('verifyFrame').style.display = 'block';
 }
 
+// Copy code to clipboard
 function copyCode() {
   navigator.clipboard.writeText(verificationCode);
   alert("Verification code copied to clipboard!");
 }
 
+// Verify account by checking description
 async function verifyAccount() {
+  if(!currentUser?.id) return;
+  
   showLoading();
   try {
-    let userRes = await fetch(proxy + encodeURIComponent(`https://users.roblox.com/v1/users/${currentUser.id}`));
-    let userData = await userRes.json();
+    // Fetch latest user data to check description
+    const userRes = await fetch(proxy + encodeURIComponent(
+      `https://users.roblox.com/v1/users/${currentUser.id}`
+    ));
+    const userData = await userRes.json();
     
     if(userData.description && userData.description.includes(verificationCode)) {
+      // Verification successful
       saveUserData();
       alert("Verification successful! Welcome to BloxNet.");
       document.getElementById('verifyFrame').style.display = 'none';
@@ -355,6 +386,7 @@ async function verifyAccount() {
   }
 }
 
+// Save user data to localStorage
 function saveUserData() {
   localStorage.setItem('robloxUsername', currentUser.name);
   localStorage.setItem('robloxUserId', currentUser.id);
@@ -363,21 +395,29 @@ function saveUserData() {
   loadUserData();
 }
 
+// Load user data from localStorage
 function loadUserData() {
-  document.getElementById('islandHeadshot').src = localStorage.getItem('robloxHeadshot');
-  document.getElementById('islandUsername').textContent = localStorage.getItem('robloxUsername');
-  document.getElementById('islandHeadshot').style.display = 'inline-block';
-  document.getElementById('islandUsername').style.display = 'inline-block';
-  document.getElementById('dynamicIsland').classList.add('active');
-  document.getElementById('welcomeFrame').style.display = 'none';
+  const username = localStorage.getItem('robloxUsername');
+  const headshot = localStorage.getItem('robloxHeadshot');
+  
+  if(username && headshot) {
+    document.getElementById('islandHeadshot').src = headshot;
+    document.getElementById('islandUsername').textContent = username;
+    document.getElementById('islandHeadshot').style.display = 'inline-block';
+    document.getElementById('islandUsername').style.display = 'inline-block';
+    document.getElementById('dynamicIsland').classList.add('active');
+    document.getElementById('welcomeFrame').style.display = 'none';
+  }
 }
 
+// Toggle dynamic island menu
 function toggleMenu() {
-  let menu = document.getElementById('dynamicMenu');
+  const menu = document.getElementById('dynamicMenu');
   menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
   document.getElementById('menuUsername').textContent = localStorage.getItem('robloxUsername');
 }
 
+// View profile
 function viewProfile() {
   document.getElementById('profileHeadshot').src = localStorage.getItem('robloxHeadshot');
   document.getElementById('profileUsername').textContent = localStorage.getItem('robloxUsername');
@@ -386,20 +426,24 @@ function viewProfile() {
   document.getElementById('dynamicMenu').style.display = 'none';
 }
 
+// Close profile view
 function closeProfile() {
   document.getElementById('profileView').style.display = 'none';
 }
 
+// Back to player confirmation
 function backToPlayer() {
   document.getElementById('verifyFrame').style.display = 'none';
   document.getElementById('playerFrame').style.display = 'block';
 }
 
+// Logout
 function logout() {
   localStorage.clear();
   location.reload();
 }
 
+// Reset form
 function resetForm() {
   document.getElementById('userIdInput').value = '';
   document.getElementById('playerFrame').style.display = 'none';
