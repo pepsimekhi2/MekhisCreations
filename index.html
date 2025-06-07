@@ -771,6 +771,7 @@
             localStorage.setItem('selectedStyle', styleName);
         }
 
+        // Theme selection
         document.querySelectorAll('.theme-option').forEach(option => {
             option.addEventListener('click', () => {
                 const isStyle = option.hasAttribute('data-style');
@@ -785,9 +786,16 @@
                 // Add selected class to current option
                 option.classList.add('selected');
                 
+                // Apply the selected theme/style
                 if (isStyle) {
                     applyStyle(value);
                 } else {
+                    applyTheme(value);
+                }
+            });
+        });
+
+        // Initialize saved theme and style
         const savedTheme = localStorage.getItem('selectedTheme') || 'default';
         const savedStyle = localStorage.getItem('selectedStyle') || 'light';
         
@@ -806,30 +814,6 @@
             if (styleBtn) {
                 styleBtn.classList.add('selected');
             }
-        });
-
-        // Theme button click handlers
-        document.querySelectorAll('[data-theme]').forEach(button => {
-            button.addEventListener('click', () => {
-                const theme = button.dataset.theme;
-                applyTheme(theme);
-                // Remove selected class from all theme buttons
-                document.querySelectorAll('[data-theme]').forEach(btn => btn.classList.remove('selected'));
-                // Add selected class to clicked button
-                button.classList.add('selected');
-            });
-        });
-
-        // Style button click handlers
-        document.querySelectorAll('[data-style]').forEach(button => {
-            button.addEventListener('click', () => {
-                const style = button.dataset.style;
-                applyStyle(style);
-                // Remove selected class from all style buttons
-                document.querySelectorAll('[data-style]').forEach(btn => btn.classList.remove('selected'));
-                // Add selected class to clicked button
-                button.classList.add('selected');
-            });
         });
         
         applyStyle(savedStyle);
