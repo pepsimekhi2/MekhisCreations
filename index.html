@@ -888,10 +888,10 @@
 
         // Initialize steps
         function initSteps() {
-            // Check URL parameters first
+            // First check if we're accessing a profile directly
             const urlParams = new URLSearchParams(window.location.search);
             const username = urlParams.get('user');
-
+            
             if (username) {
                 // If user parameter exists, show profile view
                 showStep('profile-view', 4);
@@ -904,19 +904,28 @@
                 document.getElementById('profile-headshot').src = headshot;
                 document.getElementById('profile-username').textContent = username;
                 document.getElementById('profile-description').textContent = description;
-            } else {
-                // No URL parameter, check localStorage
-                const newUser = localStorage.getItem('newUser');
-                if (newUser === 'false') {
-                    showStep('main-app', 4);
-                } else if (newUser === 'true') {
-                    showStep('step1', 1);
-                }
+                return;
+            }
+
+            // If not accessing profile, check localStorage
+            const newUser = localStorage.getItem('newUser');
+            
+            // If newUser is not set, assume true (new user)
+            if (!newUser || newUser === 'true') {
+                showStep('step1', 1);
+            } else if (newUser === 'false') {
+                showStep('main-app', 4);
             }
         }
 
         // Initialize steps when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initSteps);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure newUser is set if not already
+            if (!localStorage.getItem('newUser')) {
+                localStorage.setItem('newUser', 'true');
+            }
+            initSteps();
+        });
     </script>
 </body>
 </html>
