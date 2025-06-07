@@ -1,87 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Mekhis Creations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Mekhis Creations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="version">Mekhis Creations v1.0.4</div>
-    <button class="theme-btn" id="theme-btn">Themes</button>
-    <div class="theme-menu" id="theme-menu">
-        <div class="theme-category">Style</div>
-        <div class="theme-option" data-style="light">Light</div>
-        <div class="theme-option" data-style="dark">Dark</div>
-        <div class="theme-category">Theme</div>
-        <div class="theme-option" data-theme="chrome">Chrome</div>
-        <div class="theme-option" data-theme="neon">Neon</div>
-        <div class="theme-option" data-theme="crimson">Crimson</div>
-        <div class="theme-option" data-theme="gold">Gold</div>
-        <div class="theme-option" data-theme="silver">Silver</div>
-        <div class="theme-option" data-theme="bronze">Bronze</div>
+  <div class="version">Mekhis Creations v1.0.4</div>
+  <button class="theme-btn" id="theme-btn">Themes</button>
+  <div class="theme-menu" id="theme-menu">
+    <div class="theme-category">Style</div>
+    <div class="theme-option" data-style="light">Light</div>
+    <div class="theme-option" data-style="dark">Dark</div>
+    <div class="theme-category">Theme</div>
+    <div class="theme-option" data-theme="chrome">Chrome</div>
+    <div class="theme-option" data-theme="neon">Neon</div>
+    <div class="theme-option" data-theme="crimson">Crimson</div>
+    <div class="theme-option" data-theme="gold">Gold</div>
+    <div class="theme-option" data-theme="silver">Silver</div>
+    <div class="theme-option" data-theme="bronze">Bronze</div>
+  </div>
+
+  <div class="container">
+    <div id="main-app" class="step">
+      <h1>Welcome to Mekhis Creations</h1>
+      <div class="bounce">🎉</div>
+      <p>You're all set! Enjoy the platform.</p>
     </div>
-    <div class="container">
-        <div id="main-app" class="step">
-            <h1>Welcome to Mekhis Creations</h1>
-            <div class="bounce">🎉</div>
-            <p>You're all set! Enjoy the platform.</p>
+
+    <div id="onboarding">
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div id="step1" class="step">
+        <h1>Welcome to Mekhis Creations!</h1>
+        <div class="bounce">👋</div>
+        <p>Let's get you set up!</p>
+        <p>First, enter your Roblox User ID below:</p>
+        <input type="text" id="roblox-id" placeholder="123456789" />
+        <button id="confirm-id">Let's Go!</button>
+      </div>
+
+      <div id="step2" class="step">
+        <h2>Is this you?</h2>
+        <div id="user-info">
+          <img id="headshot" src="" alt="Roblox avatar" />
+          <div id="username"></div>
+          <div id="description"></div>
         </div>
-        <div id="onboarding">
-            <div class="progress-bar">
-                <div class="progress" id="progress"></div>
-            </div>
-            <div id="step1" class="step">
-                <h1>Welcome to Mekhis Creations!</h1>
-                <div class="bounce">👋</div>
-                <p>Let's get you set up!</p>
-                <p>First, enter your Roblox User ID below:</p>
-                <input type="text" id="roblox-id" placeholder="123456789">
-                <button id="confirm-id">Let's Go!</button>
-            </div>
-            <div id="step2" class="step">
-                <h2>Is this you?</h2>
-                <div id="user-info">
-                    <img id="headshot" src="" alt="Roblox avatar">
-                    <div id="username"></div>
-                    <div id="description"></div>
-                </div>
-                <button id="yes-btn">Yes, that's me!</button>
-                <button id="no-btn">No, try again</button>
-            </div>
-            <div id="step3" class="step">
-                <h2>Almost there!</h2>
-                <p>Let's verify this is really you:</p>
-                <ol style="text-align:left;display:inline-block">
-                    <li>Copy this code</li>
-                    <li>Paste it in your Roblox profile description</li>
-                    <li>Click verify when done</li>
-                </ol>
-                <div class="code-container">
-                    <div id="verification-code">
-                        <span id="code-text"></span>
-                        <button class="copy-btn">Copy</button>
-                    </div>
-                </div>
-                <div class="button-group">
-                    <button id="refresh-code">New Code</button>
-                    <button id="verify-btn">Verify</button>
-                </div>
-                <div style="margin-top:15px">
-                    <button class="back-btn" id="back-btn">Back</button>
-                </div>
-                <div id="verification-status"></div>
-            </div>
+        <button id="yes-btn">Yes, that's me!</button>
+        <button id="no-btn">No, try again</button>
+      </div>
+
+      <div id="step3" class="step">
+        <h2>Almost there!</h2>
+        <p>Let's verify this is really you:</p>
+        <ol style="text-align:left;display:inline-block">
+          <li>Copy this code</li>
+          <li>Paste it in your Roblox profile description</li>
+          <li>Click verify when done</li>
+        </ol>
+        <div class="code-container">
+          <div id="verification-code">
+            <span id="code-text"></span>
+            <button class="copy-btn">Copy</button>
+          </div>
         </div>
-        <div id="profile-page" style="display:none;">
+        <div class="button-group">
+          <button id="refresh-code">New Code</button>
+          <button id="verify-btn">Verify</button>
+        </div>
+        <div style="margin-top:15px">
+          <button class="back-btn" id="back-btn">Back</button>
+        </div>
+        <div id="verification-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ FIXED: profile-page moved outside of .container -->
+  <div id="profile-page" style="display:none;">
     <div class="container">
-        <div id="profile-container"></div>
+      <div id="profile-container"></div>
     </div>
-</div>
-    </div>
-    <script src="js/themes.js"></script>
-    <script src="js/onboarding.js"></script>
-    <script src="js/main.js"></script>
+  </div>
+
+  <script src="js/themes.js"></script>
+  <script src="js/onboarding.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
