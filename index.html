@@ -71,8 +71,8 @@
         .list-item img{width:40px;height:40px;border-radius:50%;margin-right:10px}
         .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999}
         #notification-center{position:fixed;top:20px;right:20px;z-index:1000}
-        #notification-bell{position:relative;background:var(--primary);color:white;border:none;width:40px;height:40px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
-        #notification-badge{position:absolute;top:-5px;right:-5px;background:var(--accent);color:white;width:20px;height:20px;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:bold;border-radius:50%}
+        #notification-bell{position:relative;background:var(--primary);color:white;border:none;width:40px;height:40px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
+        #notification-badge{position:absolute;top:-10px;right:-10px;background:var(--accent);color:white;width:24px;height:24px;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:bold;border-radius:50%}
         #notification-panel{display:none;position:absolute;top:50px;right:0;background:var(--card-bg);border-radius:10px;width:300px;max-height:400px;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1001}
         .notification-header{padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);font-weight:bold}
         .notification-item{padding:12px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
@@ -82,7 +82,7 @@
         .notification-time{font-size:10px;color:gray;margin-top:5px}
         #message-input-container{display:flex;margin-top:10px}
         #message-input{flex:1;border-radius:50px 0 0 50px;margin-right:0;padding-left:15px}
-        #send-message-btn{border-radius:0 50px 50px 0;margin-left:0;padding:12px 15px;min-width:auto}
+        #send-message-btn{border-radius:0 50px 50px 0;margin-left:0;padding:12px 15px;min-width:auto;position:relative;z-index:1}
         #messages-container{max-height:300px;overflow-y:auto;margin-bottom:10px;text-align:left}
         .message{border-radius:15px;padding:8px 12px;margin:5px 0;max-width:80%;word-wrap:break-word}
         .sent{background:var(--primary);color:white;margin-left:auto;border-bottom-right-radius:5px}
@@ -245,11 +245,11 @@
     <!-- Messages List -->
     <div class="messages-list" id="messages-list">
         <button class="close-list" id="close-messages">×</button>
-        <h3 class="list-title">Messages</h3>
+        <h3 class="list-title" id="chat-username">Messages</h3>
         <div id="messages-container"></div>
         <div id="message-input-container">
             <input type="text" id="message-input" placeholder="Type your message...">
-            <button id="send-message-btn">Send</button>
+            <button id="send-message-btn">➤</button>
         </div>
     </div>
 
@@ -402,8 +402,9 @@
                     
                     // Check if notification is about a message
                     if (notification.message.includes('sent you a message')) {
-                        const userId = notification.message.match(/from (.+?)!/)[1];
-                        if (userId) {
+                        const userIdMatch = notification.message.match(/from (.+?)!/);
+                        if (userIdMatch && userIdMatch[1]) {
+                            const userId = userIdMatch[1];
                             database.ref('users').orderByChild('username').equalTo(userId).once('value').then(snapshot => {
                                 if (snapshot.exists()) {
                                     snapshot.forEach(child => {
@@ -459,7 +460,7 @@
             // Messages listener
             database.ref(`users/${userId}/messages`).on('child_added', (snapshot) => {
                 const messageData = snapshot.val();
-                if (messageData.senderId !== userId) { // Don't notify for your own messages
+                if (messageData.receiverId === userId) { // Only notify when message is received
                     database.ref(`users/${messageData.senderId}`).once('value').then(senderSnapshot => {
                         if (senderSnapshot.exists()) {
                             const sender = senderSnapshot.val();
@@ -656,9 +657,9 @@
         // Messaging functionality
         function openMessages(userId, username) {
             currentChatUserId = userId;
+            document.getElementById('chat-username').textContent = `Messages with ${username}`;
             document.getElementById('messages-list').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            document.getElementById('list-title').textContent = `Messages with ${username}`;
             loadMessages(localStorage.getItem('robloxUserId'), userId);
         }
 
@@ -713,7 +714,6 @@
                 read: false
             };
             
-            // Save message for both sender and receiver
             const updates = {};
             updates[`users/${senderId}/messages/${messageId}`] = messageData;
             updates[`users/${receiverId}/messages/${messageId}`] = messageData;
@@ -883,7 +883,7 @@
                 } else if (isCurrentUser) {
                     createNewUser(userId);
                 } else {
-                    showNotification('Profile not found', 'error');
+                    showNotification('User not found', 'error');
                     window.history.pushState({}, '', '/');
                     loadUserData(localStorage.getItem('robloxUserId'));
                 }
@@ -1000,7 +1000,7 @@
 
             document.getElementById('verify-btn')?.addEventListener('click', async () => {
                 const userId = localStorage.getItem('tempUserId');
-                localStorage.setItem('newUser', 'false');
+                localStorage.setItem('newUser', 'true');
                 localStorage.setItem('robloxUserId', userId);
                 localStorage.setItem('robloxUsername', localStorage.getItem('tempUsername'));
                 localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
