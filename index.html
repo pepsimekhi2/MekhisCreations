@@ -1,574 +1,982 @@
-// Initialize Firebase
-const firebaseConfig = {
-    databaseURL: "https://cloud-fbd6b-default-rtdb.firebaseio.com"
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-// Notification queue to avoid overlap
-let notificationQueue = [], notificationActive = false;
-function showNotification(message, type = 'info') {
-    notificationQueue.push({message, type});
-    if (!notificationActive) displayNextNotification();
-}
-function displayNextNotification() {
-    if (notificationQueue.length === 0) { notificationActive = false; return; }
-    notificationActive = true;
-    const {message, type} = notificationQueue.shift();
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    setTimeout(() => {
-        notification.remove();
-        displayNextNotification();
-    }, 2300);
-}
-
-// Theme management
-function applyTheme(theme) {
-    document.body.className = theme + '-theme';
-    localStorage.setItem('selectedTheme', theme);
-    document.querySelectorAll('.theme-option').forEach(opt => {
-        opt.classList.remove('selected');
-        if (opt.dataset.theme === theme) {
-            opt.classList.add('selected');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Mekhis Creations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4285F4;
+            --secondary: #34A853;
+            --accent: #EA4335;
+            --text: #202124;
+            --bg: #F8F9FA;
+            --card-bg: #fff;
+            --btn-text: #fff;
+            --input-bg: #fff;
+            --theme-gradient: linear-gradient(135deg, var(--bg), #fff, var(--bg));
+            --transition-time: 0.4s;
         }
-    });
-}
 
-// Helper function to safely get elements
-function getElementByIdSafe(id) {
-    return document.getElementById(id);
-}
+        body {
+            font-family: 'Fredoka One', cursive;
+            background: var(--theme-gradient) fixed;
+            color: var(--text);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all var(--transition-time) ease-in-out;
+        }
 
-// Helper function to safely add event listeners
-function addSafeEventListener(elementId, eventType, callback) {
-    const element = getElementByIdSafe(elementId);
-    if (element) {
-        element.addEventListener(eventType, callback);
-    }
-}
+        .container {
+            max-width: 900px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: all var(--transition-time) ease-in-out;
+        }
 
-// Progress bar update function
-function updateProgress(step) {
-    const progressBar = getElementByIdSafe('progress');
-    if (progressBar) {
-        progressBar.style.width = step * 33.33 + '%';
-    }
-}
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
-// Step navigation function
-function showStep(stepId, progressStep) {
-    document.querySelectorAll('.step').forEach(step => {
-        step.classList.remove('active');
-    });
-    const stepElement = getElementByIdSafe(stepId);
-    if (stepElement) {
-        stepElement.classList.add('active');
-        updateProgress(progressStep);
-    }
-}
+        .step.active {
+            display: block;
+        }
 
-// Verification code generator
-function generateVerificationCode() {
-    const codeTextElement = getElementByIdSafe('code-text');
-    if (codeTextElement) {
-        const code = Math.floor(10000 + 90000 * Math.random());
-        codeTextElement.textContent = code;
-        localStorage.setItem('verificationCode', code.toString());
-        return code;
-    }
-    return null;
-}
+        .profile-container {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
-// Home content display function
-function showHomeContent() {
-    const onboarding = getElementByIdSafe('onboarding');
-    const mainApp = getElementByIdSafe('main-app');
-    const homeContent = getElementByIdSafe('home-content');
-    
-    if (onboarding) onboarding.style.display = 'none';
-    if (mainApp) mainApp.style.display = 'none';
-    if (homeContent) homeContent.style.display = 'block';
-    
-    const userId = localStorage.getItem('robloxUserId');
-    if (userId) {
-        loadUserData(userId);
-    }
-}
+        .profile-container.active {
+            display: block;
+        }
 
-// User data loading function
-function loadUserData(userId) {
-    database.ref('users/' + userId).once('value').then(snapshot => {
-        if (snapshot.exists()) {
-            const userData = snapshot.val();
-            updateProfileUI(userData);
-            showNotification('Profile loaded successfully', 'success');
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.05);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+
+        .profile-headshot {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h1 {
+            font-size: 28px;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .profile-description {
+            margin-top: 10px;
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .profile-content {
+            padding: 20px 0;
+        }
+
+        .profile-section {
+            margin-bottom: 20px;
+        }
+
+        .profile-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .activities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            padding: 15px;
+            background: rgba(0,0,0,.05);
+            border-radius: 10px;
+        }
+
+        .activity-status {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .activity-time {
+            font-size: 14px;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .view-profile-btn {
+            background: var(--secondary);
+            margin-top: 20px;
+        }
+
+        .view-profile-btn:hover {
+            background: var(--primary);
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(0,0,0,.1);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width var(--transition-time) ease-in-out;
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            text-shadow: 2px 2px 0 rgba(0,0,0,.1);
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        button {
+            font-family: 'Fredoka One', cursive;
+            background: var(--primary);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all var(--transition-time) ease-in-out;
+            box-shadow: 0 4px 0 rgba(0,0,0,.1);
+            min-width: 120px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 rgba(0,0,0,.1);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0,0,0,.1);
+        }
+
+        button.selected {
+            background: var(--accent);
+            box-shadow: 0 0 15px rgba(0,0,0,.2);
+            animation: pulse 1.5s infinite;
+        }
+
+        #no-btn {
+            background: var(--accent);
+        }
+
+        #yes-btn, #verify-btn {
+            background: var(--secondary);
+        }
+
+        .back-btn {
+            background: transparent;
+            color: var(--accent);
+            box-shadow: none;
+            text-decoration: underline;
+            padding: 8px;
+            min-width: auto;
+        }
+
+        .back-btn:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        input {
+            font-family: 'Fredoka One', cursive;
+            padding: 12px;
+            border: 3px solid var(--primary);
+            border-radius: 50px;
+            width: 80%;
+            text-align: center;
+            font-size: 16px;
+            margin: 15px 0;
+            background: var(--input-bg);
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        #user-info {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,.05);
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        #headshot {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        #username {
+            font-size: 24px;
+            margin: 10px 0;
+            color: var(--primary);
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        #description {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .code-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        #verification-code {
+            font-size: 32px;
+            letter-spacing: 5px;
+            color: var(--secondary);
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 50px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #verification-status {
+            min-height: 24px;
+            color: var(--accent);
+            margin-top: 10px;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .bounce {
+            animation: bounce 0.5s infinite alternate ease-in-out;
+        }
+
+        .version {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            opacity: .7;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .theme-btn {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            padding: 8px 12px;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .theme-menu {
+            position: fixed;
+            bottom: 40px;
+            right: 10px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.2);
+            display: none;
+            z-index: 100;
+            width: 200px;
+            max-height: 60vh;
+            overflow-y: auto;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .theme-menu.active {
+            display: block;
+        }
+
+        .theme-category {
+            font-weight: bold;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+            text-align: center;
+        }
+
+        .theme-option {
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 2px 0;
+            font-size: 12px;
+            text-align: center;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .theme-option:hover {
+            background: rgba(0,0,0,.1);
+            transform: scale(1.05);
+        }
+
+        .theme-option.selected {
+            background: var(--primary);
+            color: var(--btn-text);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0,0,0,.2);
+            transform: scale(1.1);
+        }
+
+        .theme-option[data-style="light"] {
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+        }
+
+        .theme-option[data-style="dark"] {
+            background: linear-gradient(45deg, #202124, #303134);
+        }
+
+        .theme-option[data-theme="chrome"] {
+            background: linear-gradient(45deg, #4285F4, #34A853, #EA4335);
+        }
+
+        .theme-option[data-theme="neon"] {
+            background: linear-gradient(45deg, #00F0FF, #FF00F0, #F0FF00);
+        }
+
+        .theme-option[data-theme="crimson"] {
+            background: linear-gradient(45deg, #DC143C, #8B0000, #FF6347);
+        }
+
+        .theme-option[data-theme="gold"] {
+            background: linear-gradient(45deg, #FFD700, #D4AF37, #C0C0C0);
+        }
+
+        .theme-option[data-theme="silver"] {
+            background: linear-gradient(45deg, #C0C0C0, #A8A8A8, #808080);
+        }
+
+        .theme-option[data-theme="bronze"] {
+            background: linear-gradient(45deg, #CD7F32, #B87333, #8B4513);
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            50% { opacity: 0.5; transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="version">Mekhis Creations v1.0.4</div>
+    <button class="theme-btn" id="theme-btn">Themes</button>
+    <div class="theme-menu" id="theme-menu">
+        <div class="theme-category">Style</div>
+        <div class="theme-option" data-style="light">Light</div>
+        <div class="theme-option" data-style="dark">Dark</div>
+        <div class="theme-category">Theme</div>
+        <div class="theme-option" data-theme="chrome">Chrome</div>
+        <div class="theme-option" data-theme="neon">Neon</div>
+        <div class="theme-option" data-theme="crimson">Crimson</div>
+        <div class="theme-option" data-theme="gold">Gold</div>
+        <div class="theme-option" data-theme="silver">Silver</div>
+        <div class="theme-option" data-theme="bronze">Bronze</div>
+    </div>
+
+    <div class="container">
+        <div id="main-app" class="step">
+            <h1>Welcome to Mekhis Creations</h1>
+            <div class="bounce">🎉</div>
+            <p>You're all set! Enjoy the platform.</p>
+            <button id="view-profile" class="view-profile-btn">View Profile</button>
+        </div>
+
+        <div id="profile-view" class="step">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img id="profile-headshot" src="" alt="Profile Picture" class="profile-headshot">
+                    <div class="profile-info">
+                        <h1 id="profile-username"></h1>
+                        <div id="profile-description" class="profile-description"></div>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Following</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="back-btn" id="profile-back">Back</button>
+            </div>
+        </div>
+
+        <div id="onboarding">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <div id="step1">
+                <h1>Welcome to Mekhis Creations!</h1>
+                <div class="bounce">👋</div>
+                <p>Let's get you set up!</p>
+                <p>First, enter your Roblox User ID below:</p>
+                <input type="text" id="roblox-id" placeholder="123456789">
+                <button id="confirm-id">Let's Go!</button>
+            </div>
+
+            <div id="step2">
+                <h2>Is this you?</h2>
+                <div id="user-info">
+                    <img id="headshot" src="" alt="Roblox avatar">
+                    <div id="username"></div>
+                    <div id="description"></div>
+                </div>
+                <button id="yes-btn">Yes, that's me!</button>
+                <button id="no-btn">No, try again</button>
+            </div>
+
+            <div id="step3">
+                <h2>Almost there!</h2>
+                <p>Let's verify this is really you:</p>
+                <ol style="text-align:left;display:inline-block">
+                    <li>Copy this code</li>
+                    <li>Paste it in your Roblox profile description</li>
+                    <li>Click verify when done</li>
+                </ol>
+                <div class="code-container">
+                    <div id="verification-code">
+                        <span id="code-text"></span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="refresh-code">New Code</button>
+                    <button id="verify-btn">Verify</button>
+                </div>
+                <div style="margin-top:15px">
+                    <button class="back-btn" id="back-btn">Back</button>
+                </div>
+                <div id="verification-status"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchProxy(url) {
+            try {
+                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+                return await res.json();
+            } catch (e) {
+                console.error(e);
+                throw e;
+            }
+        }
+
+        function updateProgress(e) {
+            document.getElementById('progress').style.width = e * 33.33 + '%';
+        }
+
+        if (localStorage.getItem('newUser') === null) localStorage.setItem('newUser', 'true');
+        if (localStorage.getItem('newUser') === 'false') {
+            document.getElementById('main-app').classList.add('active');
+            document.getElementById('onboarding').style.display = 'none';
         } else {
-            createNewUser(userId);
+            document.getElementById('step1').classList.add('active');
+            updateProgress(1);
         }
-    }).catch(error => {
-        console.error("Database error:", error);
-        loadFromLocalStorage();
-        showNotification('Error loading profile', 'error');
-    });
-}
 
-// New user creation function
-function createNewUser(userId) {
-    const userData = {
-        userId: userId,
-        username: localStorage.getItem('robloxUsername'),
-        headshot: localStorage.getItem('robloxHeadshot'),
-        description: "",
-        followers: 0,
-        following: 0,
-        createdAt: Date.now()
-    };
-    
-    database.ref('users/' + userId).set(userData)
-        .then(() => {
-            updateProfileUI(userData);
-            showNotification('New profile created', 'success');
-        })
-        .catch(error => {
-            console.error("Create user error:", error);
-            loadFromLocalStorage();
-            showNotification('Error creating profile', 'error');
+        function showStep(stepId, progress) {
+            // Remove active class from all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+
+            // Add active class to target step
+            const targetStep = document.getElementById(stepId);
+            if (targetStep) {
+                targetStep.classList.add('active');
+            }
+
+            // Update progress only for onboarding steps
+            if (stepId.startsWith('step')) {
+                document.getElementById('progress').style.width = `${progress * 25}%`;
+            }
+
+            // Handle profile view
+            if (stepId === 'profile-view') {
+                const profileContainer = document.querySelector('.profile-container');
+                if (profileContainer) {
+                    profileContainer.classList.add('active');
+                }
+            } else {
+                const profileContainer = document.querySelector('.profile-container');
+                if (profileContainer) {
+                    profileContainer.classList.remove('active');
+                }
+            }
+        }
+
+        document.getElementById('confirm-id').addEventListener('click', async () => {
+            const e = document.getElementById('roblox-id').value.trim();
+            if (!e) return;
+
+            try {
+                const [t, n] = await Promise.all([
+                    fetchProxy(`https://users.roblox.com/v1/users/${e}`),
+                    fetchProxy(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${e}&size=150x150&format=Png`)
+                ]);
+
+                if (t.errors || n.errors) throw new Error('User not found');
+
+                document.getElementById('username').textContent = t.name;
+                document.getElementById('description').textContent = t.description || '(No description)';
+                document.getElementById('headshot').src = n.data[0].imageUrl;
+                localStorage.setItem('tempUserId', e);
+                localStorage.setItem('tempUsername', t.name);
+                localStorage.setItem('tempHeadshot', n.data[0].imageUrl);
+                showStep('step2', 2);
+            } catch (e) {
+                alert("Oops! Couldn't find that user. Please check the ID and try again.");
+            }
         });
-}
 
-// Profile UI update function
-function updateProfileUI(userData) {
-    const headshot = getElementByIdSafe('profile-headshot');
-    const username = getElementByIdSafe('profile-username');
-    const description = getElementByIdSafe('profile-description');
-    const followers = getElementByIdSafe('followers-count');
-    const following = getElementByIdSafe('following-count');
-    
-    if (headshot) headshot.src = userData.headshot;
-    if (username) username.textContent = userData.username;
-    if (description) description.textContent = userData.description || 'No description yet';
-    if (followers) followers.textContent = userData.followers || 0;
-    if (following) following.textContent = userData.following || 0;
-}
+        document.getElementById('yes-btn').addEventListener('click', () => {
+            generateVerificationCode();
+            showStep('step3', 3);
+        });
 
-// Local storage fallback function
-function loadFromLocalStorage() {
-    const headshot = localStorage.getItem('robloxHeadshot');
-    const username = localStorage.getItem('robloxUsername');
-    const profileHeadshot = getElementByIdSafe('profile-headshot');
-    const profileUsername = getElementByIdSafe('profile-username');
-    const profileDescription = getElementByIdSafe('profile-description');
-    
-    if (headshot && profileHeadshot) profileHeadshot.src = headshot;
-    if (username && profileUsername) profileUsername.textContent = username;
-    if (profileDescription) profileDescription.textContent = 'No description yet';
-}
+        document.getElementById('no-btn').addEventListener('click', () => {
+            showStep('step1', 1);
+        });
 
-// CORS proxy function with retry mechanism
-async function fetchRobloxData(url) {
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/' + url;
-    try {
-        const response = await fetch(proxyUrl, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+        document.getElementById('back-btn').addEventListener('click', () => {
+            showStep('step2', 2);
+        });
+
+        function generateVerificationCode() {
+            const e = Math.floor(1e4 + 9e4 * Math.random());
+            document.getElementById('code-text').textContent = e;
+            localStorage.setItem('verificationCode', e.toString());
+        }
+
+        document.getElementById('refresh-code').addEventListener('click', generateVerificationCode);
+
+        document.getElementById('verify-btn').addEventListener('click', async () => {
+            const e = localStorage.getItem('tempUserId');
+            const t = localStorage.getItem('verificationCode');
+
+            try {
+                const n = await fetchProxy(`https://users.roblox.com/v1/users/${e}`);
+                if (n.description && n.description.includes(t)) {
+                    localStorage.setItem('newUser', 'false');
+                    localStorage.setItem('robloxUserId', e);
+                    localStorage.setItem('robloxUsername', localStorage.getItem('tempUsername'));
+                    localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
+                    ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(e => localStorage.removeItem(e));
+                    document.getElementById('onboarding').style.display = 'none';
+                    document.getElementById('main-app').classList.add('active');
+                } else {
+                    document.getElementById('verification-status').textContent = 'Code not found in description. Please try again.';
+                }
+            } catch (e) {
+                document.getElementById('verification-status').textContent = 'Error verifying. Please try again.';
+            }
+        });
+
+        document.querySelector('.copy-btn').addEventListener('click', () => {
+            const e = document.getElementById('code-text').textContent;
+            navigator.clipboard.writeText(e).then(() => {
+                const t = document.querySelector('.copy-btn');
+                t.textContent = 'Copied!';
+                setTimeout(() => { t.textContent = 'Copy'; }, 2000);
+            });
+        });
+
+        document.getElementById('step3').classList.contains('active') && generateVerificationCode();
+
+        const themeBtn = document.getElementById('theme-btn');
+        const themeMenu = document.getElementById('theme-menu');
+        themeBtn.addEventListener('click', () => {
+            themeMenu.classList.toggle('active');
+        });
+
+        const styles = {
+            light: {
+                text: '#202124',
+                bg: '#F8F9FA',
+                cardBg: '#fff',
+                btnText: '#fff',
+                inputBg: '#fff'
             },
-            mode: 'cors',
-            retry: 3
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        showNotification('Data loaded successfully', 'success');
-        return data;
-    } catch (error) {
-        console.error('Error fetching Roblox data:', error);
-        showNotification('Failed to load data. Retrying...', 'error');
-        
-        // Retry mechanism
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return fetchRobloxData(url); // Retry
-    }
-}
-
-// Initialize event listeners after DOM loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize theme
-    const savedTheme = localStorage.getItem('selectedTheme') || 'default';
-    applyTheme(savedTheme);
-
-    // Theme button event
-    document.getElementById('theme-btn')?.addEventListener('click', () => {
-        document.getElementById('theme-menu').classList.toggle('active');
-    });
-
-    // Theme selection
-    document.querySelectorAll('.theme-option')?.forEach(option => {
-        option.addEventListener('click', () => {
-            applyTheme(option.dataset.theme);
-            document.getElementById('theme-menu').classList.remove('active');
-        });
-    });
-
-    // Player search functionality
-    document.getElementById('search-btn')?.addEventListener('click', () => {
-        const searchTerm = document.getElementById('search-input').value.trim();
-        if (!searchTerm) return showNotification('Please enter a username to search', 'error');
-        showNotification('Searching for players...', 'info');
-        database.ref('users').once('value').then(snapshot => {
-            const results = [];
-            snapshot.forEach(childSnapshot => {
-                const user = childSnapshot.val();
-                if (user.username.toLowerCase().includes(searchTerm.toLowerCase())) results.push(user);
-            });
-            const resultsContainer = document.getElementById('search-results');
-            resultsContainer.innerHTML = '';
-            if (results.length > 0) {
-                results.forEach(user => {
-                    const userElement = document.createElement('div');
-                    userElement.className = 'search-result';
-                    userElement.innerHTML = `
-                        <img src="${user.headshot}" width="50" height="50" style="border-radius:50%;margin-right:10px;">
-                        <span>${user.username}</span>
-                        <button class="view-profile" data-id="${user.userId}">View</button>
-                    `;
-                    resultsContainer.appendChild(userElement);
-                });
-                resultsContainer.style.display = 'block';
-                showNotification(`Found ${results.length} matching players`, 'success');
-            } else {
-                resultsContainer.innerHTML = '<p>No players found matching your search</p>';
-                resultsContainer.style.display = 'block';
-                showNotification('No players found', 'error');
+            dark: {
+                text: '#F8F9FA',
+                bg: '#202124',
+                cardBg: '#303134',
+                btnText: '#fff',
+                inputBg: '#303134'
             }
-        }).catch(error => {
-            showNotification('Search failed', 'error');
-            console.error('Search error:', error);
-        });
-    });
-
-    // Profile view from search results or URL
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('view-profile')) {
-            const userId = e.target.dataset.id;
-            window.history.pushState({}, '', `/@${userId}`);
-            showProfileOnly(userId);
-            document.getElementById('search-results').style.display = 'none';
-            showNotification('Loading profile...', 'info');
-        }
-    });
-
-    // Handle direct /@username or /@userid in URL
-    if (window.location.pathname.startsWith('/@')) {
-        let userId = decodeURIComponent(window.location.pathname.slice(2));
-        // If user is registered and visiting their own profile, redirect to root
-        const myId = localStorage.getItem('robloxUserId');
-        if (myId && (userId === myId || userId === localStorage.getItem('robloxUsername'))) {
-            window.history.replaceState({}, '', '/');
-            showHomeContent();
-        } else {
-            showProfileOnly(userId);
-        }
-    }
-
-    // Helper: show profile without registering/logging in
-    window.showProfileOnly = function(userId) {
-        database.ref('users/' + userId).once('value').then(snapshot => {
-            if (snapshot.exists()) {
-                updateProfileUI(snapshot.val());
-                document.getElementById('home-content').style.display = 'block';
-            } else {
-                showNotification('User not found', 'error');
-            }
-        });
-    };
-
-    // View profile from search results
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('view-profile')) {
-            const userId = e.target.dataset.id;
-            loadUserData(userId);
-            document.getElementById('search-results').style.display = 'none';
-            showNotification('Loading profile...', 'info');
-        }
-    });
-
-    // Initialize app state
-    if (localStorage.getItem('newUser') === 'false') {
-        showHomeContent();
-    } else {
-        localStorage.setItem('newUser', 'true');
-        generateVerificationCode();
-    }
-});
-
-// --- Messaging UI: Separate Send Button ---
-function setupMessageSendButton() {
-    const input = document.getElementById('message-input');
-    let sendBtn = document.getElementById('send-message-btn');
-    if (!sendBtn && input) {
-        sendBtn = document.createElement('button');
-        sendBtn.id = 'send-message-btn';
-        sendBtn.textContent = 'Send';
-        sendBtn.style.marginLeft = '10px';
-        input.parentNode.parentNode.appendChild(sendBtn); // place outside input container
-    }
-    if (sendBtn) {
-        sendBtn.onclick = () => {
-            const txt = input.value.trim();
-            if (!txt) return;
-            const senderId = localStorage.getItem('robloxUserId');
-            const receiverId = window.currentChatUserId;
-            if (senderId && receiverId) sendMessage(senderId, receiverId, txt);
         };
-    }
-}
 
-// --- Messaging: always clear previous chat and reset input ---
-function openMessages(userId) {
-    window.currentChatUserId = userId;
-    const messagesContainer = document.getElementById('messages-container');
-    if (messagesContainer) messagesContainer.innerHTML = '';
-    const input = document.getElementById('message-input');
-    if (input) input.value = '';
-    document.getElementById('messages-list').style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-    loadMessages(localStorage.getItem('robloxUserId'), userId);
-    setupMessageSendButton();
-}
-
-// --- Notification system ---
-let notifications = [], unreadNotifications = 0;
-function updateNotificationBadge() {
-    const badge = document.getElementById('notification-badge');
-    if (!badge) return;
-    const newCount = notifications.filter(n => !n.read).length;
-    badge.textContent = newCount;
-    badge.style.display = newCount > 0 ? 'flex' : 'none';
-}
-function addNotification(message, type = 'info', timestamp = Date.now()) {
-    const notification = { id: Date.now(), message, type, timestamp, read: false };
-    notifications.unshift(notification);
-    updateNotificationBadge();
-    renderNotifications();
-    showNotification(message, type);
-}
-function renderNotifications() {
-    const notificationList = document.getElementById('notification-list');
-    if (!notificationList) return;
-    notificationList.innerHTML = '';
-    if (notifications.length === 0) {
-        notificationList.innerHTML = '<div style="padding:15px;text-align:center;color:gray">No notifications yet</div>';
-        return;
-    }
-    notifications.forEach(notification => {
-        const notificationElement = document.createElement('div');
-        notificationElement.className = `notification-item ${notification.read ? '' : 'unread'}`;
-        notificationElement.innerHTML = `
-            <div>${notification.message}</div>
-            <div class="notification-time">${new Date(notification.timestamp).toLocaleString()}</div>
-        `;
-        notificationElement.addEventListener('click', () => {
-            if (!notification.read) {
-                notification.read = true;
-                updateNotificationBadge();
-                notificationElement.classList.remove('unread');
+        const themes = {
+            default: {
+                primary: '#4285F4',
+                secondary: '#34A853',
+                accent: '#EA4335',
+                gradient: 'linear-gradient(var(--bg),var(--bg))'
+            },
+            chrome: {
+                primary: '#4285F4',
+                secondary: '#0F9D58',
+                accent: '#DB4437',
+                gradient: 'linear-gradient(var(--bg), #f0f0f0, var(--bg))'
+            },
+            neon: {
+                primary: '#00F0FF',
+                secondary: '#FF00F0',
+                accent: '#F0FF00',
+                gradient: 'linear-gradient(var(--bg), #e0e0e0, var(--bg))'
+            },
+            crimson: {
+                primary: '#DC143C',
+                secondary: '#8B0000',
+                accent: '#FF6347',
+                gradient: 'linear-gradient(var(--bg), #f5f5f5, var(--bg))'
+            },
+            gold: {
+                primary: '#FFD700',
+                secondary: '#D4AF37',
+                accent: '#C0C0C0',
+                gradient: 'linear-gradient(var(--bg), #f8f8f8, var(--bg))'
+            },
+            silver: {
+                primary: '#C0C0C0',
+                secondary: '#A8A8A8',
+                accent: '#808080',
+                gradient: 'linear-gradient(var(--bg), #f9f9f9, var(--bg))'
+            },
+            bronze: {
+                primary: '#CD7F32',
+                secondary: '#B87333',
+                accent: '#8B4513',
+                gradient: 'linear-gradient(var(--bg), #fafafa, var(--bg))'
             }
-            // Open chat if notification is about a message
-            const msgMatch = notification.message.match(/New message from (.+?)!/);
-            if (msgMatch) {
-                const username = msgMatch[1];
-                // Find user by username and open chat
-                database.ref('users').orderByChild('username').equalTo(username).once('value').then(snapshot => {
-                    if (snapshot.exists()) {
-                        const userId = Object.keys(snapshot.val())[0];
-                        openMessages(userId);
-                    }
-                });
-            }
-        });
-        notificationList.appendChild(notificationElement);
-    });
-}
-document.getElementById('notification-bell')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const panel = document.getElementById('notification-panel');
-    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-    // Mark all as read when opening
-    if (panel.style.display === 'block') {
-        notifications.forEach(n => n.read = true);
-        updateNotificationBadge();
-        renderNotifications();
-    }
-});
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('#notification-center')) {
-        const panel = document.getElementById('notification-panel');
-        if (panel) panel.style.display = 'none';
-    }
-});
+        };
 
-// --- Style notification bell as square ---
-// --- Style notification bell as square ---
-(function squareBell(){
-    const bell = document.getElementById('notification-bell');
-    if(bell) {
-        bell.style.borderRadius = '8px';
-        bell.style.width = '40px';
-        bell.style.height = '40px';
-        bell.style.aspectRatio = '1/1';
-        bell.style.padding = '0';
-    }
-})();
+        function applyTheme(themeName) {
+            const theme = themes[themeName] || themes.default;
+            document.documentElement.style.setProperty('--primary', theme.primary);
+            document.documentElement.style.setProperty('--secondary', theme.secondary);
+            document.documentElement.style.setProperty('--accent', theme.accent);
+            document.body.style.background = theme.gradient;
+            document.body.classList.remove('theme-active');
+            document.body.classList.add(`theme-${themeName}`);
+            localStorage.setItem('selectedTheme', themeName);
 
-// --- END PATCHES ---
-// Initialize all event listeners safely
-addSafeEventListener('confirm-id', 'click', async () => {
-    const userIdInput = getElementByIdSafe('roblox-id');
-    if (!userIdInput) return;
-    
-    const userId = userIdInput.value.trim();
-    if (!userId) {
-        showNotification('Please enter a Roblox ID', 'error');
-        return;
-    }
-    
-    try {
-        showNotification('Loading Roblox profile...', 'info');
-        const [userData, headshotData] = await Promise.all([
-            fetchRobloxData(`https://users.roblox.com/v1/users/${userId}`),
-            fetchRobloxData(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`)
-        ]);
-        
-        if (userData.errors || headshotData.errors) throw new Error('User not found');
-        
-        const usernameElement = getElementByIdSafe('username');
-        const descriptionElement = getElementByIdSafe('description');
-        const headshotElement = getElementByIdSafe('headshot');
-        
-        if (usernameElement) usernameElement.textContent = userData.name;
-        if (descriptionElement) descriptionElement.textContent = userData.description || '(No description)';
-        if (headshotElement) headshotElement.src = headshotData.data[0].imageUrl;
-        
-        localStorage.setItem('tempUserId', userId);
-        localStorage.setItem('tempUsername', userData.name);
-        localStorage.setItem('tempHeadshot', headshotData.data[0].imageUrl);
-        
-        showStep('step2', 2);
-        showNotification('Profile found! Is this you?', 'success');
-    } catch(error) {
-        showNotification("Couldn't find that user. Please check the ID", 'error');
-    }
-});
-
-addSafeEventListener('yes-btn', 'click', () => {
-    generateVerificationCode();
-    showStep('step3', 3);
-    showNotification('Verification code generated', 'info');
-});
-
-addSafeEventListener('no-btn', 'click', () => {
-    showStep('step1', 1);
-    showNotification('Please enter the correct Roblox ID', 'info');
-});
-
-addSafeEventListener('back-btn', 'click', () => {
-    showStep('step2', 2);
-});
-
-addSafeEventListener('verify-btn', 'click', async () => {
-    const userId = localStorage.getItem('tempUserId');
-    const verificationCode = localStorage.getItem('verificationCode');
-    
-    try {
-        showNotification('Verifying your profile...', 'info');
-        const userData = await fetchRobloxData(`https://users.roblox.com/v1/users/${userId}`);
-        
-        if (userData.description && userData.description.includes(verificationCode)) {
-            localStorage.setItem('newUser', 'false');
-            localStorage.setItem('robloxUserId', userId);
-            localStorage.setItem('robloxUsername', localStorage.getItem('tempUsername'));
-            localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
-            
-            // Clear temp data
-            ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(item => {
-                localStorage.removeItem(item);
+            // Update UI feedback
+            document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.theme === themeName) {
+                    option.classList.add('selected');
+                }
             });
-            
-            const statusElement = getElementByIdSafe('verification-status');
-            if (statusElement) statusElement.textContent = 'Verification successful!';
-            showNotification('Verification successful!', 'success');
-            setTimeout(() => {
-                showHomeContent();
-            }, 1500);
-        } else {
-            const statusElement = getElementByIdSafe('verification-status');
-            if (statusElement) statusElement.textContent = 'Code not found in description. Please try again.';
-            showNotification('Verification failed - code not found', 'error');
+
+            // Smooth transition
+            document.body.style.transition = 'background 0.5s ease-in-out';
         }
-    } catch(error) {
-        const statusElement = getElementByIdSafe('verification-status');
-        if (statusElement) statusElement.textContent = 'Error verifying. Please try again.';
-        showNotification('Error during verification', 'error');
-    }
-});
 
-addSafeEventListener('go-home-btn', 'click', () => {
-    showHomeContent();
-});
+        function applyStyle(styleName) {
+            const style = styles[styleName] || styles.light;
+            document.documentElement.style.setProperty('--text', style.text);
+            document.documentElement.style.setProperty('--bg', style.bg);
+            document.documentElement.style.setProperty('--card-bg', style.cardBg);
+            document.documentElement.style.setProperty('--btn-text', style.btnText);
+            document.documentElement.style.setProperty('--input-bg', style.inputBg);
+            document.body.style.background = document.querySelector(`[data-style="${styleName}"]`).dataset.gradient;
+            localStorage.setItem('selectedStyle', styleName);
+        }
 
-addSafeEventListener('edit-btn', 'click', () => {
-    const desc = getElementByIdSafe('profile-description');
-    if (desc) {
-        desc.contentEditable = true;
-        desc.focus();
-        getElementByIdSafe('edit-btn').style.display = 'none';
-        getElementByIdSafe('save-btn').style.display = 'inline-block';
-        showNotification('Editing description...', 'info');
-    }
-});
-
-addSafeEventListener('save-btn', 'click', () => {
-    const desc = getElementByIdSafe('profile-description');
-    const userId = localStorage.getItem('robloxUserId');
-    
-    if (desc && userId) {
-        const text = desc.textContent;
-        desc.contentEditable = false;
-        getElementByIdSafe('edit-btn').style.display = 'inline-block';
-        getElementByIdSafe('save-btn').style.display = 'none';
-        
-        database.ref('users/' + userId).update({ description: text })
-            .then(() => {
-                showNotification('Description saved successfully!', 'success');
-            })
-            .catch(error => {
-                console.error("Save error:", error);
-                showNotification('Error saving description', 'error');
-                if (getElementByIdSafe('edit-btn')) getElementByIdSafe('edit-btn').click();
+        // Theme selection
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const isStyle = option.hasAttribute('data-style');
+                const value = isStyle ? option.dataset.style : option.dataset.theme;
+                
+                // Remove selected class from all options in the same category
+                const category = option.parentElement;
+                category.querySelectorAll('.theme-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to current option
+                option.classList.add('selected');
+                
+                // Apply the selected theme/style
+                if (isStyle) {
+                    applyStyle(value);
+                } else {
+                    applyTheme(value);
+                }
             });
-    }
-});
+        });
 
-addSafeEventListener('.copy-btn', 'click', () => {
-    const codeTextElement = getElementByIdSafe('code-text');
-    if (codeTextElement) {
-        const code = codeTextElement.textContent;
-        navigator.clipboard.writeText(code).then(() => {
-            const copyBtn = document.querySelector('.copy-btn');
-            if (copyBtn) {
-                copyBtn.textContent = 'Copied!';
-                showNotification('Code copied to clipboard', 'success');
-                setTimeout(() => {
-                    copyBtn.textContent = 'Copy';
-                }, 2000);
+        // Initialize saved theme and style
+        const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+        const savedStyle = localStorage.getItem('selectedStyle') || 'light';
+        
+        // Apply initial theme and style
+        applyTheme(savedTheme);
+        applyStyle(savedStyle);
+
+        // Add selected class to theme buttons after DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeBtn = document.querySelector(`[data-theme="${savedTheme}"]`);
+            const styleBtn = document.querySelector(`[data-style="${savedStyle}"]`);
+            
+            if (themeBtn) {
+                themeBtn.classList.add('selected');
+            }
+            if (styleBtn) {
+                styleBtn.classList.add('selected');
             }
         });
-    }
-});
+        
+        applyStyle(savedStyle);
+        applyTheme(savedTheme);
+
+        // Profile view functionality
+        document.getElementById('view-profile').addEventListener('click', () => {
+            showStep('profile-view', 4);
+            // Load profile data from localStorage
+            const headshot = localStorage.getItem('robloxHeadshot');
+            const username = localStorage.getItem('robloxUsername');
+            const description = localStorage.getItem('robloxDescription') || 'No description set';
+            
+            // Update profile information
+            document.getElementById('profile-headshot').src = headshot;
+            document.getElementById('profile-username').textContent = username;
+            document.getElementById('profile-description').textContent = description;
+        });
+
+        document.getElementById('profile-back').addEventListener('click', () => {
+            showStep('main-app', 4);
+        });
+        // Profile view functionality
+        document.getElementById('view-profile').addEventListener('click', () => {
+            const username = localStorage.getItem('robloxUsername');
+            if (username) {
+                window.location.href = `/?user=${username}`;
+            }
+        });
+
+        // Handle URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('user');
+
+        if (username) {
+            // Load profile for the specified user
+            showStep('profile-view', 4);
+            
+            // Load profile data from localStorage
+            const headshot = localStorage.getItem('robloxHeadshot');
+            const description = localStorage.getItem('robloxDescription') || 'No description set';
+            
+            // Update profile information
+            document.getElementById('profile-headshot').src = headshot;
+            document.getElementById('profile-username').textContent = username;
+            document.getElementById('profile-description').textContent = description;
+        }
+
+        // Add back button functionality when coming from URL
+        document.getElementById('profile-back').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // Handle direct access to profile page
+        if (window.location.pathname === '/profile') {
+            const username = localStorage.getItem('robloxUsername');
+            if (username) {
+                window.location.href = `/?user=${username}`;
+            } else {
+                // Redirect to main page if no user is logged in
+                window.location.href = '/';
+            }
+        }
+
+        // Profile view functionality
+        document.getElementById('view-profile').addEventListener('click', () => {
+            const username = localStorage.getItem('robloxUsername');
+            if (username) {
+                window.location.href = `/?user=${username}`;
+            }
+        });
+
+        // Initialize steps
+        function initSteps() {
+            // First check if we're accessing a profile directly
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('user');
+            
+            if (username) {
+                // If user parameter exists, show profile view
+                showStep('profile-view', 4);
+                
+                // Load profile data from localStorage
+                const headshot = localStorage.getItem('robloxHeadshot');
+                const description = localStorage.getItem('robloxDescription') || 'No description set';
+                
+                // Update profile information
+                document.getElementById('profile-headshot').src = headshot;
+                document.getElementById('profile-username').textContent = username;
+                document.getElementById('profile-description').textContent = description;
+                return;
+            }
+
+            // If not accessing profile, check localStorage
+            const newUser = localStorage.getItem('newUser');
+            
+            // If newUser is not set, assume true (new user)
+            if (!newUser || newUser === 'true') {
+                showStep('step1', 1);
+            } else if (newUser === 'false') {
+                showStep('main-app', 4);
+            }
+        }
+
+        // Initialize steps when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure newUser is set if not already
+            if (!localStorage.getItem('newUser')) {
+                localStorage.setItem('newUser', 'true');
+            }
+            initSteps();
+        });
+    </script>
+</body>
+</html>
