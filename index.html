@@ -106,6 +106,25 @@
     z-index: 1;
     border: none; /* Ensure no border */
 }
+        #messages-hub-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-right: 10px;
+}
+
+#messages-hub-btn:hover {
+    transform: scale(1.05);
+}
         #messages-container{max-height:300px;overflow-y:auto;margin-bottom:10px;text-align:left}
         .message{border-radius:15px;padding:8px 12px;margin:5px 0;max-width:80%;word-wrap:break-word;min-width:100px}
         .sent{background:var(--primary);color:white;margin-left:auto;border-bottom-right-radius:5px}
@@ -149,18 +168,24 @@
             <div class="theme-option" data-mode="dark">Dark Mode</div>
         </div>
     </div>
-
+    <div id="messages-hub" class="step" style="display:none">
+    <h1>Messages Hub</h1>
+    <div id="conversations-list">
+        <!-- Conversations will be loaded here -->
+    </div>
+    <button id="back-to-home-from-hub" style="margin-top:20px">Back to Home</button>
+</div>
     <!-- Notification Center -->
     <div id="notification-center">
-        <button id="notification-bell">🔔
-            <div id="notification-badge" style="display:none">0</div>
-        </button>
-        <div id="notification-panel">
-            <div class="notification-header">Notifications</div>
-            <div id="notification-list" style="max-height:350px;overflow-y:auto"></div>
-        </div>
+    <button id="messages-hub-btn" title="Messages Hub">💬</button>
+    <button id="notification-bell">🔔
+        <div id="notification-badge" style="display:none">0</div>
+    </button>
+    <div id="notification-panel">
+        <div class="notification-header">Notifications</div>
+        <div id="notification-list" style="max-height:350px;overflow-y:auto"></div>
     </div>
-
+</div>
     <div class="container">
         <div id="main-app" class="step">
             <h1>Welcome to Mekhis Creations</h1>
@@ -376,7 +401,176 @@
             // Show popup notification
             showNotification(message, type);
         }
+// Add this to your event listeners
+document.getElementById('messages-hub-btn').addEventListener('click', () => {
+    window.history.pushState({}, '', '/messages');
+    showMessagesHub();
+});
 
+window.addEventListener('popstate', () => {
+    const path = window.location.pathname;
+    if (path === '/messages') {
+        showMessagesHub();
+    } else if (path.startsWith('/@')) {
+        const username = decodeURIComponent(path.substring(2));
+        searchUserByUsername(username);
+    } else {
+        loadUserData(localStorage.getItem('robloxUserId'));
+    }
+});
+
+// Add this function to show the messages hub
+function showMessagesHub() {
+    document.getElementById('onboarding').style.display = 'none';
+    document.getElementById('main-app').style.display = 'none';
+    document.getElementById('home-content').style.display = 'none';
+    document.getElementById('messages-hub').style.display = 'block';
+    
+    const currentUserId = localStorage.getItem('robloxUserId');
+    if (!currentUserId) return showNotification('You need to be logged in', 'error');
+    
+    loadConversations(currentUserId);
+}
+
+// Add this function to load all conversations
+function loadConversations(userId) {
+    const conversationsList = document.getElementById('conversations-list');
+    conversationsList.innerHTML = '<p>Loading conversations...</p>';
+    
+    database.ref(`users/${userId}/messages`).once('value').then(snapshot => {
+        conversationsList.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+            conversationsList.innerHTML = '<p>No conversations yet</p>';
+            return;
+        }
+        
+        const conversations = {};
+        
+        // Group messages by conversation partner
+        snapshot.forEach(child => {
+            const message = child.val();
+            const otherUserId = message.senderId === userId ? message.receiverId : message.senderId;
+            
+            if (!conversations[otherUserId]) {
+                conversations[otherUserId] = {
+                    lastMessage: message,
+                    unread: false
+                };
+            } else if (message.timestamp > conversations[otherUserId].lastMessage.timestamp) {
+                conversations[otherUserId].lastMessage = message;
+            }
+            
+            if (message.receiverId === userId && !message.read) {
+                conversations[otherUserId].unread = true;
+            }
+        });
+        
+        // Get user data for each conversation partner
+        const promises = Object.keys(conversations).map(otherUserId => {
+            return database.ref(`users/${otherUserId}`).once('value').then(userSnapshot => {
+                if (userSnapshot.exists()) {
+                    return {
+                        user: userSnapshot.val(),
+                        lastMessage: conversations[otherUserId].lastMessage,
+                        unread: conversations[otherUserId].unread
+                    };
+                }
+                return null;
+            });
+        });
+        
+        Promise.all(promises).then(results => {
+            conversationsList.innerHTML = '';
+            
+            results.filter(result => result !== null)
+                .sort((a, b) => b.lastMessage.timestamp - a.lastMessage.timestamp)
+                .forEach(result => {
+                    const conversationElement = document.createElement('div');
+                    conversationElement.className = `conversation-item ${result.unread ? 'unread' : ''}`;
+                    
+                    const messageTime = new Date(result.lastMessage.timestamp);
+                    const messageTimeFormatted = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const messageDateFormatted = messageTime.toLocaleDateString();
+                    
+                    conversationElement.innerHTML = `
+                        <img src="${result.user.headshot}" alt="${result.user.username}" width="50" height="50">
+                        <div class="conversation-info">
+                            <div class="conversation-username">${result.user.username}</div>
+                            <div class="conversation-preview">${result.lastMessage.text.substring(0, 30)}${result.lastMessage.text.length > 30 ? '...' : ''}</div>
+                        </div>
+                        <div class="conversation-time">
+                            <div>${messageTimeFormatted}</div>
+                            <div class="conversation-date">${messageDateFormatted}</div>
+                        </div>
+                    `;
+                    
+                    conversationElement.addEventListener('click', () => {
+                        openMessages(result.user.userId, result.user.username);
+                    });
+                    
+                    conversationsList.appendChild(conversationElement);
+                });
+            
+            if (conversationsList.innerHTML === '') {
+                conversationsList.innerHTML = '<p>No conversations yet</p>';
+            }
+        });
+    });
+}
+
+// Add CSS for the conversations list
+.conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    background: var(--card-bg);
+    margin-bottom: 5px;
+    border-radius: 10px;
+}
+
+.conversation-item:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.conversation-item.unread {
+    background: rgba(66,133,244,0.1);
+}
+
+.conversation-item img {
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid var(--primary);
+}
+
+.conversation-info {
+    flex: 1;
+}
+
+.conversation-username {
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.conversation-preview {
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.conversation-time {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.6;
+}
+
+.conversation-date {
+    margin-top: 3px;
+    font-size: 10px;
+}
         function renderNotifications() {
             const notificationList = document.getElementById('notification-list');
             notificationList.innerHTML = '';
@@ -1094,7 +1288,10 @@
             document.getElementById('messages-list').style.display = 'none';
             currentChatUserId = null;
         });
-
+document.getElementById('back-to-home-from-hub').addEventListener('click', () => {
+    window.history.pushState({}, '', '/');
+    showHomeContent();
+});
         document.getElementById('overlay').addEventListener('click', () => {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('followers-list').style.display = 'none';
