@@ -888,7 +888,7 @@
             document.getElementById('profile-description').textContent = userData.description || 'No description yet';
             
             const followersCount = userData.followers ? Object.keys(userData.followers).length : 0;
-            const followingCount = userData.following ? Object.keys(userData.following)..length : 0;
+            const followingCount = userData.following ? Object.keys(userData.following).length : 0;
             document.getElementById('followers-count').textContent = formatNumber(followersCount);
             document.getElementById('following-count').textContent = formatNumber(followingCount);
             
