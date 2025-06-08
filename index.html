@@ -80,6 +80,58 @@
         .notification-item:hover{background:rgba(0,0,0,0.05)}
         .notification-item.unread{background:rgba(66,133,244,0.1)}
         .notification-time{font-size:10px;color:gray;margin-top:5px}
+        // Add CSS for the conversations list
+.conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    background: var(--card-bg);
+    margin-bottom: 5px;
+    border-radius: 10px;
+}
+
+.conversation-item:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.conversation-item.unread {
+    background: rgba(66,133,244,0.1);
+}
+
+.conversation-item img {
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid var(--primary);
+}
+
+.conversation-info {
+    flex: 1;
+}
+
+.conversation-username {
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.conversation-preview {
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.conversation-time {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.6;
+}
+
+.conversation-date {
+    margin-top: 3px;
+    font-size: 10px;
+}
         #message-input-container {
     display: flex;
     margin-top: 10px;
@@ -519,58 +571,7 @@ function loadConversations(userId) {
     });
 }
 
-// Add CSS for the conversations list
-.conversation-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    cursor: pointer;
-    background: var(--card-bg);
-    margin-bottom: 5px;
-    border-radius: 10px;
-}
 
-.conversation-item:hover {
-    background: rgba(0,0,0,0.05);
-}
-
-.conversation-item.unread {
-    background: rgba(66,133,244,0.1);
-}
-
-.conversation-item img {
-    border-radius: 50%;
-    margin-right: 10px;
-    border: 2px solid var(--primary);
-}
-
-.conversation-info {
-    flex: 1;
-}
-
-.conversation-username {
-    font-weight: bold;
-    color: var(--primary);
-}
-
-.conversation-preview {
-    font-size: 12px;
-    color: var(--text);
-    opacity: 0.8;
-}
-
-.conversation-time {
-    text-align: right;
-    font-size: 12px;
-    color: var(--text);
-    opacity: 0.6;
-}
-
-.conversation-date {
-    margin-top: 3px;
-    font-size: 10px;
-}
         function renderNotifications() {
             const notificationList = document.getElementById('notification-list');
             notificationList.innerHTML = '';
