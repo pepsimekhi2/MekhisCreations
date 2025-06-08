@@ -80,9 +80,32 @@
         .notification-item:hover{background:rgba(0,0,0,0.05)}
         .notification-item.unread{background:rgba(66,133,244,0.1)}
         .notification-time{font-size:10px;color:gray;margin-top:5px}
-        #message-input-container{display:flex;margin-top:10px;width:100%}
-        #message-input{flex:1;border-radius:50px 0 0 50px;margin-right:0;padding-left:15px;height:40px;line-height:40px}
-        #send-message-btn{border-radius:0 50px 50px 0;margin-left:0;padding:0 20px;height:40px;line-height:40px;min-width:auto;position:relative;z-index:1}
+        #message-input-container {
+    display: flex;
+    margin-top: 10px;
+    width: 100%;
+    align-items: center; /* Add this to align items vertically */
+}
+       #message-input {
+    flex: 1;
+    border-radius: 50px 0 0 50px;
+    margin-right: 0;
+    padding: 0 15px; /* Change from padding-left to padding */
+    height: 40px; /* Explicit height */
+    line-height: 40px; /* Match height */
+    border: 3px solid var(--primary); /* Add border to match button style */
+}
+       #send-message-btn {
+    border-radius: 0 50px 50px 0;
+    margin-left: 0;
+    padding: 0 20px; /* Adjust padding */
+    height: 40px; /* Explicit height */
+    line-height: 40px; /* Match height */
+    min-width: auto;
+    position: relative;
+    z-index: 1;
+    border: none; /* Ensure no border */
+}
         #messages-container{max-height:300px;overflow-y:auto;margin-bottom:10px;text-align:left}
         .message{border-radius:15px;padding:8px 12px;margin:5px 0;max-width:80%;word-wrap:break-word;min-width:100px}
         .sent{background:var(--primary);color:white;margin-left:auto;border-bottom-right-radius:5px}
@@ -427,59 +450,61 @@
         }
 
         function loadMessages(currentUserId, otherUserId) {
-            const messagesContainer = document.getElementById('messages-container');
-            messagesContainer.innerHTML = '';
-            
-            let lastDate = null;
-            
-            database.ref(`users/${currentUserId}/messages`).orderByChild('timestamp').once('value').then(snapshot => {
-                messagesContainer.innerHTML = '';
-                
-                if (snapshot.exists()) {
-                    const messages = [];
-                    snapshot.forEach(childSnapshot => {
-                        const message = childSnapshot.val();
-                        if (message.senderId === otherUserId && message.receiverId === currentUserId || 
-                            message.senderId === currentUserId && message.receiverId === otherUserId) {
-                            messages.push(message);
-                        }
+    const messagesContainer = document.getElementById('messages-container');
+    messagesContainer.innerHTML = '';
+    
+    let lastDate = null;
+    
+    database.ref(`users/${currentUserId}/messages`).orderByChild('timestamp').once('value').then(snapshot => {
+        messagesContainer.innerHTML = '';
+        
+        if (snapshot.exists()) {
+            const messages = [];
+            snapshot.forEach(child => {
+                const message = child.val();
+                if ((message.senderId === otherUserId && message.receiverId === currentUserId) || 
+                    (message.senderId === currentUserId && message.receiverId === otherUserId)) {
+                    messages.push({
+                        ...message,
+                        key: child.key // Store the key for later use
                     });
-                    
-                    if (messages.length > 0) {
-                        messages.sort((a, b) => a.timestamp - b.timestamp);
-                        
-                        messages.forEach(message => {
-                            const messageTime = new Date(message.timestamp);
-                            const messageDate = messageTime.toLocaleDateString();
-                            const messageTimeFormatted = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            
-                            if (lastDate !== messageDate) {
-                                const dateElement = document.createElement('div');
-                                dateElement.className = 'message-date';
-                                dateElement.textContent = messageDate;
-                                messagesContainer.appendChild(dateElement);
-                                lastDate = messageDate;
-                            }
-                            
-                            const messageElement = document.createElement('div');
-                            messageElement.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
-                            messageElement.innerHTML = `
-                                <div>${message.text}</div>
-                                <div class="message-time">${messageTimeFormatted}</div>
-                            `;
-                            messagesContainer.appendChild(messageElement);
-                            
-                            // Mark as read
-                            if (message.receiverId === currentUserId && !message.read) {
-                                database.ref(`users/${currentUserId}/messages/${childSnapshot.key}`).update({ read: true });
-                            }
-                        });
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    }
                 }
             });
+            
+            if (messages.length > 0) {
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+                
+                messages.forEach(message => {
+                    const messageTime = new Date(message.timestamp);
+                    const messageDate = messageTime.toLocaleDateString();
+                    const messageTimeFormatted = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    if (lastDate !== messageDate) {
+                        const dateElement = document.createElement('div');
+                        dateElement.className = 'message-date';
+                        dateElement.textContent = messageDate;
+                        messagesContainer.appendChild(dateElement);
+                        lastDate = messageDate;
+                    }
+                    
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
+                    messageElement.innerHTML = `
+                        <div>${message.text}</div>
+                        <div class="message-time">${messageTimeFormatted}</div>
+                    `;
+                    messagesContainer.appendChild(messageElement);
+                    
+                    // Mark as read
+                    if (message.receiverId === currentUserId && !message.read) {
+                        database.ref(`users/${currentUserId}/messages/${message.key}`).update({ read: true });
+                    }
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
         }
-
+    });
+}
         function sendMessage(senderId, receiverId, messageText) {
             if (!messageText.trim()) return;
             
