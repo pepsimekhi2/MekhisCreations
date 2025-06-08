@@ -2,502 +2,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mekhis Creations</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root {
-            --primary: #4285F4;
-            --secondary: #34A853;
-            --accent: #EA4335;
-            --text: #202124;
-            --bg: #F8F9FA;
-            --card-bg: #fff;
-            --btn-text: #fff;
-            --input-bg: #fff;
-            --theme-gradient: linear-gradient(135deg, var(--bg), #fff, var(--bg));
-            --transition-time: 0.4s;
-        }
-
-        body {
-            font-family: 'Fredoka One', cursive;
-            background: var(--theme-gradient) fixed;
-            color: var(--text);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .container {
-            max-width: 900px;
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .step {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .step.active {
-            display: block;
-        }
-
-        .profile-container {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .profile-container.active {
-            display: block;
-        }
-
-        .profile-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,.05);
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(0,0,0,.1);
-        }
-
-        .profile-headshot {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            object-fit: cover;
-        }
-
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-info h1 {
-            font-size: 28px;
-            margin: 0;
-            color: var(--primary);
-        }
-
-        .profile-description {
-            margin-top: 10px;
-            color: var(--text);
-            font-size: 16px;
-        }
-
-        .profile-stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            padding: 30px 0;
-            border-bottom: 1px solid rgba(0,0,0,.1);
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--text);
-        }
-
-        .profile-content {
-            padding: 20px 0;
-        }
-
-        .profile-section {
-            margin-bottom: 20px;
-        }
-
-        .profile-section h2 {
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .activities-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .activity-item {
-            padding: 15px;
-            background: rgba(0,0,0,.05);
-            border-radius: 10px;
-        }
-
-        .activity-status {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .activity-time {
-            font-size: 14px;
-            color: var(--text);
-            opacity: 0.7;
-        }
-
-        .view-profile-btn {
-            background: var(--secondary);
-            margin-top: 20px;
-        }
-
-        .view-profile-btn:hover {
-            background: var(--primary);
-        }
-
-        .step {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .active {
-            display: block;
-        }
-
-        .progress-bar {
-            height: 10px;
-            background: rgba(0,0,0,.1);
-            border-radius: 5px;
-            margin: 20px 0;
-            overflow: hidden;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .progress {
-            height: 100%;
-            background: var(--secondary);
-            width: 0%;
-            transition: width var(--transition-time) ease-in-out;
-        }
-
-        h1, h2 {
-            color: var(--primary);
-            text-shadow: 2px 2px 0 rgba(0,0,0,.1);
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        button {
-            font-family: 'Fredoka One', cursive;
-            background: var(--primary);
-            color: var(--btn-text);
-            border: none;
-            border-radius: 50px;
-            padding: 12px 24px;
-            margin: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all var(--transition-time) ease-in-out;
-            box-shadow: 0 4px 0 rgba(0,0,0,.1);
-            min-width: 120px;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 0 rgba(0,0,0,.1);
-        }
-
-        button:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 0 rgba(0,0,0,.1);
-        }
-
-        button.selected {
-            background: var(--accent);
-            box-shadow: 0 0 15px rgba(0,0,0,.2);
-            animation: pulse 1.5s infinite;
-        }
-
-        #no-btn {
-            background: var(--accent);
-        }
-
-        #yes-btn, #verify-btn {
-            background: var(--secondary);
-        }
-
-        .back-btn {
-            background: transparent;
-            color: var(--accent);
-            box-shadow: none;
-            text-decoration: underline;
-            padding: 8px;
-            min-width: auto;
-        }
-
-        .back-btn:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        input {
-            font-family: 'Fredoka One', cursive;
-            padding: 12px;
-            border: 3px solid var(--primary);
-            border-radius: 50px;
-            width: 80%;
-            text-align: center;
-            font-size: 16px;
-            margin: 15px 0;
-            background: var(--input-bg);
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        #user-info {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,.05);
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        #headshot {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid var(--primary);
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        #username {
-            font-size: 24px;
-            margin: 10px 0;
-            color: var(--primary);
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        #description {
-            background: var(--bg);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .code-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        #verification-code {
-            font-size: 32px;
-            letter-spacing: 5px;
-            color: var(--secondary);
-            background: var(--card-bg);
-            padding: 15px 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .copy-btn {
-            background: var(--primary);
-            color: var(--btn-text);
-            border: none;
-            border-radius: 50px;
-            padding: 5px 10px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        #verification-status {
-            min-height: 24px;
-            color: var(--accent);
-            margin-top: 10px;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .bounce {
-            animation: bounce 0.5s infinite alternate ease-in-out;
-        }
-
-        .version {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            font-size: 12px;
-            opacity: .7;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .theme-btn {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 12px;
-            padding: 8px 12px;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .theme-menu {
-            position: fixed;
-            bottom: 40px;
-            right: 10px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,.2);
-            display: none;
-            z-index: 100;
-            width: 200px;
-            max-height: 60vh;
-            overflow-y: auto;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .theme-menu.active {
-            display: block;
-        }
-
-        .theme-category {
-            font-weight: bold;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,.1);
-            text-align: center;
-        }
-
-        .theme-option {
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 2px 0;
-            font-size: 12px;
-            text-align: center;
-            transition: all var(--transition-time) ease-in-out;
-        }
-
-        .theme-option:hover {
-            background: rgba(0,0,0,.1);
-            transform: scale(1.05);
-        }
-
-        .theme-option.selected {
-            background: var(--primary);
-            color: var(--btn-text);
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(0,0,0,.2);
-            transform: scale(1.1);
-        }
-
-        .theme-option[data-style="light"] {
-            background: linear-gradient(45deg, #ffffff, #f8f9fa);
-        }
-
-        .theme-option[data-style="dark"] {
-            background: linear-gradient(45deg, #202124, #303134);
-        }
-
-        .theme-option[data-theme="chrome"] {
-            background: linear-gradient(45deg, #4285F4, #34A853, #EA4335);
-        }
-
-        .theme-option[data-theme="neon"] {
-            background: linear-gradient(45deg, #00F0FF, #FF00F0, #F0FF00);
-        }
-
-        .theme-option[data-theme="crimson"] {
-            background: linear-gradient(45deg, #DC143C, #8B0000, #FF6347);
-        }
-
-        .theme-option[data-theme="gold"] {
-            background: linear-gradient(45deg, #FFD700, #D4AF37, #C0C0C0);
-        }
-
-        .theme-option[data-theme="silver"] {
-            background: linear-gradient(45deg, #C0C0C0, #A8A8A8, #808080);
-        }
-
-        .theme-option[data-theme="bronze"] {
-            background: linear-gradient(45deg, #CD7F32, #B87333, #8B4513);
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-5px); }
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(10px); }
-            50% { opacity: 0.5; transform: translateY(5px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(0); }
-        }
-
-        @keyframes scaleIn {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        :root{--primary:#4285F4;--secondary:#34A853;--accent:#EA4335;--text:#202124;--bg:#F8F9FA;--card-bg:#fff;--btn-text:#fff;--input-bg:#fff;--notification-success:#34A853;--notification-error:#EA4335;--notification-info:#4285F4;--theme-dark-text:#F8F9FA;--theme-dark-bg:#202124;--theme-dark-card:#303134;--crimson:#DC143C;--neon-primary:#00F0FF;--neon-secondary:#FF00F0;--neon-accent:#F0FF00;--gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32}
+        body{font-family:'Fredoka One',cursive;color:var(--text);margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;transition:all 0.3s;background:var(--bg)}
+        .container{max-width:500px;width:100%;padding:20px;text-align:center;position:relative}
+        .step{display:none}.active{display:block;animation:fadeIn 0.5s}
+        .progress-bar{height:10px;background:rgba(0,0,0,0.1);border-radius:5px;margin:20px 0;overflow:hidden}
+        .progress{height:100%;background:var(--secondary);width:0%;transition:width 0.5s}
+        h1,h2{color:var(--primary);text-shadow:2px 2px 0 rgba(0,0,0,0.1)}
+        button{font-family:'Fredoka One',cursive;background:var(--primary);color:var(--btn-text);border:none;border-radius:50px;padding:12px 24px;margin:5px;cursor:pointer;font-size:16px;transition:all 0.2s;box-shadow:0 4px 0 rgba(0,0,0,0.1);min-width:120px}
+        button:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,0.1)}
+        button:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,0.1)}
+        #no-btn{background:var(--accent)}#yes-btn,#verify-btn{background:var(--secondary)}
+        .back-btn{background:transparent;color:var(--accent);box-shadow:none;text-decoration:underline;padding:8px;min-width:auto}
+        input{font-family:'Fredoka One',cursive;padding:12px;border:3px solid var(--primary);border-radius:50px;width:80%;text-align:center;font-size:16px;margin:15px 0;background:var(--input-bg)}
+        #user-info{background:var(--card-bg);border-radius:20px;padding:20px;margin:20px 0;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
+        #headshot{width:150px;height:150px;border-radius:50%;object-fit:cover;border:5px solid var(--primary)}
+        #username{font-size:24px;margin:10px 0;color:var(--primary)}#description{background:var(--bg);padding:15px;border-radius:10px;margin:10px 0}
+        .code-container{display:flex;justify-content:center;gap:10px;margin:20px 0}
+        #verification-code{font-size:32px;letter-spacing:5px;color:var(--secondary);background:var(--card-bg);padding:15px 20px;border-radius:10px;display:flex;align-items:center}
+        .copy-btn{background:var(--primary);color:var(--btn-text);border:none;border-radius:50px;padding:5px 10px;font-size:12px;cursor:pointer;margin-left:10px}
+        #verification-status{min-height:24px;color:var(--accent);margin-top:10px}
+        .bounce{animation:bounce 0.5s infinite alternate}
+        #home-content{display:none;text-align:center}
+        #title-bar{font-size:28px;margin-bottom:10px}
+        #divider{height:3px;background:var(--primary);border-radius:3px;width:80%;margin:0 auto 20px}
+        #profile-container{background:var(--card-bg);border-radius:20px;padding:20px;margin:20px auto;max-width:400px;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
+        #profile-headshot{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--primary);margin-bottom:15px}
+        #profile-username{font-size:22px;color:var(--primary);margin-bottom:15px}
+        #profile-description{background:var(--bg);padding:15px;border-radius:10px;margin:15px 0;min-height:60px}
+        #profile-stats{display:flex;justify-content:space-around;margin:15px 0}
+        .stat-value{font-size:20px;font-weight:bold;color:var(--primary);cursor:pointer;transition:all 0.2s}
+        .stat-value:hover{transform:scale(1.05);text-decoration:underline}
+        .stat-label{font-size:14px;color:var(--text)}
+        #edit-btn{background:var(--primary);margin-right:10px}#save-btn{background:var(--secondary);display:none}
+        #follow-btn{background:var(--accent);display:none}
+        #message-btn{background:var(--primary);display:none;margin-top:10px}
+        #back-to-profile{background:var(--primary);display:none;margin:10px auto;width:80%}
+        .version{position:fixed;bottom:10px;left:10px;font-size:12px;opacity:0.7}
+        .theme-btn{position:fixed;bottom:10px;right:10px;font-size:12px;padding:8px 12px;border-radius:50px}
+        .theme-menu{position:fixed;bottom:40px;right:10px;background:var(--card-bg);border-radius:10px;padding:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:100;width:200px;display:none}
+        .theme-menu.active{display:block}
+        .theme-section{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,0.1)}
+        .theme-section-title{font-weight:bold;margin-bottom:5px;font-size:14px}
+        .theme-option{padding:5px 10px;cursor:pointer;border-radius:5px;margin:2px 0;font-size:12px;text-align:center}
+        .theme-option:hover{background:rgba(0,0,0,0.1)}.theme-option.selected{background:var(--primary);color:var(--btn-text)}
+        #player-search{margin-top:20px;margin-bottom:20px}#search-input{width:60%;margin-right:10px}
+        #search-results{display:none;margin-top:10px;background:var(--card-bg);border-radius:10px;padding:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+        .search-result{display:flex;align-items:center;padding:8px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
+        .search-result:hover{background:rgba(0,0,0,0.05)}
+        .search-result:last-child{border-bottom:none}
+        .search-result img{width:40px;height:40px;border-radius:50%;margin-right:10px;border:2px solid var(--primary)}
+        .search-result button{margin-left:auto;padding:5px 10px;font-size:12px;min-width:auto}
+        .notification{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:50px;color:white;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,0.2);z-index:1000;animation:slideIn 0.3s,fadeOut 0.5s 2.5s forwards}
+        .notification.success{background-color:var(--notification-success)}.notification.error{background-color:var(--notification-error)}.notification.info{background-color:var(--notification-info)}
+        .followers-list, .following-list, .messages-list {display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card-bg);border-radius:20px;padding:20px;width:80%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1000}
+        .close-list{position:absolute;top:10px;right:10px;background:var(--accent);color:white;border:none;width:24px;height:24px;border-radius:5px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.2);padding:0}
+        .close-list:hover{transform:scale(1.1);background:#d32f2f}
+        .list-title{margin-bottom:15px;color:var(--primary)}
+        .list-item{display:flex;align-items:center;padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
+        .list-item:hover{background:rgba(0,0,0,0.05)}
+        .list-item:last-child{border-bottom:none}
+        .list-item img{width:40px;height:40px;border-radius:50%;margin-right:10px}
+        .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999}
+        #notification-center{position:fixed;top:20px;right:20px;z-index:1000}
+        #notification-bell{position:relative;background:var(--primary);color:white;border:none;width:40px;height:40px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
+        #notification-badge{position:absolute;top:-5px;right:-5px;background:var(--accent);color:white;width:20px;height:20px;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:bold;border-radius:50%}
+        #notification-panel{display:none;position:absolute;top:50px;right:0;background:var(--card-bg);border-radius:10px;width:300px;max-height:400px;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1001}
+        .notification-header{padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);font-weight:bold}
+        .notification-item{padding:12px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
+        .notification-item:last-child{border-bottom:none}
+        .notification-item:hover{background:rgba(0,0,0,0.05)}
+        .notification-item.unread{background:rgba(66,133,244,0.1)}
+        .notification-time{font-size:10px;color:gray;margin-top:5px}
+        #message-input-container{display:flex;margin-top:10px}
+        #message-input{flex:1;border-radius:50px 0 0 50px;margin-right:0;padding-left:15px}
+        #send-message-btn{border-radius:0 50px 50px 0;margin-left:0;padding:12px 15px;min-width:auto}
+        #messages-container{max-height:300px;overflow-y:auto;margin-bottom:10px;text-align:left}
+        .message{border-radius:15px;padding:8px 12px;margin:5px 0;max-width:80%;word-wrap:break-word}
+        .sent{background:var(--primary);color:white;margin-left:auto;border-bottom-right-radius:5px}
+        .received{background:var(--bg);margin-right:auto;border-bottom-left-radius:5px}
+        .message-time{font-size:10px;color:var(--text);opacity:0.7;margin-top:2px}
+        @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideIn{from{opacity:0;transform:translate(-50%,-30px)}to{opacity:1;transform:translate(-50%,0)}}
+        @keyframes fadeOut{from{opacity:1}to{opacity:0}}
+        body.default-theme{--primary:#4285F4;--secondary:#34A853;--accent:#EA4335;--text:#202124;--bg:#F8F9FA;--card-bg:#fff;--btn-text:#fff;--input-bg:#fff;--notification-success:#34A853;--notification-error:#EA4335;--notification-info:#4285F4}
+        body.default-theme.dark-mode{--text:#F8F9FA;--bg:#202124;--card-bg:#303134}
+        body.crimson-theme{--primary:#DC143C;--secondary:#8B0000;--accent:#FF6347;--notification-success:#2E8B57;--notification-error:#B22222;--notification-info:#4682B4}
+        body.crimson-theme.dark-mode{--text:#F8F9FA;--bg:#1A1A1A;--card-bg:#2D2D2D}
+        body.neon-theme{--primary:#00F0FF;--secondary:#FF00F0;--accent:#F0FF00;--notification-success:#00FF7F;--notification-error:#FF1493;--notification-info:#9370DB}
+        body.neon-theme.dark-mode{--text:#FFFFFF;--bg:#0A0A0A;--card-bg:#1A1A1A}
+        body.gold-theme{--primary:#FFD700;--secondary:#DAA520;--accent:#B8860B;--notification-success:#32CD32;--notification-error:#FF4500;--notification-info:#1E90FF}
+        body.gold-theme.dark-mode{--text:#FFFAF0;--bg:#121212;--card-bg:#222222}
+        body.silver-theme{--primary:#C0C0C0;--secondary:#A9A9A9;--accent:#808080;--notification-success:#20B2AA;--notification-error:#CD5C5C;--notification-info:#6495ED}
+        body.silver-theme.dark-mode{--text:#F5F5F5;--bg:#181818;--card-bg:#282828}
+        body.bronze-theme{--primary:#CD7F32;--secondary:#A0522D;--accent:#8B4513;--notification-success:#228B22;--notification-error:#8B0000;--notification-info:#4169E1}
+        body.bronze-theme.dark-mode{--text:#FFF8DC;--bg:#1E1E1E;--card-bg:#2E2E2E}
     </style>
 </head>
-<body>
-    <div class="version">Mekhis Creations v1.0.4</div>
+<body class="default-theme">
+    <div class="version">Mekhis Creations v1.4</div>
     <button class="theme-btn" id="theme-btn">Themes</button>
     <div class="theme-menu" id="theme-menu">
-        <div class="theme-category">Style</div>
-        <div class="theme-option" data-style="light">Light</div>
-        <div class="theme-option" data-style="dark">Dark</div>
-        <div class="theme-category">Theme</div>
-        <div class="theme-option" data-theme="chrome">Chrome</div>
-        <div class="theme-option" data-theme="neon">Neon</div>
-        <div class="theme-option" data-theme="crimson">Crimson</div>
-        <div class="theme-option" data-theme="gold">Gold</div>
-        <div class="theme-option" data-theme="silver">Silver</div>
-        <div class="theme-option" data-theme="bronze">Bronze</div>
+        <div class="theme-section">
+            <div class="theme-section-title">Color Themes</div>
+            <div class="theme-option selected" data-theme="default">Default</div>
+            <div class="theme-option" data-theme="crimson">Crimson</div>
+            <div class="theme-option" data-theme="neon">Neon</div>
+            <div class="theme-option" data-theme="gold">Gold</div>
+            <div class="theme-option" data-theme="silver">Silver</div>
+            <div class="theme-option" data-theme="bronze">Bronze</div>
+        </div>
+        <div class="theme-section">
+            <div class="theme-section-title">Appearance</div>
+            <div class="theme-option" data-mode="light">Light Mode</div>
+            <div class="theme-option" data-mode="dark">Dark Mode</div>
+        </div>
+    </div>
+
+    <!-- Notification Center -->
+    <div id="notification-center">
+        <button id="notification-bell">🔔
+            <div id="notification-badge" style="display:none">0</div>
+        </button>
+        <div id="notification-panel">
+            <div class="notification-header">Notifications</div>
+            <div id="notification-list" style="max-height:350px;overflow-y:auto"></div>
+        </div>
     </div>
 
     <div class="container">
@@ -505,44 +142,15 @@
             <h1>Welcome to Mekhis Creations</h1>
             <div class="bounce">🎉</div>
             <p>You're all set! Enjoy the platform.</p>
-            <button id="view-profile" class="view-profile-btn">View Profile</button>
+            <button id="go-home-btn" style="margin-top:20px">Go to Home</button>
         </div>
-
-        <div id="profile-view" class="step">
-            <div class="profile-container">
-                <div class="profile-header">
-                    <img id="profile-headshot" src="" alt="Profile Picture" class="profile-headshot">
-                    <div class="profile-info">
-                        <h1 id="profile-username"></h1>
-                        <div id="profile-description" class="profile-description"></div>
-                    </div>
-                </div>
-                <div class="profile-stats">
-                    <div class="stat-grid">
-                        <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Followers</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Following</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">0</span>
-                            <span class="stat-label">Posts</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="back-btn" id="profile-back">Back</button>
-            </div>
-        </div>
-
+        
         <div id="onboarding">
             <div class="progress-bar">
                 <div class="progress" id="progress"></div>
             </div>
-
-            <div id="step1">
+            
+            <div id="step1" class="step active">
                 <h1>Welcome to Mekhis Creations!</h1>
                 <div class="bounce">👋</div>
                 <p>Let's get you set up!</p>
@@ -550,8 +158,8 @@
                 <input type="text" id="roblox-id" placeholder="123456789">
                 <button id="confirm-id">Let's Go!</button>
             </div>
-
-            <div id="step2">
+            
+            <div id="step2" class="step">
                 <h2>Is this you?</h2>
                 <div id="user-info">
                     <img id="headshot" src="" alt="Roblox avatar">
@@ -561,8 +169,8 @@
                 <button id="yes-btn">Yes, that's me!</button>
                 <button id="no-btn">No, try again</button>
             </div>
-
-            <div id="step3">
+            
+            <div id="step3" class="step">
                 <h2>Almost there!</h2>
                 <p>Let's verify this is really you:</p>
                 <ol style="text-align:left;display:inline-block">
@@ -576,406 +184,899 @@
                         <button class="copy-btn">Copy</button>
                     </div>
                 </div>
-                <div class="button-group">
-                    <button id="refresh-code">New Code</button>
-                    <button id="verify-btn">Verify</button>
-                </div>
                 <div style="margin-top:15px">
+                    <button id="verify-btn">Verify</button>
                     <button class="back-btn" id="back-btn">Back</button>
                 </div>
                 <div id="verification-status"></div>
             </div>
         </div>
+        
+        <div id="home-content">
+            <div id="title-bar">Mekhis Creations</div>
+            <div id="divider"></div>
+            
+            <button id="back-to-profile">Back to My Profile</button>
+            
+            <div id="player-search">
+                <input type="text" id="search-input" placeholder="Search players by username">
+                <button id="search-btn">Search</button>
+                <div id="search-results"></div>
+            </div>
+            
+            <div id="profile-container">
+                <img id="profile-headshot" src="" alt="Profile picture">
+                <div id="profile-username"></div>
+                <div id="profile-description">Loading description...</div>
+                <div id="profile-stats">
+                    <div>
+                        <div class="stat-value" id="followers-count">0</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="following-count">0</div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                </div>
+                <div id="profile-actions">
+                    <button id="edit-btn">Edit</button>
+                    <button id="save-btn">Save</button>
+                    <button id="follow-btn">Follow</button>
+                    <button id="message-btn">Message</button>
+                </div>
+            </div>
+            <div id="divider"></div>
+        </div>
+    </div>
+
+    <!-- Followers/Following Lists -->
+    <div class="overlay" id="overlay"></div>
+    <div class="followers-list" id="followers-list">
+        <button class="close-list" id="close-followers">×</button>
+        <h3 class="list-title">Followers</h3>
+        <div id="followers-container"></div>
+    </div>
+    <div class="following-list" id="following-list">
+        <button class="close-list" id="close-following">×</button>
+        <h3 class="list-title">Following</h3>
+        <div id="following-container"></div>
+    </div>
+    
+    <!-- Messages List -->
+    <div class="messages-list" id="messages-list">
+        <button class="close-list" id="close-messages">×</button>
+        <h3 class="list-title">Messages</h3>
+        <div id="messages-container"></div>
+        <div id="message-input-container">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-message-btn">Send</button>
+        </div>
     </div>
 
     <script>
-        async function fetchProxy(url) {
+        // Initialize Firebase
+        const firebaseConfig = { databaseURL: "https://cloud-fbd6b-default-rtdb.firebaseio.com" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Helper functions
+        const formatNumber = num => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        async function getRobloxUserData(userId) {
             try {
-                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
-                return await res.json();
-            } catch (e) {
-                console.error(e);
-                throw e;
-            }
-        }
-
-        function updateProgress(e) {
-            document.getElementById('progress').style.width = e * 33.33 + '%';
-        }
-
-        if (localStorage.getItem('newUser') === null) localStorage.setItem('newUser', 'true');
-        if (localStorage.getItem('newUser') === 'false') {
-            document.getElementById('main-app').classList.add('active');
-            document.getElementById('onboarding').style.display = 'none';
-        } else {
-            document.getElementById('step1').classList.add('active');
-            updateProgress(1);
-        }
-
-        function showStep(stepId, progress) {
-            // Remove active class from all steps
-            document.querySelectorAll('.step').forEach(step => {
-                step.classList.remove('active');
-            });
-
-            // Add active class to target step
-            const targetStep = document.getElementById(stepId);
-            if (targetStep) {
-                targetStep.classList.add('active');
-            }
-
-            // Update progress only for onboarding steps
-            if (stepId.startsWith('step')) {
-                document.getElementById('progress').style.width = `${progress * 25}%`;
-            }
-
-            // Handle profile view
-            if (stepId === 'profile-view') {
-                const profileContainer = document.querySelector('.profile-container');
-                if (profileContainer) {
-                    profileContainer.classList.add('active');
-                }
-            } else {
-                const profileContainer = document.querySelector('.profile-container');
-                if (profileContainer) {
-                    profileContainer.classList.remove('active');
-                }
-            }
-        }
-
-        document.getElementById('confirm-id').addEventListener('click', async () => {
-            const e = document.getElementById('roblox-id').value.trim();
-            if (!e) return;
-
-            try {
-                const [t, n] = await Promise.all([
-                    fetchProxy(`https://users.roblox.com/v1/users/${e}`),
-                    fetchProxy(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${e}&size=150x150&format=Png`)
+                showNotification('Fetching Roblox user data...', 'info');
+                const corsProxy = 'https://corsproxy.io/?';
+                const [userResponse, headshotResponse] = await Promise.all([
+                    fetch(`${corsProxy}https://users.roblox.com/v1/users/${userId}`),
+                    fetch(`${corsProxy}https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`)
                 ]);
-
-                if (t.errors || n.errors) throw new Error('User not found');
-
-                document.getElementById('username').textContent = t.name;
-                document.getElementById('description').textContent = t.description || '(No description)';
-                document.getElementById('headshot').src = n.data[0].imageUrl;
-                localStorage.setItem('tempUserId', e);
-                localStorage.setItem('tempUsername', t.name);
-                localStorage.setItem('tempHeadshot', n.data[0].imageUrl);
-                showStep('step2', 2);
-            } catch (e) {
-                alert("Oops! Couldn't find that user. Please check the ID and try again.");
+                
+                if (userResponse.ok && headshotResponse.ok) {
+                    const [userData, headshotData] = await Promise.all([userResponse.json(), headshotResponse.json()]);
+                    return {
+                        username: userData.name || `User${userId}`,
+                        description: userData.description || 'No description available',
+                        headshot: headshotData.data[0]?.imageUrl
+                    };
+                }
+            } catch (error) {
+                console.log('API request failed, using fallback');
             }
-        });
-
-        document.getElementById('yes-btn').addEventListener('click', () => {
-            generateVerificationCode();
-            showStep('step3', 3);
-        });
-
-        document.getElementById('no-btn').addEventListener('click', () => {
-            showStep('step1', 1);
-        });
-
-        document.getElementById('back-btn').addEventListener('click', () => {
-            showStep('step2', 2);
-        });
-
-        function generateVerificationCode() {
-            const e = Math.floor(1e4 + 9e4 * Math.random());
-            document.getElementById('code-text').textContent = e;
-            localStorage.setItem('verificationCode', e.toString());
+            
+            return {
+                username: `User${userId}`,
+                description: 'Verified Mekhis Creations user',
+                headshot: `https://tr.rbxcdn.com/${userId}/150/150/AvatarHeadshot/Png`
+            };
         }
 
-        document.getElementById('refresh-code').addEventListener('click', generateVerificationCode);
+        // Theme management
+        function applyTheme(theme, mode) {
+            document.body.classList.remove('default-theme', 'crimson-theme', 'neon-theme', 'gold-theme', 'silver-theme', 'bronze-theme', 'dark-mode');
+            document.body.classList.add(`${theme}-theme`);
+            if (mode === 'dark') document.body.classList.add('dark-mode');
+            localStorage.setItem('selectedTheme', theme);
+            localStorage.setItem('selectedMode', mode);
+            updateThemeMenuSelection(theme, mode);
+        }
 
-        document.getElementById('verify-btn').addEventListener('click', async () => {
-            const e = localStorage.getItem('tempUserId');
-            const t = localStorage.getItem('verificationCode');
-
-            try {
-                const n = await fetchProxy(`https://users.roblox.com/v1/users/${e}`);
-                if (n.description && n.description.includes(t)) {
-                    localStorage.setItem('newUser', 'false');
-                    localStorage.setItem('robloxUserId', e);
-                    localStorage.setItem('robloxUsername', localStorage.getItem('tempUsername'));
-                    localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
-                    ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(e => localStorage.removeItem(e));
-                    document.getElementById('onboarding').style.display = 'none';
-                    document.getElementById('main-app').classList.add('active');
-                } else {
-                    document.getElementById('verification-status').textContent = 'Code not found in description. Please try again.';
-                }
-            } catch (e) {
-                document.getElementById('verification-status').textContent = 'Error verifying. Please try again.';
-            }
-        });
-
-        document.querySelector('.copy-btn').addEventListener('click', () => {
-            const e = document.getElementById('code-text').textContent;
-            navigator.clipboard.writeText(e).then(() => {
-                const t = document.querySelector('.copy-btn');
-                t.textContent = 'Copied!';
-                setTimeout(() => { t.textContent = 'Copy'; }, 2000);
-            });
-        });
-
-        document.getElementById('step3').classList.contains('active') && generateVerificationCode();
-
-        const themeBtn = document.getElementById('theme-btn');
-        const themeMenu = document.getElementById('theme-menu');
-        themeBtn.addEventListener('click', () => {
-            themeMenu.classList.toggle('active');
-        });
-
-        const styles = {
-            light: {
-                text: '#202124',
-                bg: '#F8F9FA',
-                cardBg: '#fff',
-                btnText: '#fff',
-                inputBg: '#fff'
-            },
-            dark: {
-                text: '#F8F9FA',
-                bg: '#202124',
-                cardBg: '#303134',
-                btnText: '#fff',
-                inputBg: '#303134'
-            }
-        };
-
-        const themes = {
-            default: {
-                primary: '#4285F4',
-                secondary: '#34A853',
-                accent: '#EA4335',
-                gradient: 'linear-gradient(var(--bg),var(--bg))'
-            },
-            chrome: {
-                primary: '#4285F4',
-                secondary: '#0F9D58',
-                accent: '#DB4437',
-                gradient: 'linear-gradient(var(--bg), #f0f0f0, var(--bg))'
-            },
-            neon: {
-                primary: '#00F0FF',
-                secondary: '#FF00F0',
-                accent: '#F0FF00',
-                gradient: 'linear-gradient(var(--bg), #e0e0e0, var(--bg))'
-            },
-            crimson: {
-                primary: '#DC143C',
-                secondary: '#8B0000',
-                accent: '#FF6347',
-                gradient: 'linear-gradient(var(--bg), #f5f5f5, var(--bg))'
-            },
-            gold: {
-                primary: '#FFD700',
-                secondary: '#D4AF37',
-                accent: '#C0C0C0',
-                gradient: 'linear-gradient(var(--bg), #f8f8f8, var(--bg))'
-            },
-            silver: {
-                primary: '#C0C0C0',
-                secondary: '#A8A8A8',
-                accent: '#808080',
-                gradient: 'linear-gradient(var(--bg), #f9f9f9, var(--bg))'
-            },
-            bronze: {
-                primary: '#CD7F32',
-                secondary: '#B87333',
-                accent: '#8B4513',
-                gradient: 'linear-gradient(var(--bg), #fafafa, var(--bg))'
-            }
-        };
-
-        function applyTheme(themeName) {
-            const theme = themes[themeName] || themes.default;
-            document.documentElement.style.setProperty('--primary', theme.primary);
-            document.documentElement.style.setProperty('--secondary', theme.secondary);
-            document.documentElement.style.setProperty('--accent', theme.accent);
-            document.body.style.background = theme.gradient;
-            document.body.classList.remove('theme-active');
-            document.body.classList.add(`theme-${themeName}`);
-            localStorage.setItem('selectedTheme', themeName);
-
-            // Update UI feedback
+        function updateThemeMenuSelection(theme, mode) {
             document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
-                option.classList.remove('selected');
-                if (option.dataset.theme === themeName) {
-                    option.classList.add('selected');
-                }
+                option.classList.toggle('selected', option.dataset.theme === theme);
             });
-
-            // Smooth transition
-            document.body.style.transition = 'background 0.5s ease-in-out';
+            document.querySelectorAll('.theme-option[data-mode]').forEach(option => {
+                option.classList.toggle('selected', option.dataset.mode === mode);
+            });
         }
 
-        function applyStyle(styleName) {
-            const style = styles[styleName] || styles.light;
-            document.documentElement.style.setProperty('--text', style.text);
-            document.documentElement.style.setProperty('--bg', style.bg);
-            document.documentElement.style.setProperty('--card-bg', style.cardBg);
-            document.documentElement.style.setProperty('--btn-text', style.btnText);
-            document.documentElement.style.setProperty('--input-bg', style.inputBg);
-            document.body.style.background = document.querySelector(`[data-style="${styleName}"]`).dataset.gradient;
-            localStorage.setItem('selectedStyle', styleName);
-        }
+        // Initialize theme
+        applyTheme(localStorage.getItem('selectedTheme') || 'default', localStorage.getItem('selectedMode') || 'light');
 
-        // Theme selection
-        document.querySelectorAll('.theme-option').forEach(option => {
+        // Theme button events
+        document.getElementById('theme-btn').addEventListener('click', () => {
+            document.getElementById('theme-menu').classList.toggle('active');
+        });
+
+        document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
             option.addEventListener('click', () => {
-                const isStyle = option.hasAttribute('data-style');
-                const value = isStyle ? option.dataset.style : option.dataset.theme;
-                
-                // Remove selected class from all options in the same category
-                const category = option.parentElement;
-                category.querySelectorAll('.theme-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                
-                // Add selected class to current option
-                option.classList.add('selected');
-                
-                // Apply the selected theme/style
-                if (isStyle) {
-                    applyStyle(value);
-                } else {
-                    applyTheme(value);
-                }
+                applyTheme(option.dataset.theme, localStorage.getItem('selectedMode') || 'light');
             });
         });
 
-        // Initialize saved theme and style
-        const savedTheme = localStorage.getItem('selectedTheme') || 'default';
-        const savedStyle = localStorage.getItem('selectedStyle') || 'light';
-        
-        // Apply initial theme and style
-        applyTheme(savedTheme);
-        applyStyle(savedStyle);
-
-        // Add selected class to theme buttons after DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeBtn = document.querySelector(`[data-theme="${savedTheme}"]`);
-            const styleBtn = document.querySelector(`[data-style="${savedStyle}"]`);
-            
-            if (themeBtn) {
-                themeBtn.classList.add('selected');
-            }
-            if (styleBtn) {
-                styleBtn.classList.add('selected');
-            }
-        });
-        
-        applyStyle(savedStyle);
-        applyTheme(savedTheme);
-
-        // Profile view functionality
-        document.getElementById('view-profile').addEventListener('click', () => {
-            showStep('profile-view', 4);
-            // Load profile data from localStorage
-            const headshot = localStorage.getItem('robloxHeadshot');
-            const username = localStorage.getItem('robloxUsername');
-            const description = localStorage.getItem('robloxDescription') || 'No description set';
-            
-            // Update profile information
-            document.getElementById('profile-headshot').src = headshot;
-            document.getElementById('profile-username').textContent = username;
-            document.getElementById('profile-description').textContent = description;
+        document.querySelectorAll('.theme-option[data-mode]').forEach(option => {
+            option.addEventListener('click', () => {
+                applyTheme(localStorage.getItem('selectedTheme') || 'default', option.dataset.mode);
+            });
         });
 
-        document.getElementById('profile-back').addEventListener('click', () => {
-            showStep('main-app', 4);
-        });
-        // Profile view functionality
-        document.getElementById('view-profile').addEventListener('click', () => {
-            const username = localStorage.getItem('robloxUsername');
-            if (username) {
-                window.location.href = `/?user=${username}`;
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.theme-btn') && !e.target.closest('.theme-menu')) {
+                document.getElementById('theme-menu').classList.remove('active');
             }
         });
 
-        // Handle URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const username = urlParams.get('user');
+        // Notification Center
+        let notifications = [];
+        let unreadNotifications = 0;
+        let currentUserId = localStorage.getItem('robloxUserId');
+        let currentChatUserId = null;
 
-        if (username) {
-            // Load profile for the specified user
-            showStep('profile-view', 4);
-            
-            // Load profile data from localStorage
-            const headshot = localStorage.getItem('robloxHeadshot');
-            const description = localStorage.getItem('robloxDescription') || 'No description set';
-            
-            // Update profile information
-            document.getElementById('profile-headshot').src = headshot;
-            document.getElementById('profile-username').textContent = username;
-            document.getElementById('profile-description').textContent = description;
-        }
-
-        // Add back button functionality when coming from URL
-        document.getElementById('profile-back').addEventListener('click', () => {
-            window.history.back();
-        });
-
-        // Handle direct access to profile page
-        if (window.location.pathname === '/profile') {
-            const username = localStorage.getItem('robloxUsername');
-            if (username) {
-                window.location.href = `/?user=${username}`;
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notification-badge');
+            if (unreadNotifications > 0) {
+                badge.textContent = unreadNotifications;
+                badge.style.display = 'flex';
             } else {
-                // Redirect to main page if no user is logged in
-                window.location.href = '/';
+                badge.style.display = 'none';
             }
         }
 
-        // Profile view functionality
-        document.getElementById('view-profile').addEventListener('click', () => {
-            const username = localStorage.getItem('robloxUsername');
-            if (username) {
-                window.location.href = `/?user=${username}`;
-            }
-        });
-
-        // Initialize steps
-        function initSteps() {
-            // First check if we're accessing a profile directly
-            const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('user');
+        function addNotification(message, type = 'info', timestamp = Date.now()) {
+            const notification = {
+                id: Date.now(),
+                message,
+                type,
+                timestamp,
+                read: false
+            };
+            notifications.unshift(notification);
+            unreadNotifications++;
+            updateNotificationBadge();
+            renderNotifications();
             
-            if (username) {
-                // If user parameter exists, show profile view
-                showStep('profile-view', 4);
-                
-                // Load profile data from localStorage
-                const headshot = localStorage.getItem('robloxHeadshot');
-                const description = localStorage.getItem('robloxDescription') || 'No description set';
-                
-                // Update profile information
-                document.getElementById('profile-headshot').src = headshot;
-                document.getElementById('profile-username').textContent = username;
-                document.getElementById('profile-description').textContent = description;
+            // Show popup notification
+            showNotification(message, type);
+        }
+
+        function renderNotifications() {
+            const notificationList = document.getElementById('notification-list');
+            notificationList.innerHTML = '';
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<div style="padding:15px;text-align:center;color:gray">No notifications yet</div>';
                 return;
             }
-
-            // If not accessing profile, check localStorage
-            const newUser = localStorage.getItem('newUser');
             
-            // If newUser is not set, assume true (new user)
-            if (!newUser || newUser === 'true') {
-                showStep('step1', 1);
-            } else if (newUser === 'false') {
-                showStep('main-app', 4);
+            notifications.forEach(notification => {
+                const notificationElement = document.createElement('div');
+                notificationElement.className = `notification-item ${notification.read ? '' : 'unread'}`;
+                notificationElement.innerHTML = `
+                    <div>${notification.message}</div>
+                    <div class="notification-time">${new Date(notification.timestamp).toLocaleString()}</div>
+                `;
+                notificationElement.addEventListener('click', () => {
+                    if (!notification.read) {
+                        notification.read = true;
+                        unreadNotifications--;
+                        updateNotificationBadge();
+                        notificationElement.classList.remove('unread');
+                    }
+                    
+                    // Check if notification is about a message
+                    if (notification.message.includes('sent you a message')) {
+                        const userId = notification.message.match(/from (.+?)!/)[1];
+                        if (userId) {
+                            database.ref('users').orderByChild('username').equalTo(userId).once('value').then(snapshot => {
+                                if (snapshot.exists()) {
+                                    snapshot.forEach(child => {
+                                        openMessages(child.key, child.val().username);
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+                notificationList.appendChild(notificationElement);
+            });
+        }
+
+        // Notification center toggle
+        document.getElementById('notification-bell').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const panel = document.getElementById('notification-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            
+            // Mark all notifications as read when opening panel
+            if (panel.style.display === 'block') {
+                notifications.forEach(notification => {
+                    if (!notification.read) {
+                        notification.read = true;
+                    }
+                });
+                unreadNotifications = 0;
+                updateNotificationBadge();
+                renderNotifications();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#notification-center')) {
+                document.getElementById('notification-panel').style.display = 'none';
+            }
+        });
+
+        // Listen for new followers and messages
+        function setupNotificationListener(userId) {
+            // Followers listener
+            database.ref(`users/${userId}/followers`).on('child_added', (snapshot) => {
+                const followerId = snapshot.key;
+                database.ref(`users/${followerId}`).once('value').then(userSnapshot => {
+                    if (userSnapshot.exists()) {
+                        const user = userSnapshot.val();
+                        addNotification(`${user.username} started following you!`, 'success');
+                    }
+                });
+            });
+            
+            // Messages listener
+            database.ref(`users/${userId}/messages`).on('child_added', (snapshot) => {
+                const messageData = snapshot.val();
+                if (messageData.senderId !== userId) { // Don't notify for your own messages
+                    database.ref(`users/${messageData.senderId}`).once('value').then(senderSnapshot => {
+                        if (senderSnapshot.exists()) {
+                            const sender = senderSnapshot.val();
+                            addNotification(`New message from ${sender.username}!`, 'info');
+                            
+                            // If chat is open with this user, load the new message
+                            if (currentChatUserId === messageData.senderId) {
+                                loadMessages(userId, messageData.senderId);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Player search functionality
+        document.getElementById('search-btn').addEventListener('click', () => {
+            const searchTerm = document.getElementById('search-input').value.trim();
+            if (!searchTerm) return showNotification('Please enter a username to search', 'error');
+            
+            showNotification('Searching for players...', 'info');
+            database.ref('users').once('value').then(snapshot => {
+                const results = [];
+                snapshot.forEach(childSnapshot => {
+                    const user = childSnapshot.val();
+                    if (user.username.toLowerCase().includes(searchTerm.toLowerCase())) {
+                        results.push(user);
+                    }
+                });
+                
+                const resultsContainer = document.getElementById('search-results');
+                resultsContainer.innerHTML = '';
+                
+                if (results.length > 0) {
+                    results.forEach(user => {
+                        const userElement = document.createElement('div');
+                        userElement.className = 'search-result';
+                        userElement.innerHTML = `
+                            <img src="${user.headshot}" width="50" height="50" style="border-radius:50%;margin-right:10px;">
+                            <span>${user.username}</span>
+                            <button class="view-profile" data-id="${user.userId}">View</button>
+                        `;
+                        resultsContainer.appendChild(userElement);
+                    });
+                    resultsContainer.style.display = 'block';
+                    showNotification(`Found ${results.length} matching players`, 'success');
+                } else {
+                    resultsContainer.innerHTML = '<p>No players found matching your search</p>';
+                    resultsContainer.style.display = 'block';
+                    showNotification('No players found', 'error');
+                }
+            }).catch(error => {
+                showNotification('Search failed', 'error');
+                console.error('Search error:', error);
+            });
+        });
+
+        // View profile from search results
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('view-profile') || e.target.closest('.list-item')) {
+                const userId = e.target.classList.contains('view-profile') ? e.target.dataset.id : 
+                              e.target.closest('.list-item').querySelector('button')?.dataset.id;
+                if (userId) {
+                    window.history.pushState({}, '', `/@${encodeURIComponent(userId)}`);
+                    loadUserData(userId);
+                    document.getElementById('search-results').style.display = 'none';
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('followers-list').style.display = 'none';
+                    document.getElementById('following-list').style.display = 'none';
+                    document.getElementById('messages-list').style.display = 'none';
+                    showNotification('Loading profile...', 'info');
+                }
+            }
+        });
+
+        // Follow/unfollow functionality
+        function toggleFollow(userId, isFollowing) {
+            const currentUserId = localStorage.getItem('robloxUserId');
+            if (!currentUserId) return showNotification('You need to be logged in to follow', 'error');
+            
+            // Prevent users from following themselves
+            if (currentUserId === userId) {
+                return showNotification("You can't follow yourself!", 'error');
+            }
+            
+            const updates = {};
+            updates[`users/${currentUserId}/following/${userId}`] = isFollowing ? null : true;
+            updates[`users/${userId}/followers/${currentUserId}`] = isFollowing ? null : true;
+            
+            database.ref().update(updates)
+                .then(() => {
+                    showNotification(isFollowing ? 'Unfollowed successfully' : 'Followed successfully', 'success');
+                    updateFollowButton(userId, !isFollowing);
+                    updateStatsCounters(userId);
+                })
+                .catch(error => {
+                    showNotification(`Error ${isFollowing ? 'unfollowing' : 'following'}`, 'error');
+                    console.error('Follow error:', error);
+                });
+        }
+
+        function updateFollowButton(userId, isFollowing) {
+            const followBtn = document.getElementById('follow-btn');
+            if (followBtn) {
+                followBtn.textContent = isFollowing ? 'Unfollow' : 'Follow';
+                followBtn.style.backgroundColor = isFollowing ? 'var(--accent)' : 'var(--secondary)';
             }
         }
 
-        // Initialize steps when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            // Ensure newUser is set if not already
-            if (!localStorage.getItem('newUser')) {
-                localStorage.setItem('newUser', 'true');
+        function updateStatsCounters(userId) {
+            database.ref(`users/${userId}`).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    const followersCount = userData.followers ? Object.keys(userData.followers).length : 0;
+                    const followingCount = userData.following ? Object.keys(userData.following).length : 0;
+                    
+                    document.getElementById('followers-count').textContent = formatNumber(followersCount);
+                    document.getElementById('following-count').textContent = formatNumber(followingCount);
+                }
+            });
+        }
+
+        // Show followers/following lists
+        function showFollowersList(userId) {
+            database.ref(`users/${userId}/followers`).once('value').then(snapshot => {
+                const followersContainer = document.getElementById('followers-container');
+                followersContainer.innerHTML = '';
+                
+                if (snapshot.exists() && snapshot.val()) {
+                    const followerIds = Object.keys(snapshot.val());
+                    if (followerIds.length > 0) {
+                        followerIds.forEach(followerId => {
+                            database.ref(`users/${followerId}`).once('value').then(userSnapshot => {
+                                if (userSnapshot.exists()) {
+                                    const user = userSnapshot.val();
+                                    const followerElement = document.createElement('div');
+                                    followerElement.className = 'list-item';
+                                    followerElement.innerHTML = `
+                                        <img src="${user.headshot}" alt="${user.username}">
+                                        <span>${user.username}</span>
+                                        <button class="view-profile" data-id="${user.userId}">View</button>
+                                    `;
+                                    followersContainer.appendChild(followerElement);
+                                }
+                            });
+                        });
+                    } else {
+                        followersContainer.innerHTML = '<p>No followers yet</p>';
+                    }
+                } else {
+                    followersContainer.innerHTML = '<p>No followers yet</p>';
+                }
+                
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('followers-list').style.display = 'block';
+            });
+        }
+
+        function showFollowingList(userId) {
+            database.ref(`users/${userId}/following`).once('value').then(snapshot => {
+                const followingContainer = document.getElementById('following-container');
+                followingContainer.innerHTML = '';
+                
+                if (snapshot.exists() && snapshot.val()) {
+                    const followingIds = Object.keys(snapshot.val());
+                    if (followingIds.length > 0) {
+                        followingIds.forEach(followingId => {
+                            database.ref(`users/${followingId}`).once('value').then(userSnapshot => {
+                                if (userSnapshot.exists()) {
+                                    const user = userSnapshot.val();
+                                    const followingElement = document.createElement('div');
+                                    followingElement.className = 'list-item';
+                                    followingElement.innerHTML = `
+                                        <img src="${user.headshot}" alt="${user.username}">
+                                        <span>${user.username}</span>
+                                        <button class="view-profile" data-id="${user.userId}">View</button>
+                                    `;
+                                    followingContainer.appendChild(followingElement);
+                                }
+                            });
+                        });
+                    } else {
+                        followingContainer.innerHTML = '<p>Not following anyone yet</p>';
+                    }
+                } else {
+                    followingContainer.innerHTML = '<p>Not following anyone yet</p>';
+                }
+                
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('following-list').style.display = 'block';
+            });
+        }
+
+        // Messaging functionality
+        function openMessages(userId, username) {
+            currentChatUserId = userId;
+            document.getElementById('messages-list').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('list-title').textContent = `Messages with ${username}`;
+            loadMessages(localStorage.getItem('robloxUserId'), userId);
+        }
+
+        function loadMessages(currentUserId, otherUserId) {
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = 'Loading messages...';
+            
+            database.ref(`users/${currentUserId}/messages`).orderByChild('timestamp').once('value').then(snapshot => {
+                messagesContainer.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    const messages = [];
+                    snapshot.forEach(childSnapshot => {
+                        const message = childSnapshot.val();
+                        if (message.senderId === otherUserId || message.receiverId === otherUserId) {
+                            messages.push(message);
+                        }
+                    });
+                    
+                    if (messages.length > 0) {
+                        messages.sort((a, b) => a.timestamp - b.timestamp);
+                        messages.forEach(message => {
+                            const messageElement = document.createElement('div');
+                            messageElement.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
+                            messageElement.innerHTML = `
+                                <div>${message.text}</div>
+                                <div class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
+                            `;
+                            messagesContainer.appendChild(messageElement);
+                        });
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    } else {
+                        messagesContainer.innerHTML = '<div style="text-align:center;padding:20px;color:gray">No messages yet</div>';
+                    }
+                } else {
+                    messagesContainer.innerHTML = '<div style="text-align:center;padding:20px;color:gray">No messages yet</div>';
+                }
+            });
+        }
+
+        function sendMessage(senderId, receiverId, messageText) {
+            if (!messageText.trim()) return;
+            
+            const timestamp = Date.now();
+            const messageId = database.ref().child('messages').push().key;
+            
+            const messageData = {
+                text: messageText,
+                senderId: senderId,
+                receiverId: receiverId,
+                timestamp: timestamp,
+                read: false
+            };
+            
+            // Save message for both sender and receiver
+            const updates = {};
+            updates[`users/${senderId}/messages/${messageId}`] = messageData;
+            updates[`users/${receiverId}/messages/${messageId}`] = messageData;
+            
+            database.ref().update(updates)
+                .then(() => {
+                    document.getElementById('message-input').value = '';
+                    loadMessages(senderId, receiverId);
+                })
+                .catch(error => {
+                    showNotification('Failed to send message', 'error');
+                    console.error('Message send error:', error);
+                });
+        }
+
+        // Close list modals
+        document.getElementById('close-followers').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('followers-list').style.display = 'none';
+        });
+
+        document.getElementById('close-following').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('following-list').style.display = 'none';
+        });
+
+        document.getElementById('close-messages').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('messages-list').style.display = 'none';
+            currentChatUserId = null;
+        });
+
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('followers-list').style.display = 'none';
+            document.getElementById('following-list').style.display = 'none';
+            document.getElementById('messages-list').style.display = 'none';
+            currentChatUserId = null;
+        });
+
+        // Back to profile button
+        document.getElementById('back-to-profile').addEventListener('click', () => {
+            const userId = localStorage.getItem('robloxUserId');
+            if (userId) {
+                window.history.pushState({}, '', '/');
+                loadUserData(userId);
             }
-            initSteps();
+        });
+
+        // Message button
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'message-btn') {
+                const userId = window.location.pathname.substring(2); // Get from URL /@userId
+                if (userId) {
+                    database.ref(`users/${userId}`).once('value').then(snapshot => {
+                        if (snapshot.exists()) {
+                            const user = snapshot.val();
+                            openMessages(userId, user.username);
+                        }
+                    });
+                }
+            }
+        });
+
+        // Send message
+        document.getElementById('send-message-btn').addEventListener('click', () => {
+            const messageText = document.getElementById('message-input').value.trim();
+            if (!messageText) return;
+            
+            const currentUserId = localStorage.getItem('robloxUserId');
+            if (!currentUserId) return showNotification('You need to be logged in to send messages', 'error');
+            
+            if (!currentChatUserId) return showNotification('No conversation selected', 'error');
+            
+            sendMessage(currentUserId, currentChatUserId, messageText);
+        });
+
+        // Press Enter to send message
+        document.getElementById('message-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('send-message-btn').click();
+            }
+        });
+
+        // Onboarding flow functions
+        function updateProgress(step) {
+            const progressBar = document.getElementById('progress');
+            if (progressBar) progressBar.style.width = step * 33.33 + '%';
+        }
+
+        function showStep(stepId, progressStep) {
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            const stepElement = document.getElementById(stepId);
+            if (stepElement) {
+                stepElement.classList.add('active');
+                updateProgress(progressStep);
+            }
+        }
+
+        function generateVerificationCode() {
+            const codeTextElement = document.getElementById('code-text');
+            if (codeTextElement) {
+                const code = Math.floor(10000 + 90000 * Math.random());
+                codeTextElement.textContent = code;
+                localStorage.setItem('verificationCode', code.toString());
+                return code;
+            }
+            return null;
+        }
+
+        function showHomeContent() {
+            document.getElementById('onboarding').style.display = 'none';
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('home-content').style.display = 'block';
+            
+            const path = window.location.pathname;
+            if (path.startsWith('/@')) {
+                const username = decodeURIComponent(path.substring(2));
+                searchUserByUsername(username);
+            } else {
+                const userId = localStorage.getItem('robloxUserId');
+                if (userId) loadUserData(userId);
+            }
+        }
+
+        async function searchUserByUsername(username) {
+            try {
+                const snapshot = await database.ref('users').once('value');
+                let foundUser = null;
+                snapshot.forEach(childSnapshot => {
+                    const user = childSnapshot.val();
+                    if (user.username.toLowerCase() === username.toLowerCase()) {
+                        foundUser = user;
+                    }
+                });
+                
+                if (foundUser) {
+                    loadUserData(foundUser.userId, false);
+                } else {
+                    showNotification('User not found', 'error');
+                    window.history.pushState({}, '', '/');
+                    loadUserData(localStorage.getItem('robloxUserId'));
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showNotification('Error searching for user', 'error');
+            }
+        }
+
+        function loadUserData(userId, isCurrentUser = null) {
+            if (isCurrentUser === null) {
+                isCurrentUser = userId === localStorage.getItem('robloxUserId');
+            }
+            
+            database.ref('users/' + userId).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    updateProfileUI(userData, isCurrentUser);
+                    showNotification('Profile loaded successfully', 'success');
+                    
+                    if (!isCurrentUser && localStorage.getItem('robloxUserId')) {
+                        const currentUserId = localStorage.getItem('robloxUserId');
+                        database.ref(`users/${currentUserId}/following/${userId}`).once('value').then(followSnapshot => {
+                            updateFollowButton(userId, followSnapshot.exists());
+                        });
+                    }
+                } else if (isCurrentUser) {
+                    createNewUser(userId);
+                } else {
+                    showNotification('Profile not found', 'error');
+                    window.history.pushState({}, '', '/');
+                    loadUserData(localStorage.getItem('robloxUserId'));
+                }
+            }).catch(error => {
+                console.error("Database error:", error);
+                showNotification('Error loading profile', 'error');
+            });
+        }
+
+        function createNewUser(userId) {
+            const userData = {
+                userId: userId,
+                username: localStorage.getItem('robloxUsername') || `User${userId.slice(0, 4)}`,
+                headshot: localStorage.getItem('robloxHeadshot') || `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=150&height=150&format=png`,
+                description: "",
+                followers: {},
+                following: {},
+                messages: {},
+                createdAt: Date.now()
+            };
+            
+            database.ref('users/' + userId).set(userData)
+                .then(() => {
+                    updateProfileUI(userData, true);
+                    setupNotificationListener(userId);
+                })
+                .catch(error => {
+                    console.error("Create user error:", error);
+                    showNotification('Error creating profile', 'error');
+                });
+        }
+
+        function updateProfileUI(userData, isCurrentUser) {
+            document.getElementById('profile-headshot').src = userData.headshot;
+            document.getElementById('profile-username').textContent = userData.username;
+            document.getElementById('profile-description').textContent = userData.description || 'No description yet';
+            
+            const followersCount = userData.followers ? Object.keys(userData.followers).length : 0;
+            const followingCount = userData.following ? Object.keys(userData.following).length : 0;
+            document.getElementById('followers-count').textContent = formatNumber(followersCount);
+            document.getElementById('following-count').textContent = formatNumber(followingCount);
+            
+            document.getElementById('followers-count').onclick = () => showFollowersList(userData.userId);
+            document.getElementById('following-count').onclick = () => showFollowingList(userData.userId);
+            
+            document.getElementById('edit-btn').style.display = isCurrentUser ? 'inline-block' : 'none';
+            document.getElementById('save-btn').style.display = 'none';
+            document.getElementById('follow-btn').style.display = isCurrentUser ? 'none' : 'inline-block';
+            document.getElementById('message-btn').style.display = isCurrentUser ? 'none' : 'inline-block';
+            document.getElementById('back-to-profile').style.display = isCurrentUser ? 'none' : 'block';
+            document.getElementById('profile-description').contentEditable = false;
+            
+            if (!isCurrentUser) {
+                document.getElementById('follow-btn').onclick = () => {
+                    const currentUserId = localStorage.getItem('robloxUserId');
+                    if (!currentUserId) return showNotification('You need to be logged in to follow', 'error');
+                    
+                    database.ref(`users/${currentUserId}/following/${userData.userId}`).once('value').then(snapshot => {
+                        toggleFollow(userData.userId, snapshot.exists());
+                    });
+                };
+                
+                document.getElementById('message-btn').onclick = () => {
+                    openMessages(userData.userId, userData.username);
+                };
+            }
+            
+            if (isCurrentUser && !window.location.pathname.startsWith('/@')) {
+                window.history.pushState({}, '', `/@${encodeURIComponent(userData.username)}`);
+            }
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Confirm ID button
+            document.getElementById('confirm-id')?.addEventListener('click', async () => {
+                const userId = document.getElementById('roblox-id').value.trim();
+                if (!userId) return showNotification('Please enter a Roblox ID', 'error');
+                
+                try {
+                    showNotification('Loading Roblox profile...', 'info');
+                    const userData = await getRobloxUserData(userId);
+                    
+                    document.getElementById('username').textContent = userData.username;
+                    document.getElementById('description').textContent = userData.description || '(No description)';
+                    document.getElementById('headshot').src = userData.headshot;
+                    
+                    localStorage.setItem('tempUserId', userId);
+                    localStorage.setItem('tempUsername', userData.username);
+                    localStorage.setItem('tempHeadshot', userData.headshot);
+                    
+                    showStep('step2', 2);
+                    showNotification('Profile found! Is this you?', 'success');
+                } catch(error) {
+                    showNotification("Couldn't find that user. Please check the ID", 'error');
+                }
+            });
+
+            // Other buttons
+            document.getElementById('yes-btn')?.addEventListener('click', () => {
+                generateVerificationCode();
+                showStep('step3', 3);
+                showNotification('Verification code generated', 'info');
+            });
+
+            document.getElementById('no-btn')?.addEventListener('click', () => {
+                showStep('step1', 1);
+                showNotification('Please enter the correct Roblox ID', 'info');
+            });
+
+            document.getElementById('back-btn')?.addEventListener('click', () => {
+                showStep('step2', 2);
+            });
+
+            document.getElementById('verify-btn')?.addEventListener('click', async () => {
+                const userId = localStorage.getItem('tempUserId');
+                localStorage.setItem('newUser', 'false');
+                localStorage.setItem('robloxUserId', userId);
+                localStorage.setItem('robloxUsername', localStorage.getItem('tempUsername'));
+                localStorage.setItem('robloxHeadshot', localStorage.getItem('tempHeadshot'));
+                
+                ['tempUserId', 'tempUsername', 'tempHeadshot', 'verificationCode'].forEach(item => {
+                    localStorage.removeItem(item);
+                });
+                
+                document.getElementById('verification-status').textContent = 'Verification successful!';
+                showNotification('Verification successful!', 'success');
+                setTimeout(showHomeContent, 1500);
+            });
+
+            document.getElementById('go-home-btn')?.addEventListener('click', showHomeContent);
+
+            // Edit profile
+            document.getElementById('edit-btn')?.addEventListener('click', () => {
+                const desc = document.getElementById('profile-description');
+                desc.contentEditable = true;
+                desc.focus();
+                document.getElementById('edit-btn').style.display = 'none';
+                document.getElementById('save-btn').style.display = 'inline-block';
+                showNotification('Editing description...', 'info');
+            });
+
+            document.getElementById('save-btn')?.addEventListener('click', () => {
+                const desc = document.getElementById('profile-description');
+                const userId = localStorage.getItem('robloxUserId');
+                const text = desc.textContent;
+                desc.contentEditable = false;
+                document.getElementById('edit-btn').style.display = 'inline-block';
+                document.getElementById('save-btn').style.display = 'none';
+                
+                database.ref('users/' + userId).update({ description: text })
+                    .then(() => showNotification('Description saved successfully!', 'success'))
+                    .catch(error => {
+                        console.error("Save error:", error);
+                        showNotification('Error saving description', 'error');
+                    });
+            });
+
+            // Copy verification code
+            document.querySelector('.copy-btn')?.addEventListener('click', () => {
+                const code = document.getElementById('code-text').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    document.querySelector('.copy-btn').textContent = 'Copied!';
+                    showNotification('Code copied to clipboard', 'success');
+                    setTimeout(() => {
+                        document.querySelector('.copy-btn').textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+
+            // Handle back/forward navigation
+            window.addEventListener('popstate', () => {
+                const path = window.location.pathname;
+                if (path.startsWith('/@')) {
+                    const username = decodeURIComponent(path.substring(2));
+                    searchUserByUsername(username);
+                } else {
+                    loadUserData(localStorage.getItem('robloxUserId'));
+                }
+            });
+
+            // Initialize app state
+            if (localStorage.getItem('newUser') === 'false') {
+                showHomeContent();
+                const userId = localStorage.getItem('robloxUserId');
+                if (userId) {
+                    setupNotificationListener(userId);
+                    currentUserId = userId;
+                }
+            } else {
+                localStorage.setItem('newUser', 'true');
+                generateVerificationCode();
+            }
         });
     </script>
 </body>
