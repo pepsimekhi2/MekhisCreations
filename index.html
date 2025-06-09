@@ -10,7 +10,7 @@
     <style>
         :root{--primary:#4285F4;--secondary:#34A853;--accent:#EA4335;--text:#202124;--bg:#F8F9FA;--card-bg:#fff;--btn-text:#fff;--input-bg:#fff;--notification-success:#34A853;--notification-error:#EA4335;--notification-info:#4285F4;--theme-dark-text:#F8F9FA;--theme-dark-bg:#202124;--theme-dark-card:#303134;--crimson:#DC143C;--neon-primary:#00F0FF;--neon-secondary:#FF00F0;--neon-accent:#F0FF00;--gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32}
         body{font-family:'Fredoka One',cursive;color:var(--text);margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;transition:all 0.3s;background:var(--bg)}
-        .container{max-width:500px;width:100%;padding:20px;text-align:center;position:relative}
+        .container{max-width:900px;width:100%;padding:20px;text-align:center;position:relative}
         .step{display:none}.active{display:block;animation:fadeIn 0.5s}
         .progress-bar{height:10px;background:rgba(0,0,0,0.1);border-radius:5px;margin:20px 0;overflow:hidden}
         .progress{height:100%;background:var(--secondary);width:0%;transition:width 0.5s}
@@ -80,109 +80,129 @@
         .notification-item:hover{background:rgba(0,0,0,0.05)}
         .notification-item.unread{background:rgba(66,133,244,0.1)}
         .notification-time{font-size:10px;color:gray;margin-top:5px}
-        // Add CSS for the conversations list
-.conversation-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    cursor: pointer;
-    background: var(--card-bg);
-    margin-bottom: 5px;
-    border-radius: 10px;
-}
-
-.conversation-item:hover {
-    background: rgba(0,0,0,0.05);
-}
-
-.conversation-item.unread {
-    background: rgba(66,133,244,0.1);
-}
-
-.conversation-item img {
-    border-radius: 50%;
-    margin-right: 10px;
-    border: 2px solid var(--primary);
-}
-
-.conversation-info {
-    flex: 1;
-}
-
-.conversation-username {
-    font-weight: bold;
-    color: var(--primary);
-}
-
-.conversation-preview {
-    font-size: 12px;
-    color: var(--text);
-    opacity: 0.8;
-}
-
-.conversation-time {
-    text-align: right;
-    font-size: 12px;
-    color: var(--text);
-    opacity: 0.6;
-}
-
-.conversation-date {
-    margin-top: 3px;
-    font-size: 10px;
-}
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            background: var(--card-bg);
+            margin-bottom: 5px;
+            border-radius: 10px;
+        }
+        .conversation-item:hover {
+            background: rgba(0,0,0,0.05);
+        }
+        .conversation-item.unread {
+            background: rgba(66,133,244,0.1);
+        }
+        .conversation-item img {
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid var(--primary);
+        }
+        .conversation-info {
+            flex: 1;
+        }
+        .conversation-username {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .conversation-preview {
+            font-size: 12px;
+            color: var(--text);
+            opacity: 0.8;
+        }
+        .conversation-time {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text);
+            opacity: 0.6;
+        }
+        .conversation-date {
+            margin-top: 3px;
+            font-size: 10px;
+        }
         #message-input-container {
-    display: flex;
-    margin-top: 10px;
-    width: 100%;
-    align-items: center; /* Add this to align items vertically */
-}
-       #message-input {
-    flex: 1;
-    border-radius: 50px 0 0 50px;
-    margin-right: 0;
-    padding: 0 15px; /* Change from padding-left to padding */
-    height: 40px; /* Explicit height */
-    line-height: 40px; /* Match height */
-    border: 3px solid var(--primary); /* Add border to match button style */
-}
-       #send-message-btn {
-    border-radius: 0 50px 50px 0;
-    margin-left: 0;
-    padding: 0 20px; /* Adjust padding */
-    height: 40px; /* Explicit height */
-    line-height: 40px; /* Match height */
-    min-width: auto;
-    position: relative;
-    z-index: 1;
-    border: none; /* Ensure no border */
-}
+            display: flex;
+            margin-top: 10px;
+            width: 100%;
+            align-items: center;
+        }
+        #message-input {
+            flex: 1;
+            border-radius: 50px 0 0 50px;
+            margin-right: 0;
+            padding: 0 15px;
+            height: 40px;
+            line-height: 40px;
+            border: 3px solid var(--primary);
+        }
+        #send-message-btn {
+            border-radius: 0 50px 50px 0;
+            margin-left: 0;
+            padding: 0 20px;
+            height: 40px;
+            line-height: 40px;
+            min-width: auto;
+            border: none;
+        }
         #messages-hub-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    margin-right: 10px;
-}
-
-#messages-hub-btn:hover {
-    transform: scale(1.05);
-}
-        #messages-container{max-height:300px;overflow-y:auto;margin-bottom:10px;text-align:left}
-        .message{border-radius:15px;padding:8px 12px;margin:5px 0;max-width:80%;word-wrap:break-word;min-width:100px}
-        .sent{background:var(--primary);color:white;margin-left:auto;border-bottom-right-radius:5px}
-        .received{background:var(--bg);margin-right:auto;border-bottom-left-radius:5px}
-        .message-time{font-size:10px;color:var(--text);opacity:0.7;margin-top:2px}
-        .message-date{font-size:10px;color:gray;opacity:0.5;text-align:center;margin:8px 0}
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:8px;
+            box-shadow:0 2px 5px rgba(0,0,0,0.2);
+            margin-right:10px;
+        }
+        #messages-hub-btn:hover {
+            transform: scale(1.05);
+        }
+        #messages-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .message {
+            border-radius:15px;
+            padding:8px 12px;
+            margin:5px 0;
+            max-width:80%;
+            word-wrap:break-word;
+            min-width:100px;
+        }
+        .sent {
+            background:var(--primary);
+            color:white;
+            margin-left:auto;
+            border-bottom-right-radius:5px;
+        }
+        .received {
+            background:var(--bg);
+            margin-right:auto;
+            border-bottom-left-radius:5px;
+        }
+        .message-time {
+            font-size:10px;
+            color:var(--text);
+            opacity:0.7;
+            margin-top:2px;
+        }
+        .message-date {
+            font-size:10px;
+            color:gray;
+            opacity:0.5;
+            text-align:center;
+            margin:8px 0;
+        }
         @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-5px)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes slideIn{from{opacity:0;transform:translate(-50%,-30px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -199,6 +219,32 @@
         body.silver-theme.dark-mode{--text:#F5F5F5;--bg:#181818;--card-bg:#282828}
         body.bronze-theme{--primary:#CD7F32;--secondary:#A0522D;--accent:#8B4513;--notification-success:#228B22;--notification-error:#8B0000;--notification-info:#4169E1}
         body.bronze-theme.dark-mode{--text:#FFF8DC;--bg:#1E1E1E;--card-bg:#2E2E2E}
+        .hub-container {
+            display: flex;
+            flex-direction: row;
+            height: 70vh;
+            margin-top: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .conversations-panel {
+            width: 30%;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .messages-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            justify-content: space-between;
+        }
+        #messages-hub {
+            display: none;
+            width: 100%;
+        }
     </style>
 </head>
 <body class="default-theme">
@@ -220,24 +266,35 @@
             <div class="theme-option" data-mode="dark">Dark Mode</div>
         </div>
     </div>
-    <div id="messages-hub" class="step" style="display:none">
-    <h1>Messages Hub</h1>
-    <div id="conversations-list">
-        <!-- Conversations will be loaded here -->
+    <div id="messages-hub" class="step">
+        <h1>Messages Hub</h1>
+        <div class="hub-container">
+            <div class="conversations-panel" id="conversations-panel">
+                <div id="conversations-list">
+                    <p>Loading conversations...</p>
+                </div>
+            </div>
+            <div class="messages-panel" id="messages-panel">
+                <div id="chat-username">Select a conversation to start messaging</div>
+                <div id="messages-container"></div>
+                <div id="message-input-container">
+                    <input type="text" id="message-input" placeholder="Type your message...">
+                    <button id="send-message-btn">➤</button>
+                </div>
+            </div>
+        </div>
+        <button id="back-to-home-from-hub" style="margin-top:20px">Back to Home</button>
     </div>
-    <button id="back-to-home-from-hub" style="margin-top:20px">Back to Home</button>
-</div>
-    <!-- Notification Center -->
     <div id="notification-center">
-    <button id="messages-hub-btn" title="Messages Hub">💬</button>
-    <button id="notification-bell">🔔
-        <div id="notification-badge" style="display:none">0</div>
-    </button>
-    <div id="notification-panel">
-        <div class="notification-header">Notifications</div>
-        <div id="notification-list" style="max-height:350px;overflow-y:auto"></div>
+        <button id="messages-hub-btn" title="Messages Hub">💬</button>
+        <button id="notification-bell">🔔
+            <div id="notification-badge" style="display:none">0</div>
+        </button>
+        <div id="notification-panel">
+            <div class="notification-header">Notifications</div>
+            <div id="notification-list" style="max-height:350px;overflow-y:auto"></div>
+        </div>
     </div>
-</div>
     <div class="container">
         <div id="main-app" class="step">
             <h1>Welcome to Mekhis Creations</h1>
@@ -330,7 +387,6 @@
         </div>
     </div>
 
-    <!-- Followers/Following Lists -->
     <div class="overlay" id="overlay"></div>
     <div class="followers-list" id="followers-list">
         <button class="close-list" id="close-followers">×</button>
@@ -342,8 +398,6 @@
         <h3 class="list-title">Following</h3>
         <div id="following-container"></div>
     </div>
-    
-    <!-- Messages List -->
     <div class="messages-list" id="messages-list">
         <button class="close-list" id="close-messages">×</button>
         <h3 class="list-title" id="chat-username">Messages</h3>
@@ -449,128 +503,8 @@
             unreadNotifications++;
             updateNotificationBadge();
             renderNotifications();
-            
-            // Show popup notification
             showNotification(message, type);
         }
-// Add this to your event listeners
-document.getElementById('messages-hub-btn').addEventListener('click', () => {
-    window.history.pushState({}, '', '/messages');
-    showMessagesHub();
-});
-
-window.addEventListener('popstate', () => {
-    const path = window.location.pathname;
-    if (path === '/messages') {
-        showMessagesHub();
-    } else if (path.startsWith('/@')) {
-        const username = decodeURIComponent(path.substring(2));
-        searchUserByUsername(username);
-    } else {
-        loadUserData(localStorage.getItem('robloxUserId'));
-    }
-});
-
-// Add this function to show the messages hub
-function showMessagesHub() {
-    document.getElementById('onboarding').style.display = 'none';
-    document.getElementById('main-app').style.display = 'none';
-    document.getElementById('home-content').style.display = 'none';
-    document.getElementById('messages-hub').style.display = 'block';
-    
-    const currentUserId = localStorage.getItem('robloxUserId');
-    if (!currentUserId) return showNotification('You need to be logged in', 'error');
-    
-    loadConversations(currentUserId);
-}
-
-// Add this function to load all conversations
-function loadConversations(userId) {
-    const conversationsList = document.getElementById('conversations-list');
-    conversationsList.innerHTML = '<p>Loading conversations...</p>';
-    
-    database.ref(`users/${userId}/messages`).once('value').then(snapshot => {
-        conversationsList.innerHTML = '';
-        
-        if (!snapshot.exists()) {
-            conversationsList.innerHTML = '<p>No conversations yet</p>';
-            return;
-        }
-        
-        const conversations = {};
-        
-        // Group messages by conversation partner
-        snapshot.forEach(child => {
-            const message = child.val();
-            const otherUserId = message.senderId === userId ? message.receiverId : message.senderId;
-            
-            if (!conversations[otherUserId]) {
-                conversations[otherUserId] = {
-                    lastMessage: message,
-                    unread: false
-                };
-            } else if (message.timestamp > conversations[otherUserId].lastMessage.timestamp) {
-                conversations[otherUserId].lastMessage = message;
-            }
-            
-            if (message.receiverId === userId && !message.read) {
-                conversations[otherUserId].unread = true;
-            }
-        });
-        
-        // Get user data for each conversation partner
-        const promises = Object.keys(conversations).map(otherUserId => {
-            return database.ref(`users/${otherUserId}`).once('value').then(userSnapshot => {
-                if (userSnapshot.exists()) {
-                    return {
-                        user: userSnapshot.val(),
-                        lastMessage: conversations[otherUserId].lastMessage,
-                        unread: conversations[otherUserId].unread
-                    };
-                }
-                return null;
-            });
-        });
-        
-        Promise.all(promises).then(results => {
-            conversationsList.innerHTML = '';
-            
-            results.filter(result => result !== null)
-                .sort((a, b) => b.lastMessage.timestamp - a.lastMessage.timestamp)
-                .forEach(result => {
-                    const conversationElement = document.createElement('div');
-                    conversationElement.className = `conversation-item ${result.unread ? 'unread' : ''}`;
-                    
-                    const messageTime = new Date(result.lastMessage.timestamp);
-                    const messageTimeFormatted = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const messageDateFormatted = messageTime.toLocaleDateString();
-                    
-                    conversationElement.innerHTML = `
-                        <img src="${result.user.headshot}" alt="${result.user.username}" width="50" height="50">
-                        <div class="conversation-info">
-                            <div class="conversation-username">${result.user.username}</div>
-                            <div class="conversation-preview">${result.lastMessage.text.substring(0, 30)}${result.lastMessage.text.length > 30 ? '...' : ''}</div>
-                        </div>
-                        <div class="conversation-time">
-                            <div>${messageTimeFormatted}</div>
-                            <div class="conversation-date">${messageDateFormatted}</div>
-                        </div>
-                    `;
-                    
-                    conversationElement.addEventListener('click', () => {
-                        openMessages(result.user.userId, result.user.username);
-                    });
-                    
-                    conversationsList.appendChild(conversationElement);
-                });
-            
-            if (conversationsList.innerHTML === '') {
-                conversationsList.innerHTML = '<p>No conversations yet</p>';
-            }
-        });
-    });
-}
-
 
         function renderNotifications() {
             const notificationList = document.getElementById('notification-list');
@@ -597,7 +531,6 @@ function loadConversations(userId) {
                         notificationElement.classList.remove('unread');
                     }
                     
-                    // Handle notification click
                     if (notification.message.includes('sent you a message')) {
                         const userIdMatch = notification.message.match(/from (.+?)!/);
                         if (userIdMatch && userIdMatch[1]) {
@@ -622,7 +555,6 @@ function loadConversations(userId) {
             const panel = document.getElementById('notification-panel');
             panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
             
-            // Mark all notifications as read when opening panel
             if (panel.style.display === 'block') {
                 notifications.forEach(notification => {
                     if (!notification.read) {
@@ -635,71 +567,83 @@ function loadConversations(userId) {
             }
         });
 
+        // Close notification panel when clicking outside
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('notification-panel');
+            const bell = document.getElementById('notification-bell');
+            if (!e.target.closest('#notification-panel') && !e.target.closest('#notification-bell')) {
+                panel.style.display = 'none';
+            }
+        });
+
         // Messaging functions
         function openMessages(userId, username) {
             currentChatUserId = userId;
             document.getElementById('chat-username').textContent = `Messages with ${username}`;
-            document.getElementById('messages-list').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('messages-panel').style.display = 'block';
+            document.getElementById('messages-hub').style.display = 'block';
+            document.getElementById('home-content').style.display = 'none';
+            document.getElementById('onboarding').style.display = 'none';
+            document.getElementById('main-app').style.display = 'none';
             loadMessages(localStorage.getItem('robloxUserId'), userId);
         }
 
         function loadMessages(currentUserId, otherUserId) {
-    const messagesContainer = document.getElementById('messages-container');
-    messagesContainer.innerHTML = '';
-    
-    let lastDate = null;
-    
-    database.ref(`users/${currentUserId}/messages`).orderByChild('timestamp').once('value').then(snapshot => {
-        messagesContainer.innerHTML = '';
-        
-        if (snapshot.exists()) {
-            const messages = [];
-            snapshot.forEach(child => {
-                const message = child.val();
-                if ((message.senderId === otherUserId && message.receiverId === currentUserId) || 
-                    (message.senderId === currentUserId && message.receiverId === otherUserId)) {
-                    messages.push({
-                        ...message,
-                        key: child.key // Store the key for later use
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = '';
+            
+            let lastDate = null;
+            
+            database.ref(`users/${currentUserId}/messages`).orderByChild('timestamp').once('value').then(snapshot => {
+                messagesContainer.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    const messages = [];
+                    snapshot.forEach(child => {
+                        const message = child.val();
+                        if ((message.senderId === otherUserId && message.receiverId === currentUserId) || 
+                            (message.senderId === currentUserId && message.receiverId === otherUserId)) {
+                            messages.push({
+                                ...message,
+                                key: child.key
+                            });
+                        }
                     });
+                    
+                    if (messages.length > 0) {
+                        messages.sort((a, b) => a.timestamp - b.timestamp);
+                        
+                        messages.forEach(message => {
+                            const messageTime = new Date(message.timestamp);
+                            const messageDate = messageTime.toLocaleDateString();
+                            const messageTimeFormatted = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            
+                            if (lastDate !== messageDate) {
+                                const dateElement = document.createElement('div');
+                                dateElement.className = 'message-date';
+                                dateElement.textContent = messageDate;
+                                messagesContainer.appendChild(dateElement);
+                                lastDate = messageDate;
+                            }
+                            
+                            const messageElement = document.createElement('div');
+                            messageElement.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
+                            messageElement.innerHTML = `
+                                <div>${message.text}</div>
+                                <div class="message-time">${messageTimeFormatted}</div>
+                            `;
+                            messagesContainer.appendChild(messageElement);
+                            
+                            if (message.receiverId === currentUserId && !message.read) {
+                                database.ref(`users/${currentUserId}/messages/${message.key}`).update({ read: true });
+                            }
+                        });
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
                 }
             });
-            
-            if (messages.length > 0) {
-                messages.sort((a, b) => a.timestamp - b.timestamp);
-                
-                messages.forEach(message => {
-                    const messageTime = new Date(message.timestamp);
-                    const messageDate = messageTime.toLocaleDateString();
-                    const messageTimeFormatted = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    
-                    if (lastDate !== messageDate) {
-                        const dateElement = document.createElement('div');
-                        dateElement.className = 'message-date';
-                        dateElement.textContent = messageDate;
-                        messagesContainer.appendChild(dateElement);
-                        lastDate = messageDate;
-                    }
-                    
-                    const messageElement = document.createElement('div');
-                    messageElement.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
-                    messageElement.innerHTML = `
-                        <div>${message.text}</div>
-                        <div class="message-time">${messageTimeFormatted}</div>
-                    `;
-                    messagesContainer.appendChild(messageElement);
-                    
-                    // Mark as read
-                    if (message.receiverId === currentUserId && !message.read) {
-                        database.ref(`users/${currentUserId}/messages/${message.key}`).update({ read: true });
-                    }
-                });
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
         }
-    });
-}
+
         function sendMessage(senderId, receiverId, messageText) {
             if (!messageText.trim()) return;
             
@@ -896,8 +840,7 @@ function loadConversations(userId) {
             });
 
             document.getElementById('no-btn')?.addEventListener('click', () => {
-                showStep('step1', 1);
-                showNotification('Please enter the correct Roblox ID', 'info');
+                showStep('step2', 2);
             });
 
             document.getElementById('back-btn')?.addEventListener('click', () => {
@@ -1014,6 +957,7 @@ function loadConversations(userId) {
             document.getElementById('onboarding').style.display = 'none';
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('home-content').style.display = 'block';
+            document.getElementById('messages-hub').style.display = 'none';
             
             const path = window.location.pathname;
             if (path.startsWith('/@')) {
@@ -1289,16 +1233,131 @@ function loadConversations(userId) {
             document.getElementById('messages-list').style.display = 'none';
             currentChatUserId = null;
         });
-document.getElementById('back-to-home-from-hub').addEventListener('click', () => {
-    window.history.pushState({}, '', '/');
-    showHomeContent();
-});
+
         document.getElementById('overlay').addEventListener('click', () => {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('followers-list').style.display = 'none';
             document.getElementById('following-list').style.display = 'none';
             document.getElementById('messages-list').style.display = 'none';
             currentChatUserId = null;
+        });
+
+        // Messages hub navigation
+        document.getElementById('messages-hub-btn').addEventListener('click', () => {
+            window.history.pushState({}, '', '/messages');
+            showMessagesHub();
+        });
+
+        document.getElementById('back-to-home-from-hub').addEventListener('click', () => {
+            window.history.pushState({}, '', '/');
+            showHomeContent();
+        });
+
+        function showMessagesHub() {
+            document.getElementById('onboarding').style.display = 'none';
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('home-content').style.display = 'none';
+            document.getElementById('messages-hub').style.display = 'block';
+            
+            const currentUserId = localStorage.getItem('robloxUserId');
+            if (!currentUserId) return showNotification('You need to be logged in', 'error');
+            
+            loadConversations(currentUserId);
+        }
+
+        function loadConversations(userId) {
+            const conversationsList = document.getElementById('conversations-list');
+            conversationsList.innerHTML = '<p>Loading conversations...</p>';
+            
+            database.ref(`users/${userId}/messages`).once('value').then(snapshot => {
+                conversationsList.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    conversationsList.innerHTML = '<p>No conversations yet</p>';
+                    return;
+                }
+                
+                const conversations = {};
+                
+                snapshot.forEach(child => {
+                    const message = child.val();
+                    const otherUserId = message.senderId === userId ? message.receiverId : message.senderId;
+                    
+                    if (!conversations[otherUserId]) {
+                        conversations[otherUserId] = {
+                            lastMessage: message,
+                            unread: false
+                        };
+                    } else if (message.timestamp > conversations[otherUserId].lastMessage.timestamp) {
+                        conversations[otherUserId].lastMessage = message;
+                    }
+                    
+                    if (message.receiverId === userId && !message.read) {
+                        conversations[otherUserId].unread = true;
+                    }
+                });
+                
+                const promises = Object.keys(conversations).map(otherUserId => {
+                    return database.ref(`users/${otherUserId}`).once('value').then(userSnapshot => {
+                        if (userSnapshot.exists()) {
+                            return {
+                                user: userSnapshot.val(),
+                                lastMessage: conversations[otherUserId].lastMessage,
+                                unread: conversations[otherUserId].unread
+                            };
+                        }
+                        return null;
+                    });
+                });
+                
+                Promise.all(promises).then(results => {
+                    conversationsList.innerHTML = '';
+                    
+                    results.filter(result => result !== null)
+                        .sort((a, b) => b.lastMessage.timestamp - a.lastMessage.timestamp)
+                        .forEach(result => {
+                            const conversationElement = document.createElement('div');
+                            conversationElement.className = `conversation-item ${result.unread ? 'unread' : ''}`;
+                            
+                            const messageTime = new Date(result.lastMessage.timestamp);
+                            const messageTimeFormatted = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            
+                            conversationElement.innerHTML = `
+                                <img src="${result.user.headshot}" alt="${result.user.username}" width="50" height="50">
+                                <div class="conversation-info">
+                                    <div class="conversation-username">${result.user.username}</div>
+                                    <div class="conversation-preview">${result.lastMessage.text.substring(0, 30)}${result.lastMessage.text.length > 30 ? '...' : ''}</div>
+                                </div>
+                                <div class="conversation-time">
+                                    <div>${messageTimeFormatted}</div>
+                                </div>
+                            `;
+                            
+                            conversationElement.addEventListener('click', () => {
+                                openMessages(result.user.userId, result.user.username);
+                            });
+                            
+                            conversationsList.appendChild(conversationElement);
+                        });
+                    
+                    if (conversationsList.innerHTML === '') {
+                        conversationsList.innerHTML = '<p>No conversations yet</p>';
+                    }
+                });
+            });
+        }
+
+        // Handle back/forward navigation
+        window.addEventListener('popstate', () => {
+            const path = window.location.pathname;
+            if (path === '/messages') {
+                showMessagesHub();
+            } else if (path.startsWith('/@')) {
+                const username = decodeURIComponent(path.substring(2));
+                searchUserByUsername(username);
+            } else {
+                loadUserData(localStorage.getItem('robloxUserId'));
+            }
         });
     </script>
 </body>
