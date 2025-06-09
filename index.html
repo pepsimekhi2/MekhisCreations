@@ -62,8 +62,9 @@
         .theme-section-title{font-weight:bold;margin-bottom:5px;font-size:14px}
         .theme-option{padding:5px 10px;cursor:pointer;border-radius:50px;margin:2px 0;font-size:12px;text-align:center}
         .theme-option:hover{background:rgba(0,0,0,0.1)}.theme-option.selected{background:var(--primary);color:var(--btn-text)}
-        #player-search{margin-top:20px;margin-bottom:20px}#search-input{width:60%;margin-right:10px}
-        #search-results{display:none;margin-top:10px;background:var(--card-bg);border-radius:15px;padding:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+        #player-search{margin-top:20px;margin-bottom:20px;display:flex;justify-content:center;align-items:center}
+        #search-input{width:60%;margin-right:10px}
+        #search-results{display:none;margin-top:10px;background:var(--card-bg);border-radius:15px;padding:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);width:100%}
         .search-result{display:flex;align-items:center;padding:8px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
         .search-result:hover{background:rgba(0,0,0,0.05)}
         .search-result:last-child{border-bottom:none}
@@ -71,7 +72,7 @@
         .search-result button{margin-left:auto;padding:5px 10px;font-size:12px;min-width:auto;border-radius:50px}
         .notification{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:50px;color:white;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,0.2);z-index:1000;animation:slideIn 0.3s,fadeOut 0.5s 2.5s forwards}
         .notification.success{background-color:var(--notification-success)}.notification.error{background-color:var(--notification-error)}.notification.info{background-color:var(--notification-info)}
-        .followers-list,.following-list,.messages-list,.notifications-list{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card-bg);border-radius:20px;padding:20px;width:80%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1000}
+        .followers-list,.following-list,.messages-list,.notifications-list,.search-page{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card-bg);border-radius:20px;padding:20px;width:80%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1000}
         .close-list{position:absolute;top:10px;right:10px;background:var(--accent);color:white;border:none;width:25px;height:25px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
         .close-list:hover{transform:scale(1.1);background:#d32f2f}
         .list-title{margin-bottom:15px;color:var(--primary)}
@@ -91,6 +92,8 @@
         .post-action span{margin-left:5px}
         .post-action.liked{color:var(--accent)}
         .post-action.reposted{color:var(--secondary)}
+        .repost-info{font-size:12px;color:var(--primary);margin-bottom:5px;display:flex;align-items:center}
+        .repost-info i{margin-right:5px}
         .create-post{background:var(--card-bg);border-radius:15px;padding:15px;margin:15px auto;max-width:500px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
         .create-post textarea{width:100%;margin:0 0 10px 0}
         .create-post button{width:100%;margin:0}
@@ -101,6 +104,9 @@
         .message.sent{align-self:flex-end;background:var(--primary);color:white}
         .message.received{align-self:flex-start}
         .messages-container{display:flex;flex-direction:column;max-height:300px;overflow-y:auto;margin-bottom:10px}
+        .search-tabs{display:flex;justify-content:center;margin-bottom:15px}
+        .search-tab{background:var(--primary);color:white;border:none;border-radius:50px;padding:8px 16px;margin:0 5px;cursor:pointer}
+        .search-tab.active{background:var(--secondary)}
         body.galaxy-theme{--primary:#9D00FF;--secondary:#00D1FF;--accent:#FF00F5;--notification-success:#00FF88;--notification-error:#FF006E;--notification-info:#7700FF}
         body.galaxy-theme.dark-mode{--text:#FFFFFF;--bg:#0A0A1A;--card-bg:#1A1A2A;background:radial-gradient(circle at center,#0A0A1A,#000000)}
         @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-5px)}}
@@ -112,7 +118,7 @@
     </style>
 </head>
 <body class="default-theme">
-    <div class="version">Mekhis Creations v2.0</div>
+    <div class="version">Mekhis Creations v2.1</div>
     <button class="theme-btn" id="theme-btn">Themes</button>
     <div class="theme-menu" id="theme-menu">
         <div class="theme-section">
@@ -207,15 +213,14 @@
             <div id="title-bar">Mekhis Creations</div>
             <div id="divider"></div>
             
-            <div id="create-post" class="create-post" style="display:none">
-                <textarea id="post-content" placeholder="What's on your mind?"></textarea>
-                <button id="post-btn">Post</button>
-            </div>
-            
             <div id="player-search">
                 <input type="text" id="search-input" placeholder="Search players by username">
                 <button id="search-btn">Search</button>
-                <div id="search-results"></div>
+            </div>
+            
+            <div id="create-post" class="create-post" style="display:none">
+                <textarea id="post-content" placeholder="What's on your mind?"></textarea>
+                <button id="post-btn">Post</button>
             </div>
             
             <button id="back-to-profile">Back to My Profile</button>
@@ -276,6 +281,16 @@
         <button class="close-list" id="close-notifications">×</button>
         <h3 class="list-title">Notifications</h3>
         <div id="notifications-container"></div>
+    </div>
+    <div class="search-page" id="search-page">
+        <button class="close-list" id="close-search">×</button>
+        <h3 class="list-title">Search Results</h3>
+        <div class="search-tabs">
+            <button class="search-tab active" id="users-tab">Users</button>
+            <button class="search-tab" id="posts-tab">Posts</button>
+        </div>
+        <div id="search-users-container"></div>
+        <div id="search-posts-container" style="display:none"></div>
     </div>
 
     <script>
@@ -433,43 +448,126 @@
             });
         }
 
-        // Player search functionality
+        // Search functionality
         document.getElementById('search-btn').addEventListener('click', () => {
             const searchTerm = document.getElementById('search-input').value.trim();
-            if (!searchTerm) return showNotification('Please enter a username to search', 'error');
+            if (!searchTerm) return showNotification('Please enter a search term', 'error');
             
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('search-page').style.display = 'block';
+            document.getElementById('users-tab').classList.add('active');
+            document.getElementById('posts-tab').classList.remove('active');
+            document.getElementById('search-users-container').style.display = 'block';
+            document.getElementById('search-posts-container').style.display = 'none';
+            
+            // Search users
             database.ref('users').once('value').then(snapshot => {
-                const results = [];
-                snapshot.forEach(childSnapshot => {
-                    const user = childSnapshot.val();
-                    if (user.username.toLowerCase().includes(searchTerm.toLowerCase())) {
-                        results.push(user);
-                    }
-                });
+                const usersContainer = document.getElementById('search-users-container');
+                usersContainer.innerHTML = '';
                 
-                const resultsContainer = document.getElementById('search-results');
-                resultsContainer.innerHTML = '';
-                
-                if (results.length > 0) {
-                    results.forEach(user => {
-                        const userElement = document.createElement('div');
-                        userElement.className = 'search-result';
-                        userElement.innerHTML = `
-                            <img src="${user.headshot}" width="50" height="50" style="border-radius:50%;margin-right:10px;">
-                            <span>${user.username}</span>
-                            <button class="view-profile" data-id="${user.userId}">View</button>
-                        `;
-                        resultsContainer.appendChild(userElement);
+                if (snapshot.exists()) {
+                    const users = [];
+                    snapshot.forEach(childSnapshot => {
+                        const user = childSnapshot.val();
+                        if (user.username.toLowerCase().includes(searchTerm.toLowerCase())) {
+                            users.push(user);
+                        }
                     });
-                    resultsContainer.style.display = 'block';
-                } else {
-                    resultsContainer.innerHTML = '<p>No players found matching your search</p>';
-                    resultsContainer.style.display = 'block';
+                    
+                    if (users.length > 0) {
+                        users.forEach(user => {
+                            const userElement = document.createElement('div');
+                            userElement.className = 'list-item';
+                            userElement.innerHTML = `
+                                <img src="${user.headshot}" alt="${user.username}">
+                                <span>${user.username}</span>
+                                <button class="view-profile" data-id="${user.userId}">View</button>
+                            `;
+                            usersContainer.appendChild(userElement);
+                        });
+                    } else {
+                        usersContainer.innerHTML = '<p>No users found matching your search</p>';
+                    }
                 }
-            }).catch(error => {
-                showNotification('Search failed', 'error');
-                console.error('Search error:', error);
             });
+            
+            // Search posts
+            database.ref('posts').once('value').then(snapshot => {
+                const postsContainer = document.getElementById('search-posts-container');
+                postsContainer.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    const posts = [];
+                    snapshot.forEach(childSnapshot => {
+                        const post = { id: childSnapshot.key, ...childSnapshot.val() };
+                        if (post.content.toLowerCase().includes(searchTerm.toLowerCase())) {
+                            posts.push(post);
+                        }
+                    });
+                    
+                    if (posts.length > 0) {
+                        posts.sort((a, b) => b.timestamp - a.timestamp);
+                        posts.forEach(post => {
+                            database.ref(`users/${post.userId}`).once('value').then(userSnapshot => {
+                                if (userSnapshot.exists()) {
+                                    const user = userSnapshot.val();
+                                    const currentUserId = localStorage.getItem('robloxUserId');
+                                    const isLiked = currentUserId && post.likes && post.likes[currentUserId];
+                                    const isReposted = currentUserId && post.reposts && post.reposts[currentUserId];
+                                    
+                                    const postElement = document.createElement('div');
+                                    postElement.className = 'post-container';
+                                    postElement.innerHTML = `
+                                        <div class="post-header">
+                                            <img src="${user.headshot}" width="40" height="40" style="border-radius:50%;margin-right:10px;cursor:pointer" class="view-profile" data-id="${user.userId}">
+                                            <div>
+                                                <div class="post-user view-profile" data-id="${user.userId}">${user.username}</div>
+                                                <div class="post-time">${new Date(post.timestamp).toLocaleString()}</div>
+                                            </div>
+                                        </div>
+                                        <div class="post-content">${post.content}</div>
+                                        <div class="post-actions">
+                                            <div class="post-action like-post ${isLiked ? 'liked' : ''}" data-id="${post.id}">
+                                                ❤️ <span>${post.likes ? formatNumber(Object.keys(post.likes).length) : 0}</span>
+                                            </div>
+                                            <div class="post-action repost-post ${isReposted ? 'reposted' : ''}" data-id="${post.id}">
+                                                🔄 <span>${post.reposts ? formatNumber(Object.keys(post.reposts).length) : 0}</span>
+                                            </div>
+                                            <div class="post-action">
+                                                👁️ <span>${post.views ? formatNumber(post.views) : 0}</span>
+                                            </div>
+                                        </div>
+                                    `;
+                                    postsContainer.appendChild(postElement);
+                                }
+                            });
+                        });
+                    } else {
+                        postsContainer.innerHTML = '<p>No posts found matching your search</p>';
+                    }
+                }
+            });
+        });
+
+        // Search tabs
+        document.getElementById('users-tab').addEventListener('click', () => {
+            document.getElementById('users-tab').classList.add('active');
+            document.getElementById('posts-tab').classList.remove('active');
+            document.getElementById('search-users-container').style.display = 'block';
+            document.getElementById('search-posts-container').style.display = 'none';
+        });
+
+        document.getElementById('posts-tab').addEventListener('click', () => {
+            document.getElementById('posts-tab').classList.add('active');
+            document.getElementById('users-tab').classList.remove('active');
+            document.getElementById('search-posts-container').style.display = 'block';
+            document.getElementById('search-users-container').style.display = 'none';
+        });
+
+        // Close search
+        document.getElementById('close-search').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('search-page').style.display = 'none';
         });
 
         // View profile from search results
@@ -480,10 +578,10 @@
                 if (userId) {
                     window.history.pushState({}, '', `/@${encodeURIComponent(userId)}`);
                     loadUserData(userId);
-                    document.getElementById('search-results').style.display = 'none';
                     document.getElementById('overlay').style.display = 'none';
                     document.getElementById('followers-list').style.display = 'none';
                     document.getElementById('following-list').style.display = 'none';
+                    document.getElementById('search-page').style.display = 'none';
                 }
             }
             
@@ -637,6 +735,7 @@
             document.getElementById('messages-list').style.display = 'none';
             document.getElementById('chat-window').style.display = 'none';
             document.getElementById('notifications-list').style.display = 'none';
+            document.getElementById('search-page').style.display = 'none';
         });
 
         // Back to profile button
@@ -670,7 +769,7 @@
                                 conversationElement.innerHTML = `
                                     <img src="${user.headshot}" alt="${user.username}">
                                     <span>${user.username}</span>
-                                    <button class="view-chat" data-id="${user.userId}">Chat</button>
+                                    <button class="start-chat" data-id="${user.userId}">Chat</button>
                                 `;
                                 conversationsContainer.appendChild(conversationElement);
                             }
@@ -776,12 +875,12 @@
         });
 
         document.getElementById('close-chat').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
             document.getElementById('chat-window').style.display = 'none';
-            document.getElementById('messages-list').style.display = 'block';
         });
 
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('view-chat')) {
+            if (e.target.classList.contains('start-chat')) {
                 const userId = e.target.dataset.id;
                 showChatWindow(userId);
             }
@@ -822,7 +921,28 @@
                                 
                                 const postElement = document.createElement('div');
                                 postElement.className = 'post-container';
+                                
+                                let repostInfo = '';
+                                if (post.originalPostId) {
+                                    database.ref(`posts/${post.originalPostId}`).once('value').then(originalPostSnapshot => {
+                                        if (originalPostSnapshot.exists()) {
+                                            const originalPost = originalPostSnapshot.val();
+                                            database.ref(`users/${originalPost.userId}`).once('value').then(originalUserSnapshot => {
+                                                if (originalUserSnapshot.exists()) {
+                                                    const originalUser = originalUserSnapshot.val();
+                                                    const repostInfoElement = postElement.querySelector('.repost-info');
+                                                    if (repostInfoElement) {
+                                                        repostInfoElement.innerHTML = `<i>🔄</i> Reposted from @${originalUser.username}`;
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                    repostInfo = `<div class="repost-info"><i>🔄</i> Reposted from @${user.username}</div>`;
+                                }
+                                
                                 postElement.innerHTML = `
+                                    ${repostInfo}
                                     <div class="post-header">
                                         <img src="${user.headshot}" width="40" height="40" style="border-radius:50%;margin-right:10px;cursor:pointer" class="view-profile" data-id="${user.userId}">
                                         <div>
@@ -833,13 +953,13 @@
                                     <div class="post-content">${post.content}</div>
                                     <div class="post-actions">
                                         <div class="post-action like-post ${isLiked ? 'liked' : ''}" data-id="${post.id}">
-                                            ❤️ <span>${post.likes ? Object.keys(post.likes).length : 0}</span>
+                                            ❤️ <span>${post.likes ? formatNumber(Object.keys(post.likes).length) : 0}</span>
                                         </div>
                                         <div class="post-action repost-post ${isReposted ? 'reposted' : ''}" data-id="${post.id}">
-                                            🔄 <span>${post.reposts ? Object.keys(post.reposts).length : 0}</span>
+                                            🔄 <span>${post.reposts ? formatNumber(Object.keys(post.reposts).length) : 0}</span>
                                         </div>
                                         <div class="post-action">
-                                            👁️ <span>${post.views || 0}</span>
+                                            👁️ <span>${post.views ? formatNumber(post.views) : 0}</span>
                                         </div>
                                     </div>
                                 `;
@@ -890,10 +1010,28 @@
                 const currentUserId = localStorage.getItem('robloxUserId');
                 if (!currentUserId) return showNotification('You need to be logged in to like posts', 'error');
                 
+                const actionElement = e.target.classList.contains('like-post') ? e.target : e.target.closest('.like-post');
+                
                 database.ref(`posts/${postId}/likes/${currentUserId}`).transaction(like => {
                     if (like === null) {
+                        // Send notification to post owner
+                        database.ref(`posts/${postId}`).once('value').then(postSnapshot => {
+                            if (postSnapshot.exists()) {
+                                const post = postSnapshot.val();
+                                if (post.userId !== currentUserId) {
+                                    const notification = {
+                                        message: `${localStorage.getItem('robloxUsername')} liked your post`,
+                                        timestamp: Date.now()
+                                    };
+                                    database.ref(`users/${post.userId}/notifications`).push(notification);
+                                }
+                            }
+                        });
+                        
+                        actionElement.classList.add('liked');
                         return true;
                     } else {
+                        actionElement.classList.remove('liked');
                         return null;
                     }
                 });
@@ -904,12 +1042,21 @@
                 const currentUserId = localStorage.getItem('robloxUserId');
                 if (!currentUserId) return showNotification('You need to be logged in to repost', 'error');
                 
-                database.ref(`posts/${postId}/reposts/${currentUserId}`).transaction(repost => {
-                    if (repost === null) {
+                const actionElement = e.target.classList.contains('repost-post') ? e.target : e.target.closest('.repost-post');
+                
+                database.ref(`posts/${postId}/reposts/${currentUserId}`).once('value').then(snapshot => {
+                    if (snapshot.exists()) {
+                        // Already reposted, so remove the repost
+                        database.ref(`posts/${postId}/reposts/${currentUserId}`).remove()
+                            .then(() => {
+                                actionElement.classList.remove('reposted');
+                                showNotification('Removed repost', 'success');
+                            });
+                    } else {
                         // Create a new repost
-                        database.ref(`posts/${postId}`).once('value').then(snapshot => {
-                            if (snapshot.exists()) {
-                                const originalPost = snapshot.val();
+                        database.ref(`posts/${postId}`).once('value').then(postSnapshot => {
+                            if (postSnapshot.exists()) {
+                                const originalPost = postSnapshot.val();
                                 const repost = {
                                     userId: currentUserId,
                                     content: originalPost.content,
@@ -922,14 +1069,21 @@
                                 
                                 database.ref('posts').push(repost)
                                     .then(() => {
+                                        database.ref(`posts/${postId}/reposts/${currentUserId}`).set(true);
+                                        actionElement.classList.add('reposted');
                                         showNotification('Reposted successfully!', 'success');
+                                        
+                                        // Send notification to post owner
+                                        if (originalPost.userId !== currentUserId) {
+                                            const notification = {
+                                                message: `${localStorage.getItem('robloxUsername')} reposted your post`,
+                                                timestamp: Date.now()
+                                            };
+                                            database.ref(`users/${originalPost.userId}/notifications`).push(notification);
+                                        }
                                     });
                             }
                         });
-                        return true;
-                    } else {
-                        // Remove the repost
-                        return null;
                     }
                 });
             }
