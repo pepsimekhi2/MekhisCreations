@@ -8,10 +8,20 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root{--primary:#4285F4;--secondary:#34A853;--accent:#EA4335;--text:#202124;--bg:#F8F9FA;--card-bg:#fff;--btn-text:#fff;--input-bg:#fff;--notification-success:#34A853;--notification-error:#EA4335;--notification-info:#4285F4;--theme-dark-text:#F8F9FA;--theme-dark-bg:#202124;--theme-dark-card:#303134;--crimson:#DC143C;--neon-primary:#00F0FF;--neon-secondary:#FF00F0;--neon-accent:#F0FF00;--gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32}
-        body{font-family:'Fredoka One',cursive;color:var(--text);margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;transition:all 0.3s;background:var(--bg)}
-        .container{max-width:500px;width:100%;padding:20px;text-align:center;position:relative}
-        .step{display:none}.active{display:block;animation:fadeIn 0.5s}
+        :root{--primary:#4285F4;--secondary:#34A853;--accent:#EA4335;--text:#202124;--bg:#F8F9FA;--card-bg:#fff;--btn-text:#fff;--input-bg:#fff;--notification-success:#34A853;--notification-error:#EA4335;--notification-info:#4285F4;--theme-dark-text:#F8F9FA;--theme-dark-bg:#202124;--theme-dark-card:#303134;--crimson:#DC143C;--neon-primary:#00F0FF;--neon-secondary:#FF00F0;--neon-accent:#F0FF00;--gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32;--galaxy-primary:#9D00FF;--galaxy-secondary:#00D1FF;--galaxy-accent:#FF00F5}
+        body{font-family:'Fredoka One',cursive;color:var(--text);margin:0;min-height:100vh;display:flex;transition:all 0.3s;background:var(--bg)}
+        .container{max-width:800px;width:100%;padding:20px;margin-left:220px}
+        .sidebar{width:200px;position:fixed;left:10px;top:10px;bottom:10px;background:var(--card-bg);border-radius:15px;padding:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);overflow-y:auto}
+        .sidebar-profile{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;cursor:pointer}
+        .sidebar-profile img{width:80px;height:80px;border-radius:50%;border:3px solid var(--primary);object-fit:cover}
+        .sidebar-profile span{margin-top:10px;font-size:16px;color:var(--primary)}
+        .sidebar-nav{display:flex;flex-direction:column;gap:10px}
+        .sidebar-nav button{background:var(--primary);color:var(--btn-text);border:none;border-radius:50px;padding:10px;cursor:pointer;font-family:'Fredoka One',cursive;text-align:left}
+        .recommended-profiles{margin-top:20px}
+        .recommended-title{font-size:14px;color:var(--primary);margin-bottom:10px}
+        .recommended-user{display:flex;align-items:center;padding:8px;border-radius:10px;margin-bottom:8px;cursor:pointer}
+        .recommended-user:hover{background:rgba(0,0,0,0.05)}
+        .recommended-user img{width:40px;height:40px;border-radius:50%;margin-right:10px;border:2px solid var(--primary)}
         .progress-bar{height:10px;background:rgba(0,0,0,0.1);border-radius:5px;margin:20px 0;overflow:hidden}
         .progress{height:100%;background:var(--secondary);width:0%;transition:width 0.5s}
         h1,h2{color:var(--primary);text-shadow:2px 2px 0 rgba(0,0,0,0.1)}
@@ -20,7 +30,8 @@
         button:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,0.1)}
         #no-btn{background:var(--accent)}#yes-btn,#verify-btn{background:var(--secondary)}
         .back-btn{background:transparent;color:var(--accent);box-shadow:none;text-decoration:underline;padding:8px;min-width:auto}
-        input{font-family:'Fredoka One',cursive;padding:12px;border:3px solid var(--primary);border-radius:50px;width:80%;text-align:center;font-size:16px;margin:15px 0;background:var(--input-bg)}
+        input,textarea{font-family:'Fredoka One',cursive;padding:12px;border:3px solid var(--primary);border-radius:15px;width:80%;font-size:16px;margin:15px 0;background:var(--input-bg)}
+        textarea{min-height:100px;resize:vertical}
         #user-info{background:var(--card-bg);border-radius:20px;padding:20px;margin:20px 0;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
         #headshot{width:150px;height:150px;border-radius:50%;object-fit:cover;border:5px solid var(--primary)}
         #username{font-size:24px;margin:10px 0;color:var(--primary)}#description{background:var(--bg);padding:15px;border-radius:10px;margin:10px 0}
@@ -41,27 +52,27 @@
         .stat-value:hover{transform:scale(1.05);text-decoration:underline}
         .stat-label{font-size:14px;color:var(--text)}
         #edit-btn{background:var(--primary);margin-right:10px}#save-btn{background:var(--secondary);display:none}
-        #follow-btn{background:var(--accent);display:none}
-        #back-to-profile{background:var(--primary);display:none;margin-top:10px}
+        #follow-btn,#message-btn{background:var(--accent);display:none}
+        #back-to-profile{background:var(--primary);display:none;margin:10px auto}
         .version{position:fixed;bottom:10px;left:10px;font-size:12px;opacity:0.7}
-        .theme-btn{position:fixed;bottom:10px;right:10px;font-size:12px;padding:8px 12px}
-        .theme-menu{position:fixed;bottom:40px;right:10px;background:var(--card-bg);border-radius:10px;padding:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:100;width:200px;display:none}
+        .theme-btn{position:fixed;bottom:10px;right:10px;font-size:12px;padding:8px 12px;border-radius:50px}
+        .theme-menu{position:fixed;bottom:40px;right:10px;background:var(--card-bg);border-radius:15px;padding:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:100;width:200px;display:none}
         .theme-menu.active{display:block}
         .theme-section{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,0.1)}
         .theme-section-title{font-weight:bold;margin-bottom:5px;font-size:14px}
-        .theme-option{padding:5px 10px;cursor:pointer;border-radius:5px;margin:2px 0;font-size:12px;text-align:center}
+        .theme-option{padding:5px 10px;cursor:pointer;border-radius:50px;margin:2px 0;font-size:12px;text-align:center}
         .theme-option:hover{background:rgba(0,0,0,0.1)}.theme-option.selected{background:var(--primary);color:var(--btn-text)}
         #player-search{margin-top:20px;margin-bottom:20px}#search-input{width:60%;margin-right:10px}
-        #search-results{display:none;margin-top:10px;background:var(--card-bg);border-radius:10px;padding:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+        #search-results{display:none;margin-top:10px;background:var(--card-bg);border-radius:15px;padding:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
         .search-result{display:flex;align-items:center;padding:8px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
         .search-result:hover{background:rgba(0,0,0,0.05)}
         .search-result:last-child{border-bottom:none}
         .search-result img{width:40px;height:40px;border-radius:50%;margin-right:10px;border:2px solid var(--primary)}
-        .search-result button{margin-left:auto;padding:5px 10px;font-size:12px;min-width:auto}
+        .search-result button{margin-left:auto;padding:5px 10px;font-size:12px;min-width:auto;border-radius:50px}
         .notification{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:50px;color:white;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,0.2);z-index:1000;animation:slideIn 0.3s,fadeOut 0.5s 2.5s forwards}
         .notification.success{background-color:var(--notification-success)}.notification.error{background-color:var(--notification-error)}.notification.info{background-color:var(--notification-info)}
-        .followers-list, .following-list {display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card-bg);border-radius:20px;padding:20px;width:80%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1000}
-        .close-list{position:absolute;top:5px;right:5px;background:var(--accent);color:white;border:none;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.2);border-radius:3px}
+        .followers-list,.following-list,.messages-list,.notifications-list{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card-bg);border-radius:20px;padding:20px;width:80%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1000}
+        .close-list{position:absolute;top:10px;right:10px;background:var(--accent);color:white;border:none;width:25px;height:25px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
         .close-list:hover{transform:scale(1.1);background:#d32f2f}
         .list-title{margin-bottom:15px;color:var(--primary)}
         .list-item{display:flex;align-items:center;padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
@@ -69,35 +80,39 @@
         .list-item:last-child{border-bottom:none}
         .list-item img{width:40px;height:40px;border-radius:50%;margin-right:10px}
         .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999}
-        #notification-center{position:fixed;top:20px;right:20px;z-index:1000}
-        #notification-bell{position:relative;background:var(--primary);color:white;border:none;width:40px;height:40px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,0.2);border-radius:3px}
-        #notification-badge{position:absolute;top:-5px;right:-5px;background:var(--accent);color:white;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;border-radius:3px}
-        #notification-panel{display:none;position:absolute;top:50px;right:0;background:var(--card-bg);border-radius:10px;width:300px;max-height:400px;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1001}
-        .notification-item{padding:12px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
-        .notification-item:last-child{border-bottom:none}
-        .notification-item:hover{background:rgba(0,0,0,0.05)}
-        .notification-item.unread{background:rgba(66,133,244,0.1)}
-        .notification-time{font-size:10px;color:gray;margin-top:5px}
+        .post-container{background:var(--card-bg);border-radius:15px;padding:15px;margin:15px auto;max-width:500px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+        .post-header{display:flex;align-items:center;margin-bottom:10px}
+        .post-user{font-weight:bold;color:var(--primary);cursor:pointer}
+        .post-time{font-size:12px;color:gray;margin-left:10px}
+        .post-content{margin-bottom:15px}
+        .post-actions{display:flex;justify-content:space-around}
+        .post-action{display:flex;align-items:center;cursor:pointer;padding:5px 10px;border-radius:50px}
+        .post-action:hover{background:rgba(0,0,0,0.05)}
+        .post-action span{margin-left:5px}
+        .post-action.liked{color:var(--accent)}
+        .post-action.reposted{color:var(--secondary)}
+        .create-post{background:var(--card-bg);border-radius:15px;padding:15px;margin:15px auto;max-width:500px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+        .create-post textarea{width:100%;margin:0 0 10px 0}
+        .create-post button{width:100%;margin:0}
+        .message-input{display:flex;margin-top:10px}
+        .message-input input{flex:1;margin-right:10px}
+        .message-input button{margin:0;padding:10px 15px}
+        .message{background:var(--bg);padding:10px;border-radius:10px;margin:5px 0;max-width:80%}
+        .message.sent{align-self:flex-end;background:var(--primary);color:white}
+        .message.received{align-self:flex-start}
+        .messages-container{display:flex;flex-direction:column;max-height:300px;overflow-y:auto;margin-bottom:10px}
+        body.galaxy-theme{--primary:#9D00FF;--secondary:#00D1FF;--accent:#FF00F5;--notification-success:#00FF88;--notification-error:#FF006E;--notification-info:#7700FF}
+        body.galaxy-theme.dark-mode{--text:#FFFFFF;--bg:#0A0A1A;--card-bg:#1A1A2A;background:radial-gradient(circle at center,#0A0A1A,#000000)}
         @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-5px)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes slideIn{from{opacity:0;transform:translate(-50%,-30px)}to{opacity:1;transform:translate(-50%,0)}}
         @keyframes fadeOut{from{opacity:1}to{opacity:0}}
-        body.default-theme{--primary:#4285F4;--secondary:#34A853;--accent:#EA4335;--text:#202124;--bg:#F8F9FA;--card-bg:#fff;--btn-text:#fff;--input-bg:#fff;--notification-success:#34A853;--notification-error:#EA4335;--notification-info:#4285F4}
-        body.default-theme.dark-mode{--text:#F8F9FA;--bg:#202124;--card-bg:#303134}
-        body.crimson-theme{--primary:#DC143C;--secondary:#8B0000;--accent:#FF6347;--notification-success:#2E8B57;--notification-error:#B22222;--notification-info:#4682B4}
-        body.crimson-theme.dark-mode{--text:#F8F9FA;--bg:#1A1A1A;--card-bg:#2D2D2D}
-        body.neon-theme{--primary:#00F0FF;--secondary:#FF00F0;--accent:#F0FF00;--notification-success:#00FF7F;--notification-error:#FF1493;--notification-info:#9370DB}
-        body.neon-theme.dark-mode{--text:#FFFFFF;--bg:#0A0A0A;--card-bg:#1A1A1A}
-        body.gold-theme{--primary:#FFD700;--secondary:#DAA520;--accent:#B8860B;--notification-success:#32CD32;--notification-error:#FF4500;--notification-info:#1E90FF}
-        body.gold-theme.dark-mode{--text:#FFFAF0;--bg:#121212;--card-bg:#222222}
-        body.silver-theme{--primary:#C0C0C0;--secondary:#A9A9A9;--accent:#808080;--notification-success:#20B2AA;--notification-error:#CD5C5C;--notification-info:#6495ED}
-        body.silver-theme.dark-mode{--text:#F5F5F5;--bg:#181818;--card-bg:#282828}
-        body.bronze-theme{--primary:#CD7F32;--secondary:#A0522D;--accent:#8B4513;--notification-success:#228B22;--notification-error:#8B0000;--notification-info:#4169E1}
-        body.bronze-theme.dark-mode{--text:#FFF8DC;--bg:#1E1E1E;--card-bg:#2E2E2E}
+        @keyframes galaxyPulse{0%,100%{box-shadow:0 0 10px 5px var(--galaxy-primary)}50%{box-shadow:0 0 20px 10px var(--galaxy-secondary)}}
+        .galaxy-pulse{animation:galaxyPulse 3s infinite}
     </style>
 </head>
 <body class="default-theme">
-    <div class="version">Mekhis Creations v1.3</div>
+    <div class="version">Mekhis Creations v2.0</div>
     <button class="theme-btn" id="theme-btn">Themes</button>
     <div class="theme-menu" id="theme-menu">
         <div class="theme-section">
@@ -108,6 +123,7 @@
             <div class="theme-option" data-theme="gold">Gold</div>
             <div class="theme-option" data-theme="silver">Silver</div>
             <div class="theme-option" data-theme="bronze">Bronze</div>
+            <div class="theme-option" data-theme="galaxy">Galaxy</div>
         </div>
         <div class="theme-section">
             <div class="theme-section-title">Appearance</div>
@@ -116,14 +132,19 @@
         </div>
     </div>
 
-    <!-- Notification Center -->
-    <div id="notification-center">
-        <button id="notification-bell">🔔
-            <div id="notification-badge" style="display:none">0</div>
-        </button>
-        <div id="notification-panel">
-            <div class="notification-header" style="padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);font-weight:bold">Notifications</div>
-            <div id="notification-list" style="max-height:350px;overflow-y:auto"></div>
+    <div class="sidebar">
+        <div class="sidebar-profile" id="sidebar-profile">
+            <img id="sidebar-headshot" src="" alt="Profile">
+            <span id="sidebar-username">Loading...</span>
+        </div>
+        <div class="sidebar-nav">
+            <button id="home-btn">🏠 Home</button>
+            <button id="messages-btn">💬 Messages</button>
+            <button id="notifications-btn">🔔 Notifications</button>
+        </div>
+        <div class="recommended-profiles">
+            <div class="recommended-title">Recommended Profiles</div>
+            <div id="recommended-users"></div>
         </div>
     </div>
 
@@ -186,11 +207,18 @@
             <div id="title-bar">Mekhis Creations</div>
             <div id="divider"></div>
             
+            <div id="create-post" class="create-post" style="display:none">
+                <textarea id="post-content" placeholder="What's on your mind?"></textarea>
+                <button id="post-btn">Post</button>
+            </div>
+            
             <div id="player-search">
                 <input type="text" id="search-input" placeholder="Search players by username">
                 <button id="search-btn">Search</button>
                 <div id="search-results"></div>
             </div>
+            
+            <button id="back-to-profile">Back to My Profile</button>
             
             <div id="profile-container">
                 <img id="profile-headshot" src="" alt="Profile picture">
@@ -210,14 +238,15 @@
                     <button id="edit-btn">Edit</button>
                     <button id="save-btn">Save</button>
                     <button id="follow-btn">Follow</button>
+                    <button id="message-btn">Message</button>
                 </div>
-                <button id="back-to-profile">Back to My Profile</button>
             </div>
+            
+            <div id="posts-container"></div>
             <div id="divider"></div>
         </div>
     </div>
 
-    <!-- Followers/Following Lists -->
     <div class="overlay" id="overlay"></div>
     <div class="followers-list" id="followers-list">
         <button class="close-list" id="close-followers">×</button>
@@ -229,6 +258,25 @@
         <h3 class="list-title">Following</h3>
         <div id="following-container"></div>
     </div>
+    <div class="messages-list" id="messages-list">
+        <button class="close-list" id="close-messages">×</button>
+        <h3 class="list-title">Messages</h3>
+        <div id="conversations-container"></div>
+    </div>
+    <div class="messages-list" id="chat-window" style="display:none">
+        <button class="close-list" id="close-chat">×</button>
+        <h3 class="list-title" id="chat-title">Chat</h3>
+        <div class="messages-container" id="messages-container"></div>
+        <div class="message-input">
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    <div class="notifications-list" id="notifications-list">
+        <button class="close-list" id="close-notifications">×</button>
+        <h3 class="list-title">Notifications</h3>
+        <div id="notifications-container"></div>
+    </div>
 
     <script>
         // Initialize Firebase
@@ -238,6 +286,7 @@
 
         // Helper functions
         const formatNumber = num => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        const formatTime = timestamp => new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
@@ -249,7 +298,6 @@
 
         async function getRobloxUserData(userId) {
             try {
-                showNotification('Fetching Roblox user data...', 'info');
                 const corsProxy = 'https://corsproxy.io/?';
                 const [userResponse, headshotResponse] = await Promise.all([
                     fetch(`${corsProxy}https://users.roblox.com/v1/users/${userId}`),
@@ -277,7 +325,7 @@
 
         // Theme management
         function applyTheme(theme, mode) {
-            document.body.classList.remove('default-theme', 'crimson-theme', 'neon-theme', 'gold-theme', 'silver-theme', 'bronze-theme', 'dark-mode');
+            document.body.classList.remove('default-theme', 'crimson-theme', 'neon-theme', 'gold-theme', 'silver-theme', 'bronze-theme', 'galaxy-theme', 'dark-mode');
             document.body.classList.add(`${theme}-theme`);
             if (mode === 'dark') document.body.classList.add('dark-mode');
             localStorage.setItem('selectedTheme', theme);
@@ -324,14 +372,32 @@
         let notifications = [];
         let unreadNotifications = 0;
 
-        function updateNotificationBadge() {
-            const badge = document.getElementById('notification-badge');
-            if (unreadNotifications > 0) {
-                badge.textContent = unreadNotifications;
-                badge.style.display = 'flex';
-            } else {
-                badge.style.display = 'none';
+        function showNotificationsList() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('notifications-list').style.display = 'block';
+            renderNotifications();
+        }
+
+        function renderNotifications() {
+            const notificationsContainer = document.getElementById('notifications-container');
+            notificationsContainer.innerHTML = '';
+            
+            if (notifications.length === 0) {
+                notificationsContainer.innerHTML = '<p>No notifications yet</p>';
+                return;
             }
+            
+            notifications.forEach(notification => {
+                const notificationElement = document.createElement('div');
+                notificationElement.className = 'list-item';
+                notificationElement.innerHTML = `
+                    <div style="flex:1">
+                        <div>${notification.message}</div>
+                        <div style="font-size:12px;color:gray">${new Date(notification.timestamp).toLocaleString()}</div>
+                    </div>
+                `;
+                notificationsContainer.appendChild(notificationElement);
+            });
         }
 
         function addNotification(message, type = 'info', timestamp = Date.now()) {
@@ -344,55 +410,11 @@
             };
             notifications.unshift(notification);
             unreadNotifications++;
-            updateNotificationBadge();
             renderNotifications();
-            
-            // Show popup notification
             showNotification(message, type);
         }
 
-        function renderNotifications() {
-            const notificationList = document.getElementById('notification-list');
-            notificationList.innerHTML = '';
-            
-            if (notifications.length === 0) {
-                notificationList.innerHTML = '<div style="padding:15px;text-align:center;color:gray">No notifications yet</div>';
-                return;
-            }
-            
-            notifications.forEach(notification => {
-                const notificationElement = document.createElement('div');
-                notificationElement.className = `notification-item ${notification.read ? '' : 'unread'}`;
-                notificationElement.innerHTML = `
-                    <div>${notification.message}</div>
-                    <div class="notification-time">${new Date(notification.timestamp).toLocaleString()}</div>
-                `;
-                notificationElement.addEventListener('click', () => {
-                    if (!notification.read) {
-                        notification.read = true;
-                        unreadNotifications--;
-                        updateNotificationBadge();
-                        notificationElement.classList.remove('unread');
-                    }
-                });
-                notificationList.appendChild(notificationElement);
-            });
-        }
-
-        // Notification center toggle
-        document.getElementById('notification-bell').addEventListener('click', (e) => {
-            e.stopPropagation();
-            const panel = document.getElementById('notification-panel');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#notification-center')) {
-                document.getElementById('notification-panel').style.display = 'none';
-            }
-        });
-
-        // Listen for new followers
+        // Listen for new followers, likes, messages
         function setupNotificationListener(userId) {
             database.ref(`users/${userId}/followers`).on('child_added', (snapshot) => {
                 const followerId = snapshot.key;
@@ -403,6 +425,12 @@
                     }
                 });
             });
+
+            database.ref(`users/${userId}/notifications`).on('child_added', (snapshot) => {
+                const notification = snapshot.val();
+                addNotification(notification.message, notification.type || 'info', notification.timestamp);
+                snapshot.ref.remove();
+            });
         }
 
         // Player search functionality
@@ -410,7 +438,6 @@
             const searchTerm = document.getElementById('search-input').value.trim();
             if (!searchTerm) return showNotification('Please enter a username to search', 'error');
             
-            showNotification('Searching for players...', 'info');
             database.ref('users').once('value').then(snapshot => {
                 const results = [];
                 snapshot.forEach(childSnapshot => {
@@ -435,11 +462,9 @@
                         resultsContainer.appendChild(userElement);
                     });
                     resultsContainer.style.display = 'block';
-                    showNotification(`Found ${results.length} matching players`, 'success');
                 } else {
                     resultsContainer.innerHTML = '<p>No players found matching your search</p>';
                     resultsContainer.style.display = 'block';
-                    showNotification('No players found', 'error');
                 }
             }).catch(error => {
                 showNotification('Search failed', 'error');
@@ -459,7 +484,15 @@
                     document.getElementById('overlay').style.display = 'none';
                     document.getElementById('followers-list').style.display = 'none';
                     document.getElementById('following-list').style.display = 'none';
-                    showNotification('Loading profile...', 'info');
+                }
+            }
+            
+            // Click on recommended user
+            if (e.target.closest('.recommended-user')) {
+                const userId = e.target.closest('.recommended-user').querySelector('img').dataset.id;
+                if (userId) {
+                    window.history.pushState({}, '', `/@${encodeURIComponent(userId)}`);
+                    loadUserData(userId);
                 }
             }
         });
@@ -469,7 +502,6 @@
             const currentUserId = localStorage.getItem('robloxUserId');
             if (!currentUserId) return showNotification('You need to be logged in to follow', 'error');
             
-            // Prevent users from following themselves
             if (currentUserId === userId) {
                 return showNotification("You can't follow yourself!", 'error');
             }
@@ -593,10 +625,18 @@
             document.getElementById('following-list').style.display = 'none';
         });
 
+        document.getElementById('close-notifications').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('notifications-list').style.display = 'none';
+        });
+
         document.getElementById('overlay').addEventListener('click', () => {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('followers-list').style.display = 'none';
             document.getElementById('following-list').style.display = 'none';
+            document.getElementById('messages-list').style.display = 'none';
+            document.getElementById('chat-window').style.display = 'none';
+            document.getElementById('notifications-list').style.display = 'none';
         });
 
         // Back to profile button
@@ -607,6 +647,319 @@
                 loadUserData(userId);
             }
         });
+
+        // Messaging functionality
+        let currentChatId = null;
+
+        function showMessagesList() {
+            const userId = localStorage.getItem('robloxUserId');
+            if (!userId) return showNotification('You need to be logged in to view messages', 'error');
+            
+            database.ref(`users/${userId}/conversations`).once('value').then(snapshot => {
+                const conversationsContainer = document.getElementById('conversations-container');
+                conversationsContainer.innerHTML = '';
+                
+                if (snapshot.exists() && snapshot.val()) {
+                    const conversations = snapshot.val();
+                    Object.keys(conversations).forEach(otherUserId => {
+                        database.ref(`users/${otherUserId}`).once('value').then(userSnapshot => {
+                            if (userSnapshot.exists()) {
+                                const user = userSnapshot.val();
+                                const conversationElement = document.createElement('div');
+                                conversationElement.className = 'list-item';
+                                conversationElement.innerHTML = `
+                                    <img src="${user.headshot}" alt="${user.username}">
+                                    <span>${user.username}</span>
+                                    <button class="view-chat" data-id="${user.userId}">Chat</button>
+                                `;
+                                conversationsContainer.appendChild(conversationElement);
+                            }
+                        });
+                    });
+                } else {
+                    conversationsContainer.innerHTML = '<p>No conversations yet</p>';
+                }
+                
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('messages-list').style.display = 'block';
+                document.getElementById('chat-window').style.display = 'none';
+            });
+        }
+
+        function showChatWindow(userId) {
+            currentChatId = userId;
+            database.ref(`users/${userId}`).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const user = snapshot.val();
+                    document.getElementById('chat-title').textContent = `Chat with ${user.username}`;
+                    loadMessages(userId);
+                    document.getElementById('messages-list').style.display = 'none';
+                    document.getElementById('chat-window').style.display = 'block';
+                }
+            });
+        }
+
+        function loadMessages(userId) {
+            const currentUserId = localStorage.getItem('robloxUserId');
+            const chatId = [currentUserId, userId].sort().join('_');
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = '';
+            
+            database.ref(`chats/${chatId}/messages`).orderByChild('timestamp').limitToLast(50).on('value', snapshot => {
+                messagesContainer.innerHTML = '';
+                if (snapshot.exists()) {
+                    const messages = [];
+                    snapshot.forEach(childSnapshot => {
+                        messages.push(childSnapshot.val());
+                    });
+                    
+                    messages.sort((a, b) => a.timestamp - b.timestamp);
+                    messages.forEach(message => {
+                        const messageElement = document.createElement('div');
+                        messageElement.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
+                        messageElement.innerHTML = `
+                            <div>${message.text}</div>
+                            <div style="font-size:10px;text-align:right">${formatTime(message.timestamp)}</div>
+                        `;
+                        messagesContainer.appendChild(messageElement);
+                    });
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            });
+        }
+
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+        document.getElementById('message-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const currentUserId = localStorage.getItem('robloxUserId');
+            if (!currentUserId || !currentChatId) return;
+            
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value.trim();
+            if (!messageText) return;
+            
+            const chatId = [currentUserId, currentChatId].sort().join('_');
+            const message = {
+                senderId: currentUserId,
+                text: messageText,
+                timestamp: Date.now()
+            };
+            
+            database.ref(`chats/${chatId}/messages`).push(message)
+                .then(() => {
+                    messageInput.value = '';
+                    // Update conversation for both users
+                    const updates = {};
+                    updates[`users/${currentUserId}/conversations/${currentChatId}`] = true;
+                    updates[`users/${currentChatId}/conversations/${currentUserId}`] = true;
+                    database.ref().update(updates);
+                    
+                    // Send notification
+                    const notification = {
+                        message: `New message from ${localStorage.getItem('robloxUsername')}`,
+                        timestamp: Date.now()
+                    };
+                    database.ref(`users/${currentChatId}/notifications`).push(notification);
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    showNotification('Error sending message', 'error');
+                });
+        }
+
+        document.getElementById('close-messages').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('messages-list').style.display = 'none';
+        });
+
+        document.getElementById('close-chat').addEventListener('click', () => {
+            document.getElementById('chat-window').style.display = 'none';
+            document.getElementById('messages-list').style.display = 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('view-chat')) {
+                const userId = e.target.dataset.id;
+                showChatWindow(userId);
+            }
+        });
+
+        // Posts functionality
+        function loadPosts(userId = null) {
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.innerHTML = '<p>Loading posts...</p>';
+            
+            let postsRef = database.ref('posts').orderByChild('timestamp').limitToLast(20);
+            if (userId) {
+                postsRef = database.ref('posts').orderByChild('userId').equalTo(userId).limitToLast(20);
+            }
+            
+            postsRef.once('value').then(snapshot => {
+                postsContainer.innerHTML = '';
+                if (snapshot.exists()) {
+                    const posts = [];
+                    snapshot.forEach(childSnapshot => {
+                        posts.push({ id: childSnapshot.key, ...childSnapshot.val() });
+                    });
+                    
+                    posts.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    if (posts.length === 0) {
+                        postsContainer.innerHTML = '<p>No posts yet</p>';
+                        return;
+                    }
+                    
+                    posts.forEach(post => {
+                        database.ref(`users/${post.userId}`).once('value').then(userSnapshot => {
+                            if (userSnapshot.exists()) {
+                                const user = userSnapshot.val();
+                                const currentUserId = localStorage.getItem('robloxUserId');
+                                const isLiked = currentUserId && post.likes && post.likes[currentUserId];
+                                const isReposted = currentUserId && post.reposts && post.reposts[currentUserId];
+                                
+                                const postElement = document.createElement('div');
+                                postElement.className = 'post-container';
+                                postElement.innerHTML = `
+                                    <div class="post-header">
+                                        <img src="${user.headshot}" width="40" height="40" style="border-radius:50%;margin-right:10px;cursor:pointer" class="view-profile" data-id="${user.userId}">
+                                        <div>
+                                            <div class="post-user view-profile" data-id="${user.userId}">${user.username}</div>
+                                            <div class="post-time">${new Date(post.timestamp).toLocaleString()}</div>
+                                        </div>
+                                    </div>
+                                    <div class="post-content">${post.content}</div>
+                                    <div class="post-actions">
+                                        <div class="post-action like-post ${isLiked ? 'liked' : ''}" data-id="${post.id}">
+                                            ❤️ <span>${post.likes ? Object.keys(post.likes).length : 0}</span>
+                                        </div>
+                                        <div class="post-action repost-post ${isReposted ? 'reposted' : ''}" data-id="${post.id}">
+                                            🔄 <span>${post.reposts ? Object.keys(post.reposts).length : 0}</span>
+                                        </div>
+                                        <div class="post-action">
+                                            👁️ <span>${post.views || 0}</span>
+                                        </div>
+                                    </div>
+                                `;
+                                postsContainer.appendChild(postElement);
+                                
+                                // Track view
+                                database.ref(`posts/${post.id}/views`).transaction(views => (views || 0) + 1);
+                            }
+                        });
+                    });
+                } else {
+                    postsContainer.innerHTML = '<p>No posts yet</p>';
+                }
+            });
+        }
+
+        document.getElementById('post-btn').addEventListener('click', () => {
+            const currentUserId = localStorage.getItem('robloxUserId');
+            if (!currentUserId) return showNotification('You need to be logged in to post', 'error');
+            
+            const postContent = document.getElementById('post-content').value.trim();
+            if (!postContent) return showNotification('Post cannot be empty', 'error');
+            
+            const post = {
+                userId: currentUserId,
+                content: postContent,
+                timestamp: Date.now(),
+                likes: {},
+                reposts: {},
+                views: 0
+            };
+            
+            database.ref('posts').push(post)
+                .then(() => {
+                    document.getElementById('post-content').value = '';
+                    showNotification('Posted successfully!', 'success');
+                    loadPosts();
+                })
+                .catch(error => {
+                    console.error('Error posting:', error);
+                    showNotification('Error creating post', 'error');
+                });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('like-post') || e.target.closest('.like-post')) {
+                const postId = e.target.classList.contains('like-post') ? e.target.dataset.id : e.target.closest('.like-post').dataset.id;
+                const currentUserId = localStorage.getItem('robloxUserId');
+                if (!currentUserId) return showNotification('You need to be logged in to like posts', 'error');
+                
+                database.ref(`posts/${postId}/likes/${currentUserId}`).transaction(like => {
+                    if (like === null) {
+                        return true;
+                    } else {
+                        return null;
+                    }
+                });
+            }
+            
+            if (e.target.classList.contains('repost-post') || e.target.closest('.repost-post')) {
+                const postId = e.target.classList.contains('repost-post') ? e.target.dataset.id : e.target.closest('.repost-post').dataset.id;
+                const currentUserId = localStorage.getItem('robloxUserId');
+                if (!currentUserId) return showNotification('You need to be logged in to repost', 'error');
+                
+                database.ref(`posts/${postId}/reposts/${currentUserId}`).transaction(repost => {
+                    if (repost === null) {
+                        // Create a new repost
+                        database.ref(`posts/${postId}`).once('value').then(snapshot => {
+                            if (snapshot.exists()) {
+                                const originalPost = snapshot.val();
+                                const repost = {
+                                    userId: currentUserId,
+                                    content: originalPost.content,
+                                    timestamp: Date.now(),
+                                    originalPostId: postId,
+                                    likes: {},
+                                    reposts: {},
+                                    views: 0
+                                };
+                                
+                                database.ref('posts').push(repost)
+                                    .then(() => {
+                                        showNotification('Reposted successfully!', 'success');
+                                    });
+                            }
+                        });
+                        return true;
+                    } else {
+                        // Remove the repost
+                        return null;
+                    }
+                });
+            }
+        });
+
+        // Recommended profiles
+        function loadRecommendedProfiles() {
+            const currentUserId = localStorage.getItem('robloxUserId');
+            if (!currentUserId) return;
+            
+            database.ref('users').limitToLast(5).once('value').then(snapshot => {
+                const recommendedContainer = document.getElementById('recommended-users');
+                recommendedContainer.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnapshot => {
+                        const user = childSnapshot.val();
+                        if (user.userId !== currentUserId) {
+                            const userElement = document.createElement('div');
+                            userElement.className = 'recommended-user';
+                            userElement.innerHTML = `
+                                <img src="${user.headshot}" alt="${user.username}" data-id="${user.userId}">
+                                <span>${user.username}</span>
+                            `;
+                            recommendedContainer.appendChild(userElement);
+                        }
+                    });
+                }
+            });
+        }
 
         // Onboarding flow functions
         function updateProgress(step) {
@@ -638,14 +991,20 @@
             document.getElementById('onboarding').style.display = 'none';
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('home-content').style.display = 'block';
+            document.getElementById('create-post').style.display = 'block';
+            
+            const userId = localStorage.getItem('robloxUserId');
+            if (userId) {
+                loadUserData(userId);
+                loadPosts();
+                loadRecommendedProfiles();
+                setupNotificationListener(userId);
+            }
             
             const path = window.location.pathname;
             if (path.startsWith('/@')) {
                 const username = decodeURIComponent(path.substring(2));
                 searchUserByUsername(username);
-            } else {
-                const userId = localStorage.getItem('robloxUserId');
-                if (userId) loadUserData(userId);
             }
         }
 
@@ -682,7 +1041,6 @@
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
                     updateProfileUI(userData, isCurrentUser);
-                    showNotification('Profile loaded successfully', 'success');
                     
                     if (!isCurrentUser && localStorage.getItem('robloxUserId')) {
                         const currentUserId = localStorage.getItem('robloxUserId');
@@ -741,6 +1099,7 @@
             document.getElementById('edit-btn').style.display = isCurrentUser ? 'inline-block' : 'none';
             document.getElementById('save-btn').style.display = 'none';
             document.getElementById('follow-btn').style.display = isCurrentUser ? 'none' : 'inline-block';
+            document.getElementById('message-btn').style.display = isCurrentUser ? 'none' : 'inline-block';
             document.getElementById('back-to-profile').style.display = isCurrentUser ? 'none' : 'block';
             document.getElementById('profile-description').contentEditable = false;
             
@@ -753,6 +1112,19 @@
                         toggleFollow(userData.userId, snapshot.exists());
                     });
                 };
+                
+                document.getElementById('message-btn').onclick = () => {
+                    showChatWindow(userData.userId);
+                    document.getElementById('overlay').style.display = 'block';
+                };
+            }
+            
+            if (isCurrentUser) {
+                document.getElementById('sidebar-headshot').src = userData.headshot;
+                document.getElementById('sidebar-username').textContent = userData.username;
+                loadPosts(userData.userId);
+            } else {
+                loadPosts(userData.userId);
             }
             
             if (isCurrentUser && !window.location.pathname.startsWith('/@')) {
@@ -768,7 +1140,6 @@
                 if (!userId) return showNotification('Please enter a Roblox ID', 'error');
                 
                 try {
-                    showNotification('Loading Roblox profile...', 'info');
                     const userData = await getRobloxUserData(userId);
                     
                     document.getElementById('username').textContent = userData.username;
@@ -780,7 +1151,6 @@
                     localStorage.setItem('tempHeadshot', userData.headshot);
                     
                     showStep('step2', 2);
-                    showNotification('Profile found! Is this you?', 'success');
                 } catch(error) {
                     showNotification("Couldn't find that user. Please check the ID", 'error');
                 }
@@ -790,12 +1160,10 @@
             document.getElementById('yes-btn')?.addEventListener('click', () => {
                 generateVerificationCode();
                 showStep('step3', 3);
-                showNotification('Verification code generated', 'info');
             });
 
             document.getElementById('no-btn')?.addEventListener('click', () => {
                 showStep('step1', 1);
-                showNotification('Please enter the correct Roblox ID', 'info');
             });
 
             document.getElementById('back-btn')?.addEventListener('click', () => {
@@ -814,7 +1182,6 @@
                 });
                 
                 document.getElementById('verification-status').textContent = 'Verification successful!';
-                showNotification('Verification successful!', 'success');
                 setTimeout(showHomeContent, 1500);
             });
 
@@ -827,7 +1194,6 @@
                 desc.focus();
                 document.getElementById('edit-btn').style.display = 'none';
                 document.getElementById('save-btn').style.display = 'inline-block';
-                showNotification('Editing description...', 'info');
             });
 
             document.getElementById('save-btn')?.addEventListener('click', () => {
@@ -851,12 +1217,21 @@
                 const code = document.getElementById('code-text').textContent;
                 navigator.clipboard.writeText(code).then(() => {
                     document.querySelector('.copy-btn').textContent = 'Copied!';
-                    showNotification('Code copied to clipboard', 'success');
                     setTimeout(() => {
                         document.querySelector('.copy-btn').textContent = 'Copy';
                     }, 2000);
                 });
             });
+
+            // Sidebar navigation
+            document.getElementById('home-btn').addEventListener('click', () => {
+                window.history.pushState({}, '', '/');
+                loadPosts(); // Load global feed
+                document.getElementById('back-to-profile').style.display = 'block';
+            });
+
+            document.getElementById('messages-btn').addEventListener('click', showMessagesList);
+            document.getElementById('notifications-btn').addEventListener('click', showNotificationsList);
 
             // Handle back/forward navigation
             window.addEventListener('popstate', () => {
@@ -865,15 +1240,14 @@
                     const username = decodeURIComponent(path.substring(2));
                     searchUserByUsername(username);
                 } else {
-                    loadUserData(localStorage.getItem('robloxUserId'));
+                    loadPosts(); // Load global feed
+                    document.getElementById('back-to-profile').style.display = 'block';
                 }
             });
 
             // Initialize app state
             if (localStorage.getItem('newUser') === 'false') {
                 showHomeContent();
-                const userId = localStorage.getItem('robloxUserId');
-                if (userId) setupNotificationListener(userId);
             } else {
                 localStorage.setItem('newUser', 'true');
                 generateVerificationCode();
