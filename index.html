@@ -10,8 +10,9 @@
     <style>
         :root{--primary:#4285F4;--secondary:#34A853;--accent:#EA4335;--text:#202124;--bg:#F8F9FA;--card-bg:#fff;--btn-text:#fff;--input-bg:#fff;--notification-success:#34A853;--notification-error:#EA4335;--notification-info:#4285F4;--theme-dark-text:#F8F9FA;--theme-dark-bg:#202124;--theme-dark-card:#303134;--crimson:#DC143C;--neon-primary:#00F0FF;--neon-secondary:#FF00F0;--neon-accent:#F0FF00;--gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32;--galaxy-primary:#9D00FF;--galaxy-secondary:#00D1FF;--galaxy-accent:#FF00F5}
         body{font-family:'Fredoka One',cursive;color:var(--text);margin:0;min-height:100vh;display:flex;transition:all 0.3s;background:var(--bg)}
-        .container{max-width:800px;width:100%;padding:20px;margin-left:220px}
-        .sidebar{width:200px;position:fixed;left:10px;top:10px;bottom:10px;background:var(--card-bg);border-radius:15px;padding:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);overflow-y:auto}
+        
+        /* Sidebar styles */
+        .sidebar{width:220px;position:fixed;left:0;top:0;bottom:0;background:var(--card-bg);border-right:1px solid rgba(0,0,0,0.1);padding:15px;overflow-y:auto;z-index:100}
         .sidebar-profile{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;cursor:pointer}
         .sidebar-profile img{width:80px;height:80px;border-radius:50%;border:3px solid var(--primary);object-fit:cover}
         .sidebar-profile span{margin-top:10px;font-size:16px;color:var(--primary)}
@@ -22,6 +23,13 @@
         .recommended-user{display:flex;align-items:center;padding:8px;border-radius:10px;margin-bottom:8px;cursor:pointer}
         .recommended-user:hover{background:rgba(0,0,0,0.05)}
         .recommended-user img{width:40px;height:40px;border-radius:50%;margin-right:10px;border:2px solid var(--primary)}
+        
+        /* Main content styles */
+        .main-content{margin-left:220px;flex:1;padding:20px;max-width:800px;margin:0 auto;width:100%}
+        .page{display:none}
+        .page.active{display:block}
+        
+        /* Common elements */
         .progress-bar{height:10px;background:rgba(0,0,0,0.1);border-radius:5px;margin:20px 0;overflow:hidden}
         .progress{height:100%;background:var(--secondary);width:0%;transition:width 0.5s}
         h1,h2{color:var(--primary);text-shadow:2px 2px 0 rgba(0,0,0,0.1)}
@@ -30,57 +38,21 @@
         button:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,0.1)}
         #no-btn{background:var(--accent)}#yes-btn,#verify-btn{background:var(--secondary)}
         .back-btn{background:transparent;color:var(--accent);box-shadow:none;text-decoration:underline;padding:8px;min-width:auto}
-        input,textarea{font-family:'Fredoka One',cursive;padding:12px;border:3px solid var(--primary);border-radius:15px;width:80%;font-size:16px;margin:15px 0;background:var(--input-bg)}
+        input,textarea{font-family:'Fredoka One',cursive;padding:12px;border:3px solid var(--primary);border-radius:15px;width:100%;font-size:16px;margin:15px 0;background:var(--input-bg)}
         textarea{min-height:100px;resize:vertical}
-        #user-info{background:var(--card-bg);border-radius:20px;padding:20px;margin:20px 0;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
-        #headshot{width:150px;height:150px;border-radius:50%;object-fit:cover;border:5px solid var(--primary)}
-        #username{font-size:24px;margin:10px 0;color:var(--primary)}#description{background:var(--bg);padding:15px;border-radius:10px;margin:10px 0}
-        .code-container{display:flex;justify-content:center;gap:10px;margin:20px 0}
-        #verification-code{font-size:32px;letter-spacing:5px;color:var(--secondary);background:var(--card-bg);padding:15px 20px;border-radius:10px;display:flex;align-items:center}
-        .copy-btn{background:var(--primary);color:var(--btn-text);border:none;border-radius:50px;padding:5px 10px;font-size:12px;cursor:pointer;margin-left:10px}
-        #verification-status{min-height:24px;color:var(--accent);margin-top:10px}
-        .bounce{animation:bounce 0.5s infinite alternate}
-        #home-content{display:none;text-align:center}
-        #title-bar{font-size:28px;margin-bottom:10px}
-        #divider{height:3px;background:var(--primary);border-radius:3px;width:80%;margin:0 auto 20px}
-        #profile-container{background:var(--card-bg);border-radius:20px;padding:20px;margin:20px auto;max-width:400px;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
-        #profile-headshot{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--primary);margin-bottom:15px}
-        #profile-username{font-size:22px;color:var(--primary);margin-bottom:15px}
-        #profile-description{background:var(--bg);padding:15px;border-radius:10px;margin:15px 0;min-height:60px}
-        #profile-stats{display:flex;justify-content:space-around;margin:15px 0}
+        
+        /* Profile card */
+        .profile-card{background:var(--card-bg);border-radius:20px;padding:20px;margin:20px auto;max-width:500px;box-shadow:0 5px 15px rgba(0,0,0,0.05);text-align:center}
+        .profile-card img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--primary);margin-bottom:15px}
+        .profile-card h2{font-size:22px;color:var(--primary);margin-bottom:15px}
+        .profile-description{background:var(--bg);padding:15px;border-radius:10px;margin:15px 0;min-height:60px}
+        .profile-stats{display:flex;justify-content:space-around;margin:15px 0}
         .stat-value{font-size:20px;font-weight:bold;color:var(--primary);cursor:pointer;transition:all 0.2s}
         .stat-value:hover{transform:scale(1.05);text-decoration:underline}
         .stat-label{font-size:14px;color:var(--text)}
-        #edit-btn{background:var(--primary);margin-right:10px}#save-btn{background:var(--secondary);display:none}
-        #follow-btn,#message-btn{background:var(--accent);display:none}
-        #back-to-profile{background:var(--primary);display:none;margin:10px auto}
-        .version{position:fixed;bottom:10px;left:10px;font-size:12px;opacity:0.7}
-        .theme-btn{position:fixed;bottom:10px;right:10px;font-size:12px;padding:8px 12px;border-radius:50px}
-        .theme-menu{position:fixed;bottom:40px;right:10px;background:var(--card-bg);border-radius:15px;padding:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:100;width:200px;display:none}
-        .theme-menu.active{display:block}
-        .theme-section{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,0.1)}
-        .theme-section-title{font-weight:bold;margin-bottom:5px;font-size:14px}
-        .theme-option{padding:5px 10px;cursor:pointer;border-radius:50px;margin:2px 0;font-size:12px;text-align:center}
-        .theme-option:hover{background:rgba(0,0,0,0.1)}.theme-option.selected{background:var(--primary);color:var(--btn-text)}
-        #player-search{margin-top:20px;margin-bottom:20px;display:flex;justify-content:center;align-items:center}
-        #search-input{width:60%;margin-right:10px}
-        #search-results{display:none;margin-top:10px;background:var(--card-bg);border-radius:15px;padding:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);width:100%}
-        .search-result{display:flex;align-items:center;padding:8px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
-        .search-result:hover{background:rgba(0,0,0,0.05)}
-        .search-result:last-child{border-bottom:none}
-        .search-result img{width:40px;height:40px;border-radius:50%;margin-right:10px;border:2px solid var(--primary)}
-        .search-result button{margin-left:auto;padding:5px 10px;font-size:12px;min-width:auto;border-radius:50px}
-        .notification{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:50px;color:white;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,0.2);z-index:1000;animation:slideIn 0.3s,fadeOut 0.5s 2.5s forwards}
-        .notification.success{background-color:var(--notification-success)}.notification.error{background-color:var(--notification-error)}.notification.info{background-color:var(--notification-info)}
-        .followers-list,.following-list,.messages-list,.notifications-list,.search-page{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card-bg);border-radius:20px;padding:20px;width:80%;max-width:400px;max-height:80vh;overflow-y:auto;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:1000}
-        .close-list{position:absolute;top:10px;right:10px;background:var(--accent);color:white;border:none;width:25px;height:25px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
-        .close-list:hover{transform:scale(1.1);background:#d32f2f}
-        .list-title{margin-bottom:15px;color:var(--primary)}
-        .list-item{display:flex;align-items:center;padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
-        .list-item:hover{background:rgba(0,0,0,0.05)}
-        .list-item:last-child{border-bottom:none}
-        .list-item img{width:40px;height:40px;border-radius:50%;margin-right:10px}
-        .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999}
+        .profile-actions{display:flex;justify-content:center;gap:10px;margin-top:15px}
+        
+        /* Posts */
         .post-container{background:var(--card-bg);border-radius:15px;padding:15px;margin:15px auto;max-width:500px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
         .post-header{display:flex;align-items:center;margin-bottom:10px}
         .post-user{font-weight:bold;color:var(--primary);cursor:pointer}
@@ -95,20 +67,52 @@
         .repost-info{font-size:12px;color:var(--primary);margin-bottom:5px;display:flex;align-items:center}
         .repost-info i{margin-right:5px}
         .create-post{background:var(--card-bg);border-radius:15px;padding:15px;margin:15px auto;max-width:500px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
-        .create-post textarea{width:100%;margin:0 0 10px 0}
-        .create-post button{width:100%;margin:0}
-        .message-input{display:flex;margin-top:10px}
-        .message-input input{flex:1;margin-right:10px}
-        .message-input button{margin:0;padding:10px 15px}
-        .message{background:var(--bg);padding:10px;border-radius:10px;margin:5px 0;max-width:80%}
-        .message.sent{align-self:flex-end;background:var(--primary);color:white}
-        .message.received{align-self:flex-start}
-        .messages-container{display:flex;flex-direction:column;max-height:300px;overflow-y:auto;margin-bottom:10px}
+        
+        /* Search */
+        .search-container{margin:20px auto;max-width:500px}
         .search-tabs{display:flex;justify-content:center;margin-bottom:15px}
         .search-tab{background:var(--primary);color:white;border:none;border-radius:50px;padding:8px 16px;margin:0 5px;cursor:pointer}
         .search-tab.active{background:var(--secondary)}
+        .search-result{display:flex;align-items:center;padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
+        .search-result:hover{background:rgba(0,0,0,0.05)}
+        .search-result:last-child{border-bottom:none}
+        .search-result img{width:40px;height:40px;border-radius:50%;margin-right:10px;border:2px solid var(--primary)}
+        .search-result button{margin-left:auto;padding:5px 10px;font-size:12px;min-width:auto;border-radius:50px}
+        
+        /* Messages */
+        .messages-container{max-height:calc(100vh - 200px);overflow-y:auto;margin-bottom:15px}
+        .message{background:var(--bg);padding:10px;border-radius:10px;margin:5px 0;max-width:80%}
+        .message.sent{align-self:flex-end;background:var(--primary);color:white}
+        .message.received{align-self:flex-start}
+        .message-input{display:flex;margin-top:15px}
+        .message-input input{flex:1;margin-right:10px}
+        
+        /* Lists (followers, following, notifications) */
+        .list-container{max-width:500px;margin:0 auto}
+        .list-item{display:flex;align-items:center;padding:10px;border-bottom:1px solid rgba(0,0,0,0.1);cursor:pointer}
+        .list-item:hover{background:rgba(0,0,0,0.05)}
+        .list-item:last-child{border-bottom:none}
+        .list-item img{width:40px;height:40px;border-radius:50%;margin-right:10px}
+        
+        /* Notification */
+        .notification{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:50px;color:white;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,0.2);z-index:1000;animation:slideIn 0.3s,fadeOut 0.5s 2.5s forwards}
+        .notification.success{background-color:var(--notification-success)}.notification.error{background-color:var(--notification-error)}.notification.info{background-color:var(--notification-info)}
+        
+        /* Theme controls */
+        .version{position:fixed;bottom:10px;left:10px;font-size:12px;opacity:0.7}
+        .theme-btn{position:fixed;bottom:10px;right:10px;font-size:12px;padding:8px 12px;border-radius:50px}
+        .theme-menu{position:fixed;bottom:40px;right:10px;background:var(--card-bg);border-radius:15px;padding:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:100;width:200px;display:none}
+        .theme-menu.active{display:block}
+        .theme-section{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,0.1)}
+        .theme-section-title{font-weight:bold;margin-bottom:5px;font-size:14px}
+        .theme-option{padding:5px 10px;cursor:pointer;border-radius:50px;margin:2px 0;font-size:12px;text-align:center}
+        .theme-option:hover{background:rgba(0,0,0,0.1)}.theme-option.selected{background:var(--primary);color:var(--btn-text)}
+        
+        /* Special themes */
         body.galaxy-theme{--primary:#9D00FF;--secondary:#00D1FF;--accent:#FF00F5;--notification-success:#00FF88;--notification-error:#FF006E;--notification-info:#7700FF}
         body.galaxy-theme.dark-mode{--text:#FFFFFF;--bg:#0A0A1A;--card-bg:#1A1A2A;background:radial-gradient(circle at center,#0A0A1A,#000000)}
+        
+        /* Animations */
         @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-5px)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes slideIn{from{opacity:0;transform:translate(-50%,-30px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -138,6 +142,7 @@
         </div>
     </div>
 
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="sidebar-profile" id="sidebar-profile">
             <img id="sidebar-headshot" src="" alt="Profile">
@@ -147,6 +152,7 @@
             <button id="home-btn">🏠 Home</button>
             <button id="messages-btn">💬 Messages</button>
             <button id="notifications-btn">🔔 Notifications</button>
+            <button id="search-btn-nav">🔍 Search</button>
         </div>
         <div class="recommended-profiles">
             <div class="recommended-title">Recommended Profiles</div>
@@ -154,20 +160,15 @@
         </div>
     </div>
 
-    <div class="container">
-        <div id="main-app" class="step">
-            <h1>Welcome to Mekhis Creations</h1>
-            <div class="bounce">🎉</div>
-            <p>You're all set! Enjoy the platform.</p>
-            <button id="go-home-btn" style="margin-top:20px">Go to Home</button>
-        </div>
-        
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Onboarding Pages -->
         <div id="onboarding">
             <div class="progress-bar">
                 <div class="progress" id="progress"></div>
             </div>
             
-            <div id="step1" class="step active">
+            <div id="step1" class="page active">
                 <h1>Welcome to Mekhis Creations!</h1>
                 <div class="bounce">👋</div>
                 <p>Let's get you set up!</p>
@@ -176,18 +177,20 @@
                 <button id="confirm-id">Let's Go!</button>
             </div>
             
-            <div id="step2" class="step">
+            <div id="step2" class="page">
                 <h2>Is this you?</h2>
-                <div id="user-info">
+                <div class="profile-card">
                     <img id="headshot" src="" alt="Roblox avatar">
-                    <div id="username"></div>
-                    <div id="description"></div>
+                    <h2 id="username"></h2>
+                    <div class="profile-description" id="description"></div>
                 </div>
-                <button id="yes-btn">Yes, that's me!</button>
-                <button id="no-btn">No, try again</button>
+                <div style="text-align:center">
+                    <button id="yes-btn">Yes, that's me!</button>
+                    <button id="no-btn">No, try again</button>
+                </div>
             </div>
             
-            <div id="step3" class="step">
+            <div id="step3" class="page">
                 <h2>Almost there!</h2>
                 <p>Let's verify this is really you:</p>
                 <ol style="text-align:left;display:inline-block">
@@ -195,41 +198,37 @@
                     <li>Paste it in your Roblox profile description</li>
                     <li>Click verify when done</li>
                 </ol>
-                <div class="code-container">
-                    <div id="verification-code">
+                <div style="display:flex;justify-content:center;gap:10px;margin:20px 0">
+                    <div id="verification-code" style="font-size:32px;letter-spacing:5px;color:var(--secondary);background:var(--card-bg);padding:15px 20px;border-radius:10px;display:flex;align-items:center">
                         <span id="code-text"></span>
-                        <button class="copy-btn">Copy</button>
+                        <button class="copy-btn" style="background:var(--primary);color:var(--btn-text);border:none;border-radius:50px;padding:5px 10px;font-size:12px;cursor:pointer;margin-left:10px">Copy</button>
                     </div>
                 </div>
-                <div style="margin-top:15px">
+                <div style="text-align:center;margin-top:15px">
                     <button id="verify-btn">Verify</button>
                     <button class="back-btn" id="back-btn">Back</button>
                 </div>
-                <div id="verification-status"></div>
+                <div id="verification-status" style="text-align:center;min-height:24px;color:var(--accent);margin-top:10px"></div>
             </div>
         </div>
         
-        <div id="home-content">
-            <div id="title-bar">Mekhis Creations</div>
-            <div id="divider"></div>
-            
-            <div id="player-search">
-                <input type="text" id="search-input" placeholder="Search players by username">
-                <button id="search-btn">Search</button>
-            </div>
-            
-            <div id="create-post" class="create-post" style="display:none">
+        <!-- Main App Pages -->
+        <div id="home-page" class="page">
+            <div class="create-post">
                 <textarea id="post-content" placeholder="What's on your mind?"></textarea>
                 <button id="post-btn">Post</button>
             </div>
             
-            <button id="back-to-profile">Back to My Profile</button>
-            
-            <div id="profile-container">
+            <div id="posts-container"></div>
+        </div>
+        
+        <div id="profile-page" class="page">
+            <button class="back-btn" id="back-to-home">← Back to Home</button>
+            <div class="profile-card">
                 <img id="profile-headshot" src="" alt="Profile picture">
-                <div id="profile-username"></div>
-                <div id="profile-description">Loading description...</div>
-                <div id="profile-stats">
+                <h2 id="profile-username"></h2>
+                <div class="profile-description" id="profile-description">Loading description...</div>
+                <div class="profile-stats">
                     <div>
                         <div class="stat-value" id="followers-count">0</div>
                         <div class="stat-label">Followers</div>
@@ -239,7 +238,7 @@
                         <div class="stat-label">Following</div>
                     </div>
                 </div>
-                <div id="profile-actions">
+                <div class="profile-actions">
                     <button id="edit-btn">Edit</button>
                     <button id="save-btn">Save</button>
                     <button id="follow-btn">Follow</button>
@@ -247,51 +246,64 @@
                 </div>
             </div>
             
-            <div id="posts-container"></div>
-            <div id="divider"></div>
+            <div id="profile-posts-container"></div>
+        </div>
+        
+        <div id="messages-page" class="page">
+            <button class="back-btn" id="back-to-home-from-messages">← Back to Home</button>
+            <h2>Your Conversations</h2>
+            <div id="conversations-container" class="list-container"></div>
+            
+            <div id="chat-container" style="display:none">
+                <button class="back-btn" id="back-to-conversations">← Back to Conversations</button>
+                <h2 id="chat-title">Chat</h2>
+                <div class="messages-container" id="messages-container"></div>
+                <div class="message-input">
+                    <input type="text" id="message-input" placeholder="Type a message...">
+                    <button id="send-btn">Send</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="notifications-page" class="page">
+            <button class="back-btn" id="back-to-home-from-notifications">← Back to Home</button>
+            <h2>Notifications</h2>
+            <div id="notifications-container" class="list-container"></div>
+        </div>
+        
+        <div id="search-page" class="page">
+            <button class="back-btn" id="back-to-home-from-search">← Back to Home</button>
+            <div class="search-container">
+                <div style="display:flex;margin-bottom:20px">
+                    <input type="text" id="search-input" placeholder="Search players by username" style="flex:1;margin-right:10px">
+                    <button id="search-btn">Search</button>
+                </div>
+                
+                <div class="search-tabs">
+                    <button class="search-tab active" id="users-tab">Users</button>
+                    <button class="search-tab" id="posts-tab">Posts</button>
+                </div>
+                
+                <div id="search-users-container"></div>
+                <div id="search-posts-container" style="display:none"></div>
+            </div>
+        </div>
+        
+        <div id="followers-page" class="page">
+            <button class="back-btn" id="back-to-profile-from-followers">← Back to Profile</button>
+            <h2>Followers</h2>
+            <div id="followers-container" class="list-container"></div>
+        </div>
+        
+        <div id="following-page" class="page">
+            <button class="back-btn" id="back-to-profile-from-following">← Back to Profile</button>
+            <h2>Following</h2>
+            <div id="following-container" class="list-container"></div>
         </div>
     </div>
 
-    <div class="overlay" id="overlay"></div>
-    <div class="followers-list" id="followers-list">
-        <button class="close-list" id="close-followers">×</button>
-        <h3 class="list-title">Followers</h3>
-        <div id="followers-container"></div>
-    </div>
-    <div class="following-list" id="following-list">
-        <button class="close-list" id="close-following">×</button>
-        <h3 class="list-title">Following</h3>
-        <div id="following-container"></div>
-    </div>
-    <div class="messages-list" id="messages-list">
-        <button class="close-list" id="close-messages">×</button>
-        <h3 class="list-title">Messages</h3>
-        <div id="conversations-container"></div>
-    </div>
-    <div class="messages-list" id="chat-window" style="display:none">
-        <button class="close-list" id="close-chat">×</button>
-        <h3 class="list-title" id="chat-title">Chat</h3>
-        <div class="messages-container" id="messages-container"></div>
-        <div class="message-input">
-            <input type="text" id="message-input" placeholder="Type a message...">
-            <button id="send-btn">Send</button>
-        </div>
-    </div>
-    <div class="notifications-list" id="notifications-list">
-        <button class="close-list" id="close-notifications">×</button>
-        <h3 class="list-title">Notifications</h3>
-        <div id="notifications-container"></div>
-    </div>
-    <div class="search-page" id="search-page">
-        <button class="close-list" id="close-search">×</button>
-        <h3 class="list-title">Search Results</h3>
-        <div class="search-tabs">
-            <button class="search-tab active" id="users-tab">Users</button>
-            <button class="search-tab" id="posts-tab">Posts</button>
-        </div>
-        <div id="search-users-container"></div>
-        <div id="search-posts-container" style="display:none"></div>
-    </div>
+    <!-- Notification Element -->
+    <div id="notification" class="notification" style="display:none"></div>
 
     <script>
         // Initialize Firebase
@@ -304,11 +316,11 @@
         const formatTime = timestamp => new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
         function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
+            const notification = document.getElementById('notification');
             notification.textContent = message;
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 3000);
         }
 
         async function getRobloxUserData(userId) {
@@ -387,12 +399,6 @@
         let notifications = [];
         let unreadNotifications = 0;
 
-        function showNotificationsList() {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('notifications-list').style.display = 'block';
-            renderNotifications();
-        }
-
         function renderNotifications() {
             const notificationsContainer = document.getElementById('notifications-container');
             notificationsContainer.innerHTML = '';
@@ -449,12 +455,11 @@
         }
 
         // Search functionality
-        document.getElementById('search-btn').addEventListener('click', () => {
-            const searchTerm = document.getElementById('search-input').value.trim();
+        function performSearch(searchTerm) {
             if (!searchTerm) return showNotification('Please enter a search term', 'error');
             
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('search-page').style.display = 'block';
+            // Switch to search page
+            showPage('search-page');
             document.getElementById('users-tab').classList.add('active');
             document.getElementById('posts-tab').classList.remove('active');
             document.getElementById('search-users-container').style.display = 'block';
@@ -477,7 +482,7 @@
                     if (users.length > 0) {
                         users.forEach(user => {
                             const userElement = document.createElement('div');
-                            userElement.className = 'list-item';
+                            userElement.className = 'search-result';
                             userElement.innerHTML = `
                                 <img src="${user.headshot}" alt="${user.username}">
                                 <span>${user.username}</span>
@@ -547,7 +552,7 @@
                     }
                 }
             });
-        });
+        }
 
         // Search tabs
         document.getElementById('users-tab').addEventListener('click', () => {
@@ -562,37 +567,6 @@
             document.getElementById('users-tab').classList.remove('active');
             document.getElementById('search-posts-container').style.display = 'block';
             document.getElementById('search-users-container').style.display = 'none';
-        });
-
-        // Close search
-        document.getElementById('close-search').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('search-page').style.display = 'none';
-        });
-
-        // View profile from search results
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('view-profile') || e.target.closest('.list-item')) {
-                const userId = e.target.classList.contains('view-profile') ? e.target.dataset.id : 
-                              e.target.closest('.list-item').querySelector('button')?.dataset.id;
-                if (userId) {
-                    window.history.pushState({}, '', `/@${encodeURIComponent(userId)}`);
-                    loadUserData(userId);
-                    document.getElementById('overlay').style.display = 'none';
-                    document.getElementById('followers-list').style.display = 'none';
-                    document.getElementById('following-list').style.display = 'none';
-                    document.getElementById('search-page').style.display = 'none';
-                }
-            }
-            
-            // Click on recommended user
-            if (e.target.closest('.recommended-user')) {
-                const userId = e.target.closest('.recommended-user').querySelector('img').dataset.id;
-                if (userId) {
-                    window.history.pushState({}, '', `/@${encodeURIComponent(userId)}`);
-                    loadUserData(userId);
-                }
-            }
         });
 
         // Follow/unfollow functionality
@@ -672,8 +646,7 @@
                     followersContainer.innerHTML = '<p>No followers yet</p>';
                 }
                 
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('followers-list').style.display = 'block';
+                showPage('followers-page');
             });
         }
 
@@ -707,45 +680,9 @@
                     followingContainer.innerHTML = '<p>Not following anyone yet</p>';
                 }
                 
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('following-list').style.display = 'block';
+                showPage('following-page');
             });
         }
-
-        // Close list modals
-        document.getElementById('close-followers').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('followers-list').style.display = 'none';
-        });
-
-        document.getElementById('close-following').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('following-list').style.display = 'none';
-        });
-
-        document.getElementById('close-notifications').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('notifications-list').style.display = 'none';
-        });
-
-        document.getElementById('overlay').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('followers-list').style.display = 'none';
-            document.getElementById('following-list').style.display = 'none';
-            document.getElementById('messages-list').style.display = 'none';
-            document.getElementById('chat-window').style.display = 'none';
-            document.getElementById('notifications-list').style.display = 'none';
-            document.getElementById('search-page').style.display = 'none';
-        });
-
-        // Back to profile button
-        document.getElementById('back-to-profile').addEventListener('click', () => {
-            const userId = localStorage.getItem('robloxUserId');
-            if (userId) {
-                window.history.pushState({}, '', '/');
-                loadUserData(userId);
-            }
-        });
 
         // Messaging functionality
         let currentChatId = null;
@@ -779,9 +716,8 @@
                     conversationsContainer.innerHTML = '<p>No conversations yet</p>';
                 }
                 
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('messages-list').style.display = 'block';
-                document.getElementById('chat-window').style.display = 'none';
+                document.getElementById('chat-container').style.display = 'none';
+                showPage('messages-page');
             });
         }
 
@@ -792,8 +728,7 @@
                     const user = snapshot.val();
                     document.getElementById('chat-title').textContent = `Chat with ${user.username}`;
                     loadMessages(userId);
-                    document.getElementById('messages-list').style.display = 'none';
-                    document.getElementById('chat-window').style.display = 'block';
+                    document.getElementById('chat-container').style.display = 'block';
                 }
             });
         }
@@ -869,26 +804,9 @@
                 });
         }
 
-        document.getElementById('close-messages').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('messages-list').style.display = 'none';
-        });
-
-        document.getElementById('close-chat').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('chat-window').style.display = 'none';
-        });
-
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('start-chat')) {
-                const userId = e.target.dataset.id;
-                showChatWindow(userId);
-            }
-        });
-
         // Posts functionality
         function loadPosts(userId = null) {
-            const postsContainer = document.getElementById('posts-container');
+            const postsContainer = userId ? document.getElementById('profile-posts-container') : document.getElementById('posts-container');
             postsContainer.innerHTML = '<p>Loading posts...</p>';
             
             let postsRef = database.ref('posts').orderByChild('timestamp').limitToLast(20);
@@ -1115,6 +1033,12 @@
             });
         }
 
+        // Page management
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
         // Onboarding flow functions
         function updateProgress(step) {
             const progressBar = document.getElementById('progress');
@@ -1143,9 +1067,7 @@
 
         function showHomeContent() {
             document.getElementById('onboarding').style.display = 'none';
-            document.getElementById('main-app').style.display = 'none';
-            document.getElementById('home-content').style.display = 'block';
-            document.getElementById('create-post').style.display = 'block';
+            showPage('home-page');
             
             const userId = localStorage.getItem('robloxUserId');
             if (userId) {
@@ -1168,7 +1090,7 @@
                 let foundUser = null;
                 snapshot.forEach(childSnapshot => {
                     const user = childSnapshot.val();
-                    if (user.username.toLowerCase() === username.toLowerCase()) {
+                    if (user.username.toLowerCase() === username.toLowerCase())) {
                         foundUser = user;
                     }
                 });
@@ -1254,7 +1176,6 @@
             document.getElementById('save-btn').style.display = 'none';
             document.getElementById('follow-btn').style.display = isCurrentUser ? 'none' : 'inline-block';
             document.getElementById('message-btn').style.display = isCurrentUser ? 'none' : 'inline-block';
-            document.getElementById('back-to-profile').style.display = isCurrentUser ? 'none' : 'block';
             document.getElementById('profile-description').contentEditable = false;
             
             if (!isCurrentUser) {
@@ -1269,7 +1190,6 @@
                 
                 document.getElementById('message-btn').onclick = () => {
                     showChatWindow(userData.userId);
-                    document.getElementById('overlay').style.display = 'block';
                 };
             }
             
@@ -1281,6 +1201,8 @@
                 loadPosts(userData.userId);
             }
             
+            showPage('profile-page');
+            
             if (isCurrentUser && !window.location.pathname.startsWith('/@')) {
                 window.history.pushState({}, '', `/@${encodeURIComponent(userData.username)}`);
             }
@@ -1288,6 +1210,52 @@
 
         // Initialize event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Navigation buttons
+            document.getElementById('home-btn').addEventListener('click', () => {
+                window.history.pushState({}, '', '/');
+                showPage('home-page');
+                loadPosts();
+            });
+            
+            document.getElementById('messages-btn').addEventListener('click', showMessagesList);
+            document.getElementById('notifications-btn').addEventListener('click', () => {
+                showPage('notifications-page');
+                renderNotifications();
+            });
+            
+            document.getElementById('search-btn-nav').addEventListener('click', () => {
+                showPage('search-page');
+            });
+            
+            // Back buttons
+            document.getElementById('back-to-home').addEventListener('click', () => {
+                showPage('home-page');
+            });
+            
+            document.getElementById('back-to-home-from-messages').addEventListener('click', () => {
+                showPage('home-page');
+            });
+            
+            document.getElementById('back-to-home-from-notifications').addEventListener('click', () => {
+                showPage('home-page');
+            });
+            
+            document.getElementById('back-to-home-from-search').addEventListener('click', () => {
+                showPage('home-page');
+            });
+            
+            document.getElementById('back-to-profile-from-followers').addEventListener('click', () => {
+                showPage('profile-page');
+            });
+            
+            document.getElementById('back-to-profile-from-following').addEventListener('click', () => {
+                showPage('profile-page');
+            });
+            
+            document.getElementById('back-to-conversations').addEventListener('click', () => {
+                document.getElementById('chat-container').style.display = 'none';
+            });
+
             // Confirm ID button
             document.getElementById('confirm-id')?.addEventListener('click', async () => {
                 const userId = document.getElementById('roblox-id').value.trim();
@@ -1339,8 +1307,6 @@
                 setTimeout(showHomeContent, 1500);
             });
 
-            document.getElementById('go-home-btn')?.addEventListener('click', showHomeContent);
-
             // Edit profile
             document.getElementById('edit-btn')?.addEventListener('click', () => {
                 const desc = document.getElementById('profile-description');
@@ -1377,25 +1343,48 @@
                 });
             });
 
-            // Sidebar navigation
-            document.getElementById('home-btn').addEventListener('click', () => {
-                window.history.pushState({}, '', '/');
-                loadPosts(); // Load global feed
-                document.getElementById('back-to-profile').style.display = 'block';
+            // Search button
+            document.getElementById('search-btn').addEventListener('click', () => {
+                const searchTerm = document.getElementById('search-input').value.trim();
+                performSearch(searchTerm);
             });
-
-            document.getElementById('messages-btn').addEventListener('click', showMessagesList);
-            document.getElementById('notifications-btn').addEventListener('click', showNotificationsList);
 
             // Handle back/forward navigation
             window.addEventListener('popstate', () => {
                 const path = window.location.pathname;
-                if (path.startsWith('/@')) {
+                if (path === '/') {
+                    showPage('home-page');
+                    loadPosts();
+                } else if (path.startsWith('/@')) {
                     const username = decodeURIComponent(path.substring(2));
                     searchUserByUsername(username);
-                } else {
-                    loadPosts(); // Load global feed
-                    document.getElementById('back-to-profile').style.display = 'block';
+                }
+            });
+
+            // View profile from search results or posts
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('view-profile') || e.target.closest('.view-profile')) {
+                    const userId = e.target.classList.contains('view-profile') ? e.target.dataset.id : 
+                                  e.target.closest('.view-profile').dataset.id;
+                    if (userId) {
+                        window.history.pushState({}, '', `/@${encodeURIComponent(userId)}`);
+                        loadUserData(userId);
+                    }
+                }
+                
+                // Click on recommended user
+                if (e.target.closest('.recommended-user')) {
+                    const userId = e.target.closest('.recommended-user').querySelector('img').dataset.id;
+                    if (userId) {
+                        window.history.pushState({}, '', `/@${encodeURIComponent(userId)}`);
+                        loadUserData(userId);
+                    }
+                }
+                
+                // Start chat from conversations list
+                if (e.target.classList.contains('start-chat')) {
+                    const userId = e.target.dataset.id;
+                    showChatWindow(userId);
                 }
             });
 
