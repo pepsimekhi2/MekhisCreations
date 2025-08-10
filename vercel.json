@@ -1,21 +1,19 @@
 {
-  "redirects": [
-    {
-      "source": "/Pet-Universe",
-      "destination": "/pet-universe.html",
-      "permanent": false
-    },
-    {
-      "source": "/Pet-Universe-2", 
-      "destination": "/pet-universe-2.html",
-      "permanent": false
-    }
-  ],
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/Pet-Universe",
+      "destination": "/pet-universe.html"
+    },
+    {
+      "source": "/Pet-Universe-2",
+      "destination": "/pet-universe-2.html"
     }
   ],
-  "cleanUrls": true
+  "redirects": [
+    {
+      "source": "/((?!Pet-Universe|Pet-Universe-2|_next|api|favicon.ico|.*\\.).*)",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
 }
