@@ -12,11 +12,12 @@
             background-color: #2C2C2C;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
             padding-top: 60px;
             font-family: 'Fredoka One', cursive;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
         }
 
@@ -51,98 +52,98 @@
         .star:nth-child(1) {
             width: 8px;
             height: 8px;
-            background: radial-gradient(circle, #4A90E2, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 3s;
         }
 
         .star:nth-child(2) {
             width: 12px;
             height: 12px;
-            background: radial-gradient(circle, #7BB3F0, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 2.5s;
         }
 
         .star:nth-child(3) {
             width: 6px;
             height: 6px;
-            background: radial-gradient(circle, #9DC5F3, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 4s;
         }
 
         .star:nth-child(4) {
             width: 10px;
             height: 10px;
-            background: radial-gradient(circle, #4A90E2, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 3.5s;
         }
 
         .star:nth-child(5) {
             width: 14px;
             height: 14px;
-            background: radial-gradient(circle, #5A9FE8, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 2s;
         }
 
         .star:nth-child(6) {
             width: 7px;
             height: 7px;
-            background: radial-gradient(circle, #8BBEF2, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 3s;
         }
 
         .star:nth-child(7) {
             width: 9px;
             height: 9px;
-            background: radial-gradient(circle, #4A90E2, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 2.5s;
         }
 
         .star:nth-child(8) {
             width: 11px;
             height: 11px;
-            background: radial-gradient(circle, #6BADEF, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 4s;
         }
 
         .star:nth-child(9) {
             width: 5px;
             height: 5px;
-            background: radial-gradient(circle, #A8D0F5, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 3.2s;
         }
 
         .star:nth-child(10) {
             width: 13px;
             height: 13px;
-            background: radial-gradient(circle, #4A90E2, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 2.8s;
         }
 
         .star:nth-child(11) {
             width: 8px;
             height: 8px;
-            background: radial-gradient(circle, #6BADEF, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 3.8s;
         }
 
         .star:nth-child(12) {
             width: 10px;
             height: 10px;
-            background: radial-gradient(circle, #9DC5F3, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 2.2s;
         }
 
         .star:nth-child(13) {
             width: 6px;
             height: 6px;
-            background: radial-gradient(circle, #7BB3F0, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 3.5s;
         }
 
         .star:nth-child(14) {
             width: 15px;
             height: 15px;
-            background: radial-gradient(circle, #5A9FE8, transparent);
+            background: radial-gradient(circle, #C0C0C0, transparent);
             animation-duration: 2.3s;
         }
 
@@ -150,8 +151,8 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #4A90E2;
-            color: white;
+            background: #C0C0C0;
+            color: #000;
             border: none;
             padding: 12px 20px;
             border-radius: 25px;
@@ -159,14 +160,14 @@
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
             z-index: 100;
         }
 
         .themes-button:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
-            background: #5A9FE8;
+            box-shadow: 0 6px 20px rgba(192, 192, 192, 0.5);
+            background: #A8A8A8;
         }
 
         .themes-button:active {
@@ -178,9 +179,10 @@
             position: fixed;
             bottom: 90px;
             right: 30px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(25, 25, 25, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 15px;
+            border: 1px solid #C0C0C0;
             padding: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             transform: translateY(20px) scale(0.9);
@@ -209,7 +211,7 @@
             font-family: 'Fredoka One', cursive;
             font-size: 12px;
             font-weight: 400;
-            color: #4A90E2;
+            color: #C0C0C0;
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -223,8 +225,8 @@
 
         .theme-option {
             background: transparent;
-            border: 2px solid #4A90E2;
-            color: #4A90E2;
+            border: 2px solid #C0C0C0;
+            color: #C0C0C0;
             padding: 8px 12px;
             border-radius: 15px;
             font-family: 'Fredoka One', cursive;
@@ -238,16 +240,14 @@
         }
 
         .theme-option:hover {
-            background: #4A90E2;
-            color: white;
+            background: #C0C0C0;
+            color: #000;
             transform: scale(1.02);
         }
 
-
-
         .theme-option.active {
-            background: #4A90E2;
-            color: white;
+            background: #C0C0C0;
+            color: #000;
         }
 
         /* Light style modifications */
@@ -300,39 +300,23 @@
             color: #2C3E50;
         }
 
-        /* Neon theme - reduced glow */
-        body.neon-theme .main-title {
-            color: #00FFFF !important;
-            text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF;
+        body.light-style .content-frame {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #2C3E50;
         }
 
-        body.neon-theme .main-title::after {
-            background-color: #00FFFF;
-            box-shadow: 0 0 5px #00FFFF;
+        body.light-style .secondary-frame {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #2C3E50;
         }
 
-        body.neon-theme .star {
-            background: radial-gradient(circle, #00FFFF, transparent) !important;
-            filter: blur(1px) drop-shadow(0 0 3px #00FFFF);
+        body.light-style .games-title {
+            color: #2C3E50;
         }
 
-        body.neon-theme .themes-button {
-            background: #00FFFF;
-            color: #000;
-            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5);
-        }
-
-        body.neon-theme .themes-button:hover {
-            background: #00E6E6;
-            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.7);
-        }
-
-        body.neon-theme {
-            background: linear-gradient(to bottom, #001a1a 0%, #000d0d 100%);
-        }
-
-        body.light-style.neon-theme {
-            background: linear-gradient(to bottom, #e6ffff 0%, #ccf9f9 100%);
+        body.light-style .game-frame {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #2C3E50;
         }
 
         /* Crimson theme */
@@ -364,6 +348,22 @@
 
         body.light-style.crimson-theme {
             background: linear-gradient(to bottom, #FFEBEE 0%, #FFCDD2 100%);
+        }
+
+        body.crimson-theme .content-frame {
+            border: 2px solid #DC143C;
+        }
+
+        body.crimson-theme .games-title {
+            color: #DC143C !important;
+        }
+
+        body.crimson-theme .secondary-frame {
+            border: 2px solid #DC143C;
+        }
+
+        body.crimson-theme .game-frame {
+            border: 2px solid #DC143C;
         }
 
         /* Silver theme */
@@ -399,6 +399,23 @@
             background: linear-gradient(to bottom, #F5F5F5 0%, #E8E8E8 100%);
         }
 
+        body.silver-theme .content-frame {
+            border: 2px solid #C0C0C0;
+        }
+
+        body.silver-theme .games-title {
+            color: #C0C0C0 !important;
+            text-shadow: 0 0 3px rgba(192, 192, 192, 0.3);
+        }
+
+        body.silver-theme .secondary-frame {
+            border: 2px solid #C0C0C0;
+        }
+
+        body.silver-theme .game-frame {
+            border: 2px solid #C0C0C0;
+        }
+
         /* Bronze theme */
         body.bronze-theme .main-title {
             color: #CD7F32 !important;
@@ -431,55 +448,23 @@
             background: linear-gradient(to bottom, #FFF8F0 0%, #F4E4D6 100%);
         }
 
-        /* Gold theme */
-        body.gold-theme .main-title {
-            color: #FFD700 !important;
-            text-shadow: 0 0 3px rgba(255, 215, 0, 0.4);
+        body.bronze-theme .content-frame {
+            border: 2px solid #CD7F32;
         }
 
-        body.gold-theme .main-title::after {
-            background-color: #FFD700;
+        body.bronze-theme .games-title {
+            color: #CD7F32 !important;
         }
 
-        body.gold-theme .star {
-            background: radial-gradient(circle, #FFD700, transparent) !important;
+        body.bronze-theme .secondary-frame {
+            border: 2px solid #CD7F32;
         }
 
-        body.gold-theme .themes-button {
-            background: #FFD700;
-            color: #000;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        body.bronze-theme .game-frame {
+            border: 2px solid #CD7F32;
         }
 
-        body.gold-theme .themes-button:hover {
-            background: #E6C200;
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
-        }
 
-        body.gold-theme {
-            background: linear-gradient(to bottom, #2A2A1A 0%, #1A1A0D 100%);
-        }
-
-        /* Neon theme panel styles */
-        body.neon-theme .themes-panel {
-            background: rgba(0, 20, 20, 0.95);
-            border: 1px solid #00FFFF;
-        }
-
-        body.neon-theme .section-title {
-            color: #00FFFF;
-        }
-
-        body.neon-theme .theme-option {
-            border-color: #00FFFF;
-            color: #00FFFF;
-        }
-
-        body.neon-theme .theme-option:hover,
-        body.neon-theme .theme-option.active {
-            background: #00FFFF;
-            color: #000;
-        }
 
         /* Crimson theme panel styles */
         body.crimson-theme .themes-panel {
@@ -544,26 +529,24 @@
             color: #000;
         }
 
-
-
-
-
         .header {
             text-align: center;
             position: relative;
             z-index: 10;
+            margin-bottom: 40px;
         }
 
         .main-title {
             font-family: 'Fredoka One', cursive;
             font-size: 4rem;
-            color: #4A90E2 !important;
+            color: #C0C0C0 !important;
             margin: 0;
             letter-spacing: 2px;
             position: relative;
             display: inline-block;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-shadow: 0 0 3px rgba(192, 192, 192, 0.3);
         }
 
         .main-title::after {
@@ -573,7 +556,7 @@
             height: 4px;
             bottom: -10px;
             left: 50%;
-            background-color: #4A90E2;
+            background-color: #C0C0C0;
             transition: all 0.4s ease;
             transform: translateX(-50%);
         }
@@ -582,9 +565,148 @@
             width: 120%;
         }
 
+        .content-frame {
+            width: 750px;
+            height: 280px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid #C0C0C0;
+            border-radius: 15px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #C0C0C0;
+            font-size: 1rem;
+            text-align: center;
+            padding: 25px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+        }
+
+        .secondary-frames {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .secondary-frame {
+            width: 375px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid #C0C0C0;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #C0C0C0;
+            font-size: 1rem;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .secondary-frame:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .games-section {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .games-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: #C0C0C0;
+            margin: 0 0 30px 0;
+            letter-spacing: 1px;
+            text-shadow: 0 0 3px rgba(192, 192, 192, 0.3);
+        }
+
+        .games-frames {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-frame {
+            width: 200px;
+            height: 265px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid #C0C0C0;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #C0C0C0;
+            font-size: 1rem;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .game-frame:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-frame:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
         @media (max-width: 768px) {
             .main-title {
                 font-size: 2.5rem;
+            }
+            
+            .content-frame {
+                width: 90%;
+                max-width: 600px;
+                height: 250px;
+            }
+            
+            .secondary-frames {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .secondary-frame {
+                width: 90%;
+                max-width: 400px;
+            }
+            
+            .games-title {
+                font-size: 2rem;
+            }
+            
+            .games-frames {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .game-frame {
+                width: 90%;
+                max-width: 300px;
             }
         }
 
@@ -595,8 +717,100 @@
             .main-title {
                 font-size: 2rem;
             }
+            
+            .content-frame {
+                width: 95%;
+                height: 220px;
+                font-size: 0.9rem;
+            }
+            
+            .secondary-frame {
+                width: 95%;
+                height: 180px;
+                font-size: 0.9rem;
+            }
+            
+            .games-title {
+                font-size: 1.5rem;
+            }
+            
+            .game-frame {
+                width: 95%;
+                height: 240px;
+                font-size: 0.9rem;
+            }
         }
     </style>
+</head>
+<body>
+    <div class="stars">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+    
+    <div class="header">
+        <h1 class="main-title">Mekhis Creations</h1>
+    </div>
+    
+    <div class="content-frame">
+        Mekhis Creations is a passionate independent Roblox game studio founded and operated by Mekhi, a dedicated developer who pours their heart and soul into creating unique gaming experiences. With a growing community of lovely group members, the studio has achieved remarkable milestones including over 5,000 combined game visits and generated more than 1,000 Robux in revenue. What sets Mekhis Creations apart is the genuine commitment to innovation and quality, transforming creative visions into engaging Roblox games that captivate players and build lasting communities.
+    </div>
+    
+    <div class="secondary-frames">
+        <div class="secondary-frame">
+            Content for first frame...
+        </div>
+        <div class="secondary-frame">
+            Content for second frame...
+        </div>
+    </div>
+    
+    <div class="games-section">
+        <h2 class="games-title">Our Games</h2>
+        <div class="games-frames">
+            <div class="game-frame">
+                Game content...
+            </div>
+            <div class="game-frame">
+                Game content...
+            </div>
+        </div>
+    </div>
+    
+    <button class="themes-button" onclick="toggleThemes()">Themes</button>
+    
+    <div class="themes-panel" id="themesPanel">
+        <div class="themes-section">
+            <div class="section-title">Style</div>
+            <div class="theme-grid">
+                <button class="theme-option style-option" onclick="setStyle('dark')">Dark</button>
+                <button class="theme-option style-option" onclick="setStyle('light')">Light</button>
+            </div>
+        </div>
+        
+        <div class="themes-section">
+            <div class="section-title">Theme</div>
+            <div class="theme-grid">
+                <button class="theme-option theme-option-btn" onclick="setTheme('crimson')">Crimson</button>
+                <button class="theme-option theme-option-btn" onclick="setTheme('silver')">Silver</button>
+                <button class="theme-option theme-option-btn" onclick="setTheme('bronze')">Bronze</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function positionStars() {
             const stars = document.querySelectorAll('.star');
@@ -634,7 +848,58 @@
         }
         
         let currentStyle = 'dark';
-        let currentTheme = null;
+        let currentTheme = 'silver';
+        
+        // Load saved preferences
+        function loadSavedThemes() {
+            // Using a simple object to store preferences in memory
+            // This simulates persistent storage for the demo
+            if (window.savedThemes) {
+                currentStyle = window.savedThemes.style || 'dark';
+                currentTheme = window.savedThemes.theme || 'silver';
+            }
+            
+            // Apply saved themes
+            if (currentStyle === 'light') {
+                document.body.classList.add('light-style');
+            }
+            
+            if (currentTheme) {
+                document.body.classList.add(currentTheme + '-theme');
+            }
+            
+            // Update active buttons
+            updateActiveButtons();
+            updateThemeDisplay();
+        }
+        
+        function saveThemes() {
+            // Store preferences in memory (simulating persistent storage)
+            window.savedThemes = {
+                style: currentStyle,
+                theme: currentTheme
+            };
+        }
+        
+        function updateActiveButtons() {
+            // Update style buttons
+            const styleOptions = document.querySelectorAll('.style-option');
+            styleOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.textContent.toLowerCase() === currentStyle) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Update theme buttons
+            const themeOptions = document.querySelectorAll('.theme-option-btn');
+            themeOptions.forEach(option => {
+                option.classList.remove('active');
+                if (currentTheme && option.textContent.toLowerCase() === currentTheme) {
+                    option.classList.add('active');
+                }
+            });
+        }
         
         function toggleThemes() {
             const panel = document.getElementById('themesPanel');
@@ -643,7 +908,6 @@
         
         function setStyle(style) {
             const body = document.body;
-            const styleOptions = document.querySelectorAll('.style-option');
             
             // Remove current style
             body.classList.remove('light-style', 'dark-style');
@@ -656,28 +920,25 @@
             currentStyle = style;
             
             // Update active button
-            styleOptions.forEach(option => option.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            updateActiveButtons();
             updateThemeDisplay();
+            saveThemes();
         }
         
         function setTheme(theme) {
             const body = document.body;
-            const themeOptions = document.querySelectorAll('.theme-option-btn');
             
             // Remove current theme
-            body.classList.remove('neon-theme', 'crimson-theme', 'silver-theme', 'bronze-theme');
+            body.classList.remove('crimson-theme', 'silver-theme', 'bronze-theme');
             
             // Add new theme
             body.classList.add(theme + '-theme');
             currentTheme = theme;
             
             // Update active button
-            themeOptions.forEach(option => option.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            updateActiveButtons();
             updateThemeDisplay();
+            saveThemes();
         }
         
         function updateThemeDisplay() {
@@ -699,54 +960,11 @@
             }
         });
         
-        // Position stars when page loads
-        window.addEventListener('load', positionStars);
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            positionStars();
+            loadSavedThemes();
+        });
     </script>
-</head>
-<body>
-    <div class="stars">
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-    </div>
-    <div class="header">
-        <h1 class="main-title">Mekhis Creations</h1>
-    </div>
-    
-    <div class="content-frame"></div>
-    
-    <button class="themes-button" onclick="toggleThemes()">Themes</button>
-    
-    <div class="themes-panel" id="themesPanel">
-        <div class="themes-section">
-            <div class="section-title">Style</div>
-            <div class="theme-grid">
-                <button class="theme-option style-option active" onclick="setStyle('dark')">Dark</button>
-                <button class="theme-option style-option" onclick="setStyle('light')">Light</button>
-            </div>
-        </div>
-        
-        <div class="themes-section">
-            <div class="section-title">Theme</div>
-            <div class="theme-grid">
-                <button class="theme-option theme-option-btn" onclick="setTheme('neon')">Neon</button>
-                <button class="theme-option theme-option-btn" onclick="setTheme('crimson')">Crimson</button>
-                <button class="theme-option theme-option-btn" onclick="setTheme('silver')">Silver</button>
-                <button class="theme-option theme-option-btn" onclick="setTheme('bronze')">Bronze</button>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
