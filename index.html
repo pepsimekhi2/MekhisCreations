@@ -1,1 +1,752 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Roblox Visit Counter</title><style>body{font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#f0f0f0}.counter-container{text-align:center;padding:30px;border-radius:10px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.counter{font-size:3rem;font-weight:bold;margin:20px 0;color:#06c}</style></head><body><div class="counter-container"><h1>Game Visits</h1><div class="counter" id="visitCount">Loading...</div></div><script>(async()=>{const placeId=86169967274436;try{const proxyUrl='https://cors-anywhere.herokuapp.com/';const apiUrl=`https://games.roblox.com/v1/games?placeIds=${placeId}`;const res=await fetch(proxyUrl+apiUrl);const data=await res.json();document.getElementById('visitCount').textContent=data.data[0].visits.toLocaleString();}catch(e){document.getElementById('visitCount').textContent='Error';}})();</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mekhis Creations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2C2C2C;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 60px;
+            font-family: 'Fredoka One', cursive;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-20px) scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .star:nth-child(1) {
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #4A90E2, transparent);
+            animation-duration: 3s;
+        }
+
+        .star:nth-child(2) {
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #7BB3F0, transparent);
+            animation-duration: 2.5s;
+        }
+
+        .star:nth-child(3) {
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #9DC5F3, transparent);
+            animation-duration: 4s;
+        }
+
+        .star:nth-child(4) {
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #4A90E2, transparent);
+            animation-duration: 3.5s;
+        }
+
+        .star:nth-child(5) {
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle, #5A9FE8, transparent);
+            animation-duration: 2s;
+        }
+
+        .star:nth-child(6) {
+            width: 7px;
+            height: 7px;
+            background: radial-gradient(circle, #8BBEF2, transparent);
+            animation-duration: 3s;
+        }
+
+        .star:nth-child(7) {
+            width: 9px;
+            height: 9px;
+            background: radial-gradient(circle, #4A90E2, transparent);
+            animation-duration: 2.5s;
+        }
+
+        .star:nth-child(8) {
+            width: 11px;
+            height: 11px;
+            background: radial-gradient(circle, #6BADEF, transparent);
+            animation-duration: 4s;
+        }
+
+        .star:nth-child(9) {
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, #A8D0F5, transparent);
+            animation-duration: 3.2s;
+        }
+
+        .star:nth-child(10) {
+            width: 13px;
+            height: 13px;
+            background: radial-gradient(circle, #4A90E2, transparent);
+            animation-duration: 2.8s;
+        }
+
+        .star:nth-child(11) {
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #6BADEF, transparent);
+            animation-duration: 3.8s;
+        }
+
+        .star:nth-child(12) {
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #9DC5F3, transparent);
+            animation-duration: 2.2s;
+        }
+
+        .star:nth-child(13) {
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #7BB3F0, transparent);
+            animation-duration: 3.5s;
+        }
+
+        .star:nth-child(14) {
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #5A9FE8, transparent);
+            animation-duration: 2.3s;
+        }
+
+        .themes-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+            z-index: 100;
+        }
+
+        .themes-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
+            background: #5A9FE8;
+        }
+
+        .themes-button:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.4);
+        }
+
+        .themes-panel {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px) scale(0.9);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+            min-width: 200px;
+        }
+
+        .themes-panel.show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .themes-section {
+            margin-bottom: 15px;
+        }
+
+        .themes-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 12px;
+            font-weight: 400;
+            color: #4A90E2;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .theme-grid {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .theme-option {
+            background: transparent;
+            border: 2px solid #4A90E2;
+            color: #4A90E2;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 11px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .theme-option:hover {
+            background: #4A90E2;
+            color: white;
+            transform: scale(1.02);
+        }
+
+
+
+        .theme-option.active {
+            background: #4A90E2;
+            color: white;
+        }
+
+        /* Light style modifications */
+        body.light-style {
+            background: linear-gradient(to bottom, #F8F9FA 0%, #E9ECEF 100%);
+        }
+
+        body {
+            background: linear-gradient(to bottom, #2C2C2C 0%, #1A1A1A 100%);
+        }
+
+        body.light-style .main-title {
+            color: #2C3E50 !important;
+        }
+
+        body.light-style .main-title::after {
+            background-color: #2C3E50;
+        }
+
+        body.light-style .star {
+            background: radial-gradient(circle, #34495E, transparent) !important;
+        }
+
+        body.light-style .themes-button {
+            background: #2C3E50;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        body.light-style .themes-button:hover {
+            background: #34495E;
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.5);
+        }
+
+        body.light-style .themes-panel {
+            background: rgba(44, 62, 80, 0.95);
+        }
+
+        body.light-style .section-title {
+            color: #F8F9FA;
+        }
+
+        body.light-style .theme-option {
+            border-color: #F8F9FA;
+            color: #F8F9FA;
+        }
+
+        body.light-style .theme-option:hover,
+        body.light-style .theme-option.active {
+            background: #F8F9FA;
+            color: #2C3E50;
+        }
+
+        /* Neon theme - reduced glow */
+        body.neon-theme .main-title {
+            color: #00FFFF !important;
+            text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF;
+        }
+
+        body.neon-theme .main-title::after {
+            background-color: #00FFFF;
+            box-shadow: 0 0 5px #00FFFF;
+        }
+
+        body.neon-theme .star {
+            background: radial-gradient(circle, #00FFFF, transparent) !important;
+            filter: blur(1px) drop-shadow(0 0 3px #00FFFF);
+        }
+
+        body.neon-theme .themes-button {
+            background: #00FFFF;
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5);
+        }
+
+        body.neon-theme .themes-button:hover {
+            background: #00E6E6;
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.7);
+        }
+
+        body.neon-theme {
+            background: linear-gradient(to bottom, #001a1a 0%, #000d0d 100%);
+        }
+
+        body.light-style.neon-theme {
+            background: linear-gradient(to bottom, #e6ffff 0%, #ccf9f9 100%);
+        }
+
+        /* Crimson theme */
+        body.crimson-theme .main-title {
+            color: #DC143C !important;
+        }
+
+        body.crimson-theme .main-title::after {
+            background-color: #DC143C;
+        }
+
+        body.crimson-theme .star {
+            background: radial-gradient(circle, #DC143C, transparent) !important;
+        }
+
+        body.crimson-theme .themes-button {
+            background: #DC143C;
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+        }
+
+        body.crimson-theme .themes-button:hover {
+            background: #B91C3C;
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.5);
+        }
+
+        body.crimson-theme {
+            background: linear-gradient(to bottom, #2C1A1A 0%, #1A0D0D 100%);
+        }
+
+        body.light-style.crimson-theme {
+            background: linear-gradient(to bottom, #FFEBEE 0%, #FFCDD2 100%);
+        }
+
+        /* Silver theme */
+        body.silver-theme .main-title {
+            color: #C0C0C0 !important;
+            text-shadow: 0 0 3px rgba(192, 192, 192, 0.3);
+        }
+
+        body.silver-theme .main-title::after {
+            background-color: #C0C0C0;
+        }
+
+        body.silver-theme .star {
+            background: radial-gradient(circle, #C0C0C0, transparent) !important;
+        }
+
+        body.silver-theme .themes-button {
+            background: #C0C0C0;
+            color: #000;
+            box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
+        }
+
+        body.silver-theme .themes-button:hover {
+            background: #A8A8A8;
+            box-shadow: 0 6px 20px rgba(192, 192, 192, 0.5);
+        }
+
+        body.silver-theme {
+            background: linear-gradient(to bottom, #2A2A2A 0%, #1C1C1C 100%);
+        }
+
+        body.light-style.silver-theme {
+            background: linear-gradient(to bottom, #F5F5F5 0%, #E8E8E8 100%);
+        }
+
+        /* Bronze theme */
+        body.bronze-theme .main-title {
+            color: #CD7F32 !important;
+        }
+
+        body.bronze-theme .main-title::after {
+            background-color: #CD7F32;
+        }
+
+        body.bronze-theme .star {
+            background: radial-gradient(circle, #CD7F32, transparent) !important;
+        }
+
+        body.bronze-theme .themes-button {
+            background: #CD7F32;
+            color: #000;
+            box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3);
+        }
+
+        body.bronze-theme .themes-button:hover {
+            background: #B8722E;
+            box-shadow: 0 6px 20px rgba(205, 127, 50, 0.5);
+        }
+
+        body.bronze-theme {
+            background: linear-gradient(to bottom, #2A1F1A 0%, #1A130D 100%);
+        }
+
+        body.light-style.bronze-theme {
+            background: linear-gradient(to bottom, #FFF8F0 0%, #F4E4D6 100%);
+        }
+
+        /* Gold theme */
+        body.gold-theme .main-title {
+            color: #FFD700 !important;
+            text-shadow: 0 0 3px rgba(255, 215, 0, 0.4);
+        }
+
+        body.gold-theme .main-title::after {
+            background-color: #FFD700;
+        }
+
+        body.gold-theme .star {
+            background: radial-gradient(circle, #FFD700, transparent) !important;
+        }
+
+        body.gold-theme .themes-button {
+            background: #FFD700;
+            color: #000;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        body.gold-theme .themes-button:hover {
+            background: #E6C200;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        body.gold-theme {
+            background: linear-gradient(to bottom, #2A2A1A 0%, #1A1A0D 100%);
+        }
+
+        /* Neon theme panel styles */
+        body.neon-theme .themes-panel {
+            background: rgba(0, 20, 20, 0.95);
+            border: 1px solid #00FFFF;
+        }
+
+        body.neon-theme .section-title {
+            color: #00FFFF;
+        }
+
+        body.neon-theme .theme-option {
+            border-color: #00FFFF;
+            color: #00FFFF;
+        }
+
+        body.neon-theme .theme-option:hover,
+        body.neon-theme .theme-option.active {
+            background: #00FFFF;
+            color: #000;
+        }
+
+        /* Crimson theme panel styles */
+        body.crimson-theme .themes-panel {
+            background: rgba(30, 10, 10, 0.95);
+            border: 1px solid #DC143C;
+        }
+
+        body.crimson-theme .section-title {
+            color: #DC143C;
+        }
+
+        body.crimson-theme .theme-option {
+            border-color: #DC143C;
+            color: #DC143C;
+        }
+
+        body.crimson-theme .theme-option:hover,
+        body.crimson-theme .theme-option.active {
+            background: #DC143C;
+            color: #FFF;
+        }
+
+        /* Silver theme panel styles */
+        body.silver-theme .themes-panel {
+            background: rgba(25, 25, 25, 0.95);
+            border: 1px solid #C0C0C0;
+        }
+
+        body.silver-theme .section-title {
+            color: #C0C0C0;
+        }
+
+        body.silver-theme .theme-option {
+            border-color: #C0C0C0;
+            color: #C0C0C0;
+        }
+
+        body.silver-theme .theme-option:hover,
+        body.silver-theme .theme-option.active {
+            background: #C0C0C0;
+            color: #000;
+        }
+
+        /* Bronze theme panel styles */
+        body.bronze-theme .themes-panel {
+            background: rgba(25, 20, 15, 0.95);
+            border: 1px solid #CD7F32;
+        }
+
+        body.bronze-theme .section-title {
+            color: #CD7F32;
+        }
+
+        body.bronze-theme .theme-option {
+            border-color: #CD7F32;
+            color: #CD7F32;
+        }
+
+        body.bronze-theme .theme-option:hover,
+        body.bronze-theme .theme-option.active {
+            background: #CD7F32;
+            color: #000;
+        }
+
+
+
+
+
+        .header {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4rem;
+            color: #4A90E2 !important;
+            margin: 0;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-title::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            bottom: -10px;
+            left: 50%;
+            background-color: #4A90E2;
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+        }
+
+        .main-title:hover::after {
+            width: 120%;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 40px;
+            }
+            .main-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <script>
+        function positionStars() {
+            const stars = document.querySelectorAll('.star');
+            const positions = [];
+            const minDistance = 15; // Minimum distance between stars (in percentage)
+            
+            stars.forEach((star, index) => {
+                let validPosition = false;
+                let attempts = 0;
+                let x, y;
+                
+                while (!validPosition && attempts < 50) {
+                    x = Math.random() * 90 + 5; // 5% to 95%
+                    y = Math.random() * 80 + 10; // 10% to 90%
+                    
+                    // Check distance from existing stars
+                    validPosition = positions.every(pos => {
+                        const distance = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
+                        return distance >= minDistance;
+                    });
+                    
+                    attempts++;
+                }
+                
+                // Store position
+                positions.push({x, y});
+                
+                // Apply position
+                star.style.left = x + '%';
+                star.style.top = y + '%';
+                
+                // Random animation delay
+                star.style.animationDelay = (Math.random() * 4) + 's';
+            });
+        }
+        
+        let currentStyle = 'dark';
+        let currentTheme = null;
+        
+        function toggleThemes() {
+            const panel = document.getElementById('themesPanel');
+            panel.classList.toggle('show');
+        }
+        
+        function setStyle(style) {
+            const body = document.body;
+            const styleOptions = document.querySelectorAll('.style-option');
+            
+            // Remove current style
+            body.classList.remove('light-style', 'dark-style');
+            
+            // Add new style
+            if (style === 'light') {
+                body.classList.add('light-style');
+            }
+            
+            currentStyle = style;
+            
+            // Update active button
+            styleOptions.forEach(option => option.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateThemeDisplay();
+        }
+        
+        function setTheme(theme) {
+            const body = document.body;
+            const themeOptions = document.querySelectorAll('.theme-option-btn');
+            
+            // Remove current theme
+            body.classList.remove('neon-theme', 'crimson-theme', 'silver-theme', 'bronze-theme');
+            
+            // Add new theme
+            body.classList.add(theme + '-theme');
+            currentTheme = theme;
+            
+            // Update active button
+            themeOptions.forEach(option => option.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateThemeDisplay();
+        }
+        
+        function updateThemeDisplay() {
+            const button = document.querySelector('.themes-button');
+            if (currentTheme) {
+                button.textContent = `${currentStyle.charAt(0).toUpperCase() + currentStyle.slice(1)} ${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)}`;
+            } else {
+                button.textContent = 'Themes';
+            }
+        }
+        
+        // Close themes panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('themesPanel');
+            const button = document.querySelector('.themes-button');
+            
+            if (!panel.contains(event.target) && !button.contains(event.target)) {
+                panel.classList.remove('show');
+            }
+        });
+        
+        // Position stars when page loads
+        window.addEventListener('load', positionStars);
+    </script>
+</head>
+<body>
+    <div class="stars">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+    <div class="header">
+        <h1 class="main-title">Mekhis Creations</h1>
+    </div>
+    
+    <div class="content-frame"></div>
+    
+    <button class="themes-button" onclick="toggleThemes()">Themes</button>
+    
+    <div class="themes-panel" id="themesPanel">
+        <div class="themes-section">
+            <div class="section-title">Style</div>
+            <div class="theme-grid">
+                <button class="theme-option style-option active" onclick="setStyle('dark')">Dark</button>
+                <button class="theme-option style-option" onclick="setStyle('light')">Light</button>
+            </div>
+        </div>
+        
+        <div class="themes-section">
+            <div class="section-title">Theme</div>
+            <div class="theme-grid">
+                <button class="theme-option theme-option-btn" onclick="setTheme('neon')">Neon</button>
+                <button class="theme-option theme-option-btn" onclick="setTheme('crimson')">Crimson</button>
+                <button class="theme-option theme-option-btn" onclick="setTheme('silver')">Silver</button>
+                <button class="theme-option theme-option-btn" onclick="setTheme('bronze')">Bronze</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
