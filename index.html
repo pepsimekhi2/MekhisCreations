@@ -434,12 +434,14 @@
             color: #2C3E50;
         }
 
-        body.light-style .play-button {
+        body.light-style .play-button,
+        body.light-style .news-button {
             background: #2C3E50;
             color: #F8F9FA;
         }
 
-        body.light-style .play-button:hover {
+        body.light-style .play-button:hover,
+        body.light-style .news-button:hover {
             background: #34495E;
         }
 
@@ -532,12 +534,14 @@
             color: #DC143C;
         }
 
-        body.crimson-theme .play-button {
+        body.crimson-theme .play-button,
+        body.crimson-theme .news-button {
             background: #DC143C;
             color: #FFF;
         }
 
-        body.crimson-theme .play-button:hover {
+        body.crimson-theme .play-button:hover,
+        body.crimson-theme .news-button:hover {
             background: #B91C3C;
         }
 
@@ -633,12 +637,14 @@
             color: #C0C0C0;
         }
 
-        body.silver-theme .play-button {
+        body.silver-theme .play-button,
+        body.silver-theme .news-button {
             background: #C0C0C0;
             color: #2C2C2C;
         }
 
-        body.silver-theme .play-button:hover {
+        body.silver-theme .play-button:hover,
+        body.silver-theme .news-button:hover {
             background: #A8A8A8;
         }
 
@@ -705,12 +711,14 @@
             color: #CD7F32;
         }
 
-        body.bronze-theme .play-button {
+        body.bronze-theme .play-button,
+        body.bronze-theme .news-button {
             background: #CD7F32;
             color: #FFF;
         }
 
-        body.bronze-theme .play-button:hover {
+        body.bronze-theme .play-button:hover,
+        body.bronze-theme .news-button:hover {
             background: #B8722E;
         }
 
@@ -964,7 +972,7 @@
 
         .game-frame {
             width: 220px;
-            height: 320px;
+            height: 350px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 2px solid #C0C0C0;
@@ -1026,7 +1034,14 @@
             font-size: 0.9rem;
         }
 
-        .play-button {
+        .game-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .play-button, .news-button {
             background: #C0C0C0;
             color: #2C2C2C;
             border: none;
@@ -1038,12 +1053,24 @@
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            text-align: center;
         }
 
-        .play-button:hover {
+        .play-button:hover, .news-button:hover {
             background: #A8A8A8;
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
+        }
+
+        .news-button {
+            background: transparent;
+            color: #C0C0C0;
+            border: 2px solid #C0C0C0;
+        }
+
+        .news-button:hover {
+            background: #C0C0C0;
+            color: #2C2C2C;
         }
 
         .content-frame:hover {
@@ -1108,7 +1135,7 @@
             
             .game-frame {
                 width: 95%;
-                height: 300px;
+                height: 330px;
                 font-size: 0.9rem;
             }
         }
@@ -1160,7 +1187,10 @@
                     <div>3,800 Visits</div>
                     <div>67% Like Ratio</div>
                 </div>
-                <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/86169967274436/UPD-Pet-Universe#!/game-instances', 'Pet Universe'); return false;" class="play-button">Play Now</a>
+                <div class="game-buttons">
+                    <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/86169967274436/UPD-Pet-Universe#!/game-instances', 'Pet Universe'); return false;" class="play-button">Play Now</a>
+                    <button class="news-button" onclick="showGameNews('Pet Universe')">News</button>
+                </div>
             </div>
             <div class="game-frame">
                 <img src="https://github.com/pepsimekhi2/MekhisCreations/blob/main/icon%201.png?raw=true" alt="Pet Universe 2" class="game-image">
@@ -1169,7 +1199,10 @@
                     <div>1,300 Visits</div>
                     <div>80% Like Ratio</div>
                 </div>
-                <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/90831669132253/Pet-Universe-2#!/game-instances', 'Pet Universe 2'); return false;" class="play-button">Play Now</a>
+                <div class="game-buttons">
+                    <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/90831669132253/Pet-Universe-2#!/game-instances', 'Pet Universe 2'); return false;" class="play-button">Play Now</a>
+                    <button class="news-button" onclick="showGameNews('Pet Universe 2')">News</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1231,6 +1264,14 @@
             document.getElementById('redirectModal').classList.remove('show');
             pendingRedirectUrl = '';
             pendingRedirectName = '';
+        }
+
+        function showGameNews(gameName) {
+            if (gameName === 'Pet Universe') {
+                window.location.href = '/Pet-Universe';
+            } else if (gameName === 'Pet Universe 2') {
+                window.location.href = '/Pet-Universe-2';
+            }
         }
 
         // Close modal when clicking outside
