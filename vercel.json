@@ -8,12 +8,5 @@
       "source": "/Pet-Universe-2",
       "destination": "/pet-universe-2.html"
     }
-  ],
-  "redirects": [
-    {
-      "source": "/((?!Pet-Universe|Pet-Universe-2|_next|api|favicon.ico|.*\\.).*)",
-      "destination": "/",
-      "permanent": false
-    }
   ]
 }
