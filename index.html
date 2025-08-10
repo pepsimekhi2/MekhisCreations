@@ -435,13 +435,13 @@
         }
 
         body.light-style .play-button,
-        body.light-style .info-button {
+        body.light-style .news-button {
             background: #2C3E50;
             color: #F8F9FA;
         }
 
         body.light-style .play-button:hover,
-        body.light-style .info-button:hover {
+        body.light-style .news-button:hover {
             background: #34495E;
         }
 
@@ -535,13 +535,13 @@
         }
 
         body.crimson-theme .play-button,
-        body.crimson-theme .info-button {
+        body.crimson-theme .news-button {
             background: #DC143C;
             color: #FFF;
         }
 
         body.crimson-theme .play-button:hover,
-        body.crimson-theme .info-button:hover {
+        body.crimson-theme .news-button:hover {
             background: #B91C3C;
         }
 
@@ -638,13 +638,13 @@
         }
 
         body.silver-theme .play-button,
-        body.silver-theme .info-button {
+        body.silver-theme .news-button {
             background: #C0C0C0;
             color: #2C2C2C;
         }
 
         body.silver-theme .play-button:hover,
-        body.silver-theme .info-button:hover {
+        body.silver-theme .news-button:hover {
             background: #A8A8A8;
         }
 
@@ -712,13 +712,13 @@
         }
 
         body.bronze-theme .play-button,
-        body.bronze-theme .info-button {
+        body.bronze-theme .news-button {
             background: #CD7F32;
             color: #FFF;
         }
 
         body.bronze-theme .play-button:hover,
-        body.bronze-theme .info-button:hover {
+        body.bronze-theme .news-button:hover {
             background: #B8722E;
         }
 
@@ -1041,7 +1041,7 @@
             width: 100%;
         }
 
-        .play-button, .info-button {
+        .play-button, .news-button {
             background: #C0C0C0;
             color: #2C2C2C;
             border: none;
@@ -1056,19 +1056,19 @@
             text-align: center;
         }
 
-        .play-button:hover, .info-button:hover {
+        .play-button:hover, .news-button:hover {
             background: #A8A8A8;
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
         }
 
-        .info-button {
+        .news-button {
             background: transparent;
             color: #C0C0C0;
             border: 2px solid #C0C0C0;
         }
 
-        .info-button:hover {
+        .news-button:hover {
             background: #C0C0C0;
             color: #2C2C2C;
         }
@@ -1189,7 +1189,7 @@
                 </div>
                 <div class="game-buttons">
                     <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/86169967274436/UPD-Pet-Universe#!/game-instances', 'Pet Universe'); return false;" class="play-button">Play Now</a>
-                    <a href="/pet-universe" class="info-button">More Info</a>
+                    <button class="news-button" onclick="showGameNews('Pet Universe')">News</button>
                 </div>
             </div>
             <div class="game-frame">
@@ -1201,7 +1201,7 @@
                 </div>
                 <div class="game-buttons">
                     <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/90831669132253/Pet-Universe-2#!/game-instances', 'Pet Universe 2'); return false;" class="play-button">Play Now</a>
-                    <a href="/pet-universe-2" class="info-button">More Info</a>
+                    <button class="news-button" onclick="showGameNews('Pet Universe 2')">News</button>
                 </div>
             </div>
         </div>
@@ -1264,6 +1264,14 @@
             document.getElementById('redirectModal').classList.remove('show');
             pendingRedirectUrl = '';
             pendingRedirectName = '';
+        }
+
+        function showGameNews(gameName) {
+            if (gameName === 'Pet Universe') {
+                window.location.href = '/Pet-Universe';
+            } else if (gameName === 'Pet Universe 2') {
+                window.location.href = '/Pet-Universe-2';
+            }
         }
 
         // Close modal when clicking outside
