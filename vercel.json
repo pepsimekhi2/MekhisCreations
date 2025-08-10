@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    {
+      "source": "/Pet-Universe",
+      "destination": "/pet-universe.html",
+      "permanent": false
+    },
+    {
+      "source": "/Pet-Universe-2", 
+      "destination": "/pet-universe-2.html",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "cleanUrls": true
+}
