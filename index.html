@@ -250,6 +250,106 @@
             color: #000;
         }
 
+        /* Redirect Modal Styles */
+        .redirect-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .redirect-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .redirect-modal-content {
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(15px);
+            border: 2px solid #C0C0C0;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .redirect-modal.show .redirect-modal-content {
+            transform: scale(1);
+        }
+
+        .redirect-modal-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #C0C0C0;
+            margin: 0 0 15px 0;
+        }
+
+        .redirect-modal-text {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            color: #C0C0C0;
+            margin: 0 0 20px 0;
+            line-height: 1.4;
+        }
+
+        .redirect-modal-link {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.9rem;
+            color: #C0C0C0;
+            margin: 0 0 25px 0;
+            word-break: break-all;
+            opacity: 0.8;
+        }
+
+        .redirect-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .redirect-modal-button {
+            background: #C0C0C0;
+            color: #2C2C2C;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .redirect-modal-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
+        }
+
+        .redirect-modal-button.cancel {
+            background: transparent;
+            color: #C0C0C0;
+            border: 2px solid #C0C0C0;
+        }
+
+        .redirect-modal-button.cancel:hover {
+            background: #C0C0C0;
+            color: #2C2C2C;
+        }
+
         /* Light style modifications */
         body.light-style {
             background: linear-gradient(to bottom, #F8F9FA 0%, #E9ECEF 100%);
@@ -343,6 +443,33 @@
             background: #34495E;
         }
 
+        body.light-style .redirect-modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #2C3E50;
+        }
+
+        body.light-style .redirect-modal-title,
+        body.light-style .redirect-modal-text,
+        body.light-style .redirect-modal-link {
+            color: #2C3E50;
+        }
+
+        body.light-style .redirect-modal-button {
+            background: #2C3E50;
+            color: #FFF;
+        }
+
+        body.light-style .redirect-modal-button.cancel {
+            background: transparent;
+            color: #2C3E50;
+            border-color: #2C3E50;
+        }
+
+        body.light-style .redirect-modal-button.cancel:hover {
+            background: #2C3E50;
+            color: #FFF;
+        }
+
         /* Crimson theme */
         body.crimson-theme .main-title {
             color: #DC143C !important;
@@ -412,6 +539,33 @@
 
         body.crimson-theme .play-button:hover {
             background: #B91C3C;
+        }
+
+        body.crimson-theme .redirect-modal-content {
+            border-color: #DC143C;
+            background: rgba(30, 10, 10, 0.95);
+        }
+
+        body.crimson-theme .redirect-modal-title,
+        body.crimson-theme .redirect-modal-text,
+        body.crimson-theme .redirect-modal-link {
+            color: #DC143C;
+        }
+
+        body.crimson-theme .redirect-modal-button {
+            background: #DC143C;
+            color: #FFF;
+        }
+
+        body.crimson-theme .redirect-modal-button.cancel {
+            background: transparent;
+            color: #DC143C;
+            border-color: #DC143C;
+        }
+
+        body.crimson-theme .redirect-modal-button.cancel:hover {
+            background: #DC143C;
+            color: #FFF;
         }
 
         /* Silver theme */
@@ -558,6 +712,33 @@
 
         body.bronze-theme .play-button:hover {
             background: #B8722E;
+        }
+
+        body.bronze-theme .redirect-modal-content {
+            border-color: #CD7F32;
+            background: rgba(25, 20, 15, 0.95);
+        }
+
+        body.bronze-theme .redirect-modal-title,
+        body.bronze-theme .redirect-modal-text,
+        body.bronze-theme .redirect-modal-link {
+            color: #CD7F32;
+        }
+
+        body.bronze-theme .redirect-modal-button {
+            background: #CD7F32;
+            color: #FFF;
+        }
+
+        body.bronze-theme .redirect-modal-button.cancel {
+            background: transparent;
+            color: #CD7F32;
+            border-color: #CD7F32;
+        }
+
+        body.bronze-theme .redirect-modal-button.cancel:hover {
+            background: #CD7F32;
+            color: #FFF;
         }
 
         /* Crimson theme panel styles */
@@ -865,188 +1046,6 @@
             box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
         }
 
-        /* Redirect Modal Styles */
-        .redirect-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .redirect-modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .redirect-modal-content {
-            background: rgba(25, 25, 25, 0.95);
-            backdrop-filter: blur(15px);
-            border: 2px solid #C0C0C0;
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-        }
-
-        .redirect-modal.show .redirect-modal-content {
-            transform: scale(1);
-        }
-
-        .redirect-modal-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.5rem;
-            color: #C0C0C0;
-            margin: 0 0 15px 0;
-        }
-
-        .redirect-modal-text {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
-            color: #C0C0C0;
-            margin: 0 0 20px 0;
-            line-height: 1.4;
-        }
-
-        .redirect-modal-link {
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.9rem;
-            color: #C0C0C0;
-            margin: 0 0 25px 0;
-            word-break: break-all;
-            opacity: 0.8;
-        }
-
-        .redirect-modal-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .redirect-modal-button {
-            background: #C0C0C0;
-            color: #2C2C2C;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 100px;
-        }
-
-        .redirect-modal-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
-        }
-
-        .redirect-modal-button.cancel {
-            background: transparent;
-            color: #C0C0C0;
-            border: 2px solid #C0C0C0;
-        }
-
-        .redirect-modal-button.cancel:hover {
-            background: #C0C0C0;
-            color: #2C2C2C;
-        }
-
-        /* Theme-specific modal styles */
-        body.crimson-theme .redirect-modal-content {
-            border-color: #DC143C;
-            background: rgba(30, 10, 10, 0.95);
-        }
-
-        body.crimson-theme .redirect-modal-title,
-        body.crimson-theme .redirect-modal-text,
-        body.crimson-theme .redirect-modal-link {
-            color: #DC143C;
-        }
-
-        body.crimson-theme .redirect-modal-button {
-            background: #DC143C;
-            color: #FFF;
-        }
-
-        body.crimson-theme .redirect-modal-button.cancel {
-            background: transparent;
-            color: #DC143C;
-            border-color: #DC143C;
-        }
-
-        body.crimson-theme .redirect-modal-button.cancel:hover {
-            background: #DC143C;
-            color: #FFF;
-        }
-
-        body.bronze-theme .redirect-modal-content {
-            border-color: #CD7F32;
-            background: rgba(25, 20, 15, 0.95);
-        }
-
-        body.bronze-theme .redirect-modal-title,
-        body.bronze-theme .redirect-modal-text,
-        body.bronze-theme .redirect-modal-link {
-            color: #CD7F32;
-        }
-
-        body.bronze-theme .redirect-modal-button {
-            background: #CD7F32;
-            color: #FFF;
-        }
-
-        body.bronze-theme .redirect-modal-button.cancel {
-            background: transparent;
-            color: #CD7F32;
-            border-color: #CD7F32;
-        }
-
-        body.bronze-theme .redirect-modal-button.cancel:hover {
-            background: #CD7F32;
-            color: #FFF;
-        }
-
-        body.light-style .redirect-modal-content {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: #2C3E50;
-        }
-
-        body.light-style .redirect-modal-title,
-        body.light-style .redirect-modal-text,
-        body.light-style .redirect-modal-link {
-            color: #2C3E50;
-        }
-
-        body.light-style .redirect-modal-button {
-            background: #2C3E50;
-            color: #FFF;
-        }
-
-        body.light-style .redirect-modal-button.cancel {
-            background: transparent;
-            color: #2C3E50;
-            border-color: #2C3E50;
-        }
-
-        body.light-style .redirect-modal-button.cancel:hover {
-            background: #2C3E50;
-            color: #FFF;
-        }
-
         .content-frame:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
@@ -1146,7 +1145,7 @@
         <div class="secondary-frame">
             <div class="frame-content">
                 <h3 class="frame-title">Join our Discord</h3>
-                <a href="https://discord.gg/GRjBeWjsQv" target="_blank" class="discord-link">Join Here</a>
+                <a href="#" onclick="showRedirectModal('https://discord.gg/GRjBeWjsQv', 'Discord'); return false;" class="discord-link">Join Here</a>
             </div>
         </div>
     </div>
@@ -1161,7 +1160,7 @@
                     <div>3,800 Visits</div>
                     <div>67% Like Ratio</div>
                 </div>
-                <a href="https://www.roblox.com/games/86169967274436/UPD-Pet-Universe#!/game-instances" target="_blank" class="play-button">Play Now</a>
+                <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/86169967274436/UPD-Pet-Universe#!/game-instances', 'Pet Universe'); return false;" class="play-button">Play Now</a>
             </div>
             <div class="game-frame">
                 <img src="https://github.com/pepsimekhi2/MekhisCreations/blob/main/icon%201.png?raw=true" alt="Pet Universe 2" class="game-image">
@@ -1170,7 +1169,7 @@
                     <div>1,300 Visits</div>
                     <div>80% Like Ratio</div>
                 </div>
-                <a href="https://www.roblox.com/games/90831669132253/Pet-Universe-2#!/game-instances" target="_blank" class="play-button">Play Now</a>
+                <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/90831669132253/Pet-Universe-2#!/game-instances', 'Pet Universe 2'); return false;" class="play-button">Play Now</a>
             </div>
         </div>
     </div>
@@ -1196,11 +1195,62 @@
         </div>
     </div>
 
+    <!-- Redirect Modal -->
+    <div class="redirect-modal" id="redirectModal">
+        <div class="redirect-modal-content">
+            <h3 class="redirect-modal-title">Redirecting...</h3>
+            <p class="redirect-modal-text">You're about to be redirected to:</p>
+            <p class="redirect-modal-link" id="redirectLink"></p>
+            <div class="redirect-modal-buttons">
+                <button class="redirect-modal-button" onclick="confirmRedirect()">Alright</button>
+                <button class="redirect-modal-button cancel" onclick="closeRedirectModal()">Nevermind</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let pendingRedirectUrl = '';
+        let pendingRedirectName = '';
+
+        function showRedirectModal(url, name) {
+            pendingRedirectUrl = url;
+            pendingRedirectName = name;
+            
+            document.getElementById('redirectLink').textContent = url;
+            document.getElementById('redirectModal').classList.add('show');
+        }
+
+        function confirmRedirect() {
+            if (pendingRedirectUrl) {
+                window.open(pendingRedirectUrl, '_blank');
+            }
+            closeRedirectModal();
+        }
+
+        function closeRedirectModal() {
+            document.getElementById('redirectModal').classList.remove('show');
+            pendingRedirectUrl = '';
+            pendingRedirectName = '';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('redirectModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeRedirectModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeRedirectModal();
+            }
+        });
+
         function positionStars() {
             const stars = document.querySelectorAll('.star');
             const positions = [];
-            const minDistance = 15; // Minimum distance between stars (in percentage)
+            const minDistance = 15;
             
             stars.forEach((star, index) => {
                 let validPosition = false;
@@ -1208,10 +1258,9 @@
                 let x, y;
                 
                 while (!validPosition && attempts < 50) {
-                    x = Math.random() * 90 + 5; // 5% to 95%
-                    y = Math.random() * 80 + 10; // 10% to 90%
+                    x = Math.random() * 90 + 5;
+                    y = Math.random() * 80 + 10;
                     
-                    // Check distance from existing stars
                     validPosition = positions.every(pos => {
                         const distance = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
                         return distance >= minDistance;
@@ -1220,14 +1269,9 @@
                     attempts++;
                 }
                 
-                // Store position
                 positions.push({x, y});
-                
-                // Apply position
                 star.style.left = x + '%';
                 star.style.top = y + '%';
-                
-                // Random animation delay
                 star.style.animationDelay = (Math.random() * 4) + 's';
             });
         }
@@ -1235,16 +1279,12 @@
         let currentStyle = 'dark';
         let currentTheme = 'silver';
         
-        // Load saved preferences
         function loadSavedThemes() {
-            // Using a simple object to store preferences in memory
-            // This simulates persistent storage for the demo
             if (window.savedThemes) {
                 currentStyle = window.savedThemes.style || 'dark';
                 currentTheme = window.savedThemes.theme || 'silver';
             }
             
-            // Apply saved themes
             if (currentStyle === 'light') {
                 document.body.classList.add('light-style');
             }
@@ -1253,13 +1293,11 @@
                 document.body.classList.add(currentTheme + '-theme');
             }
             
-            // Update active buttons
             updateActiveButtons();
             updateThemeDisplay();
         }
         
         function saveThemes() {
-            // Store preferences in memory (simulating persistent storage)
             window.savedThemes = {
                 style: currentStyle,
                 theme: currentTheme
@@ -1267,7 +1305,6 @@
         }
         
         function updateActiveButtons() {
-            // Update style buttons
             const styleOptions = document.querySelectorAll('.style-option');
             styleOptions.forEach(option => {
                 option.classList.remove('active');
@@ -1276,7 +1313,6 @@
                 }
             });
             
-            // Update theme buttons
             const themeOptions = document.querySelectorAll('.theme-option-btn');
             themeOptions.forEach(option => {
                 option.classList.remove('active');
@@ -1293,18 +1329,13 @@
         
         function setStyle(style) {
             const body = document.body;
-            
-            // Remove current style
             body.classList.remove('light-style', 'dark-style');
             
-            // Add new style
             if (style === 'light') {
                 body.classList.add('light-style');
             }
             
             currentStyle = style;
-            
-            // Update active button
             updateActiveButtons();
             updateThemeDisplay();
             saveThemes();
@@ -1312,15 +1343,10 @@
         
         function setTheme(theme) {
             const body = document.body;
-            
-            // Remove current theme
             body.classList.remove('crimson-theme', 'silver-theme', 'bronze-theme');
-            
-            // Add new theme
             body.classList.add(theme + '-theme');
             currentTheme = theme;
             
-            // Update active button
             updateActiveButtons();
             updateThemeDisplay();
             saveThemes();
@@ -1335,7 +1361,6 @@
             }
         }
         
-        // Close themes panel when clicking outside
         document.addEventListener('click', function(event) {
             const panel = document.getElementById('themesPanel');
             const button = document.querySelector('.themes-button');
@@ -1345,14 +1370,12 @@
             }
         });
         
-        // Initialize when page loads
         window.addEventListener('load', function() {
             positionStars();
             loadSavedThemes();
             setupScrollAnimations();
         });
         
-        // Scroll animation setup
         function setupScrollAnimations() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -1365,7 +1388,6 @@
                 rootMargin: '0px 0px -50px 0px'
             });
             
-            // Observe elements that should animate
             const animatedElements = document.querySelectorAll('.secondary-frame, .games-section, .game-frame');
             animatedElements.forEach(el => observer.observe(el));
         }
