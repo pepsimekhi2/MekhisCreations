@@ -128,11 +128,15 @@
         }
 
         function returnToSite() {
-            window.close(); // Close the popup if opened in new window
-            // If not a popup, redirect to main site
-            setTimeout(() => {
+            // Try to communicate with parent window (if opened as popup)
+            if (window.opener && !window.opener.closed) {
+                // Tell the parent window to refresh auth state
+                window.opener.postMessage({ type: 'DISCORD_LOGIN_SUCCESS' }, '*');
+                window.close();
+            } else {
+                // If not a popup, redirect to main site
                 window.location.href = '/';
-            }, 100);
+            }
         }
 
         async function exchangeCodeForToken(code) {
@@ -143,7 +147,7 @@
                 client_secret: 'XL4vVh4Vcwgcaw4MSOGkhM1WCG-IwdgD',
                 grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: 'https://www.mekhiscreations.org/callback'
+                redirect_uri: 'https://www.mekhiscreations.org/callback.html'
             });
 
             try {
