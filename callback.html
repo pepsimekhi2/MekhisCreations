@@ -100,6 +100,36 @@
     </div>
 
     <script>
+        // Security functions
+        function simpleEncrypt(text) {
+            const key = 'mekhis_creation_key_2024';
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return btoa(result);
+        }
+
+        function createUserHash(userData) {
+            const hashString = userData.id + userData.username + userData.discriminator + userData.createdAt;
+            let hash = 0;
+            for (let i = 0; i < hashString.length; i++) {
+                const char = hashString.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return hash.toString();
+        }
+
+        function storeUserData(userData) {
+            userData.timestamp = Date.now();
+            userData.hash = createUserHash(userData);
+            
+            const encryptedData = simpleEncrypt(JSON.stringify(userData));
+            localStorage.setItem('mekhis_secure_auth', encryptedData);
+            localStorage.removeItem('mekhis_user');
+        }
+
         function getUrlParams() {
             const urlParams = new URLSearchParams(window.location.search);
             return {
@@ -128,13 +158,10 @@
         }
 
         function returnToSite() {
-            // Try to communicate with parent window (if opened as popup)
             if (window.opener && !window.opener.closed) {
-                // Tell the parent window to refresh auth state
                 window.opener.postMessage({ type: 'DISCORD_LOGIN_SUCCESS' }, '*');
                 window.close();
             } else {
-                // If not a popup, redirect to main site
                 window.location.href = '/';
             }
         }
@@ -196,7 +223,6 @@
                 const format = user.avatar.startsWith('a_') ? 'gif' : 'png';
                 return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${format}?size=128`;
             } else {
-                // Default Discord avatar
                 const defaultAvatarNumber = parseInt(user.discriminator) % 5;
                 return `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
             }
@@ -216,15 +242,12 @@
             }
 
             try {
-                // Step 1: Exchange code for access token
                 document.getElementById('message').textContent = 'Exchanging authorization code...';
                 const tokenData = await exchangeCodeForToken(params.code);
                 
-                // Step 2: Fetch Discord user information
                 document.getElementById('message').textContent = 'Fetching your Discord profile...';
                 const discordUser = await fetchDiscordUser(tokenData.access_token);
                 
-                // Step 3: Create user object with real Discord data
                 const userData = {
                     id: discordUser.id,
                     username: discordUser.username,
@@ -235,14 +258,10 @@
                     createdAt: new Date().toISOString()
                 };
 
-                // Step 4: Store user data
-                localStorage.setItem('mekhis_user', JSON.stringify(userData));
+                storeUserData(userData);
                 
-                // Step 5: Show success message with real Discord info
                 const welcomeMessage = `Welcome ${userData.displayName}!<br>Successfully logged in with Discord as <strong>${userData.username}#${userData.discriminator}</strong>`;
                 showResult(true, welcomeMessage);
-
-                // No auto-redirect - user must click the return button
 
             } catch (error) {
                 console.error('Discord authentication error:', error);
@@ -250,7 +269,6 @@
             }
         }
 
-        // Process the callback when page loads
         document.addEventListener('DOMContentLoaded', processDiscordCallback);
     </script>
 </body>
