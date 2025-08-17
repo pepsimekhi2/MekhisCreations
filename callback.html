@@ -242,10 +242,7 @@
                 const welcomeMessage = `Welcome ${userData.displayName}!<br>Successfully logged in with Discord as <strong>${userData.username}#${userData.discriminator}</strong>`;
                 showResult(true, welcomeMessage);
 
-                // Auto-redirect after 3 seconds
-                setTimeout(() => {
-                    returnToSite();
-                }, 3000);
+                // No auto-redirect - user must click the return button
 
             } catch (error) {
                 console.error('Discord authentication error:', error);
