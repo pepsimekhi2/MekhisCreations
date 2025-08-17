@@ -147,215 +147,145 @@
             animation-duration: 2.3s;
         }
 
-        /* Authentication Modal */
-        .auth-overlay {
+        /* Top Navigation */
+        .top-nav {
             position: fixed;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 1;
-            visibility: visible;
-            transition: all 0.3s ease;
+            right: 0;
+            padding: 20px;
+            z-index: 1000;
         }
 
-        .auth-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .auth-modal {
-            background: rgba(25, 25, 25, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid #C0C0C0;
-            border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            transform: scale(1);
-            transition: all 0.3s ease;
-        }
-
-        .auth-overlay.hidden .auth-modal {
-            transform: scale(0.8);
-        }
-
-        .auth-title {
+        /* Sign Up Button */
+        .signup-button {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
             font-family: 'Fredoka One', cursive;
-            font-size: 2rem;
-            color: #C0C0C0;
-            text-align: center;
-            margin: 0 0 30px 0;
-        }
-
-        .auth-form {
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 8px;
         }
 
-        .input-label {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
-            color: #C0C0C0;
-        }
-
-        .auth-input {
-            padding: 12px 16px;
-            border: 2px solid #C0C0C0;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #C0C0C0;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .auth-input:focus {
-            outline: none;
-            border-color: #A8A8A8;
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(192, 192, 192, 0.2);
-        }
-
-        .auth-input::placeholder {
-            color: rgba(192, 192, 192, 0.6);
-        }
-
-        .password-strength {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .password-strength.show {
-            display: block;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s ease;
-            border-radius: 4px;
-        }
-
-        .password-strength-text {
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .password-strength-text.show {
-            display: block;
-        }
-
-        .strength-weak {
-            background: #dc3545;
-            color: #dc3545;
-        }
-
-        .strength-moderate {
-            background: #ffc107;
-            color: #ffc107;
-        }
-
-        .strength-strong {
-            background: #28a745;
-            color: #28a745;
-        }
-
-        .auth-button {
-            padding: 14px 24px;
-            border: none;
-            border-radius: 12px;
-            background: #C0C0C0;
-            color: #2C2C2C;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .auth-button:hover {
-            background: #A8A8A8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(192, 192, 192, 0.3);
-        }
-
-        .auth-button:disabled {
-            background: rgba(192, 192, 192, 0.3);
-            color: rgba(192, 192, 192, 0.6);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .auth-switch {
-            text-align: center;
-            margin-top: 20px;
-            font-family: 'Fredoka One', cursive;
-            color: #C0C0C0;
-        }
-
-        .auth-switch-link {
-            color: #C0C0C0;
-            text-decoration: underline;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .auth-switch-link:hover {
-            color: #A8A8A8;
-        }
-
-        .discord-login {
-            background: #5865F2;
-            color: white;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .discord-login:hover {
+        .signup-button:hover {
             background: #4752C4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.5);
         }
 
         .discord-icon {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
         }
 
-        .error-message {
-            color: #dc3545;
+        /* User Profile Display */
+        .user-profile {
+            background: rgba(25, 25, 25, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid #C0C0C0;
+            border-radius: 25px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-profile:hover {
+            background: rgba(25, 25, 25, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #C0C0C0;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-display-name {
             font-family: 'Fredoka One', cursive;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
+            font-size: 14px;
+            color: #C0C0C0;
+            margin: 0;
+            line-height: 1;
         }
 
-        .error-message.show {
-            display: block;
+        .user-username {
+            font-family: 'Fredoka One', cursive;
+            font-size: 11px;
+            color: rgba(192, 192, 192, 0.7);
+            margin: 0;
+            line-height: 1;
+        }
+
+        /* User Profile Dropdown */
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid #C0C0C0;
+            border-radius: 15px;
+            padding: 15px;
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .profile-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Fredoka One', cursive;
+            font-size: 14px;
+            color: #C0C0C0;
+            text-decoration: none;
+        }
+
+        .profile-dropdown-item:hover {
+            background: rgba(192, 192, 192, 0.1);
+        }
+
+        .profile-dropdown-item.logout {
+            color: #dc3545;
+            border-top: 1px solid rgba(192, 192, 192, 0.2);
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .profile-dropdown-item.logout:hover {
+            background: rgba(220, 53, 69, 0.1);
         }
 
         .themes-button {
@@ -683,49 +613,39 @@
             color: #FFF;
         }
 
-        /* Auth modal light style */
-        body.light-style .auth-modal {
+        body.light-style .user-profile {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #2C3E50;
+        }
+
+        body.light-style .user-display-name {
+            color: #2C3E50;
+        }
+
+        body.light-style .user-username {
+            color: rgba(44, 62, 80, 0.7);
+        }
+
+        body.light-style .user-avatar {
+            border-color: #2C3E50;
+        }
+
+        body.light-style .profile-dropdown {
             background: rgba(255, 255, 255, 0.95);
             border-color: #2C3E50;
         }
 
-        body.light-style .auth-title,
-        body.light-style .input-label,
-        body.light-style .auth-switch {
+        body.light-style .profile-dropdown-item {
             color: #2C3E50;
         }
 
-        body.light-style .auth-input {
-            border-color: #2C3E50;
-            color: #2C3E50;
+        body.light-style .profile-dropdown-item:hover {
             background: rgba(44, 62, 80, 0.1);
         }
 
-        body.light-style .auth-input:focus {
-            border-color: #34495E;
-            background: rgba(44, 62, 80, 0.15);
-            box-shadow: 0 0 15px rgba(44, 62, 80, 0.2);
-        }
-
-        body.light-style .auth-input::placeholder {
-            color: rgba(44, 62, 80, 0.6);
-        }
-
-        body.light-style .auth-button {
-            background: #2C3E50;
-            color: #FFF;
-        }
-
-        body.light-style .auth-button:hover {
-            background: #34495E;
-        }
-
-        body.light-style .auth-switch-link {
-            color: #2C3E50;
-        }
-
-        body.light-style .auth-switch-link:hover {
-            color: #34495E;
+        body.light-style .profile-dropdown-item.logout {
+            color: #dc3545;
+            border-top-color: rgba(44, 62, 80, 0.2);
         }
 
         /* Crimson theme */
@@ -828,43 +748,33 @@
             color: #FFF;
         }
 
-        /* Crimson auth modal */
-        body.crimson-theme .auth-modal {
+        body.crimson-theme .user-profile {
             border-color: #DC143C;
+        }
+
+        body.crimson-theme .user-display-name {
+            color: #DC143C;
+        }
+
+        body.crimson-theme .user-username {
+            color: rgba(220, 20, 60, 0.7);
+        }
+
+        body.crimson-theme .user-avatar {
+            border-color: #DC143C;
+        }
+
+        body.crimson-theme .profile-dropdown {
             background: rgba(30, 10, 10, 0.95);
-        }
-
-        body.crimson-theme .auth-title,
-        body.crimson-theme .input-label,
-        body.crimson-theme .auth-switch {
-            color: #DC143C;
-        }
-
-        body.crimson-theme .auth-input {
             border-color: #DC143C;
+        }
+
+        body.crimson-theme .profile-dropdown-item {
             color: #DC143C;
         }
 
-        body.crimson-theme .auth-input:focus {
-            border-color: #B91C3C;
-            box-shadow: 0 0 15px rgba(220, 20, 60, 0.2);
-        }
-
-        body.crimson-theme .auth-button {
-            background: #DC143C;
-            color: #FFF;
-        }
-
-        body.crimson-theme .auth-button:hover {
-            background: #B91C3C;
-        }
-
-        body.crimson-theme .auth-switch-link {
-            color: #DC143C;
-        }
-
-        body.crimson-theme .auth-switch-link:hover {
-            color: #B91C3C;
+        body.crimson-theme .profile-dropdown-item:hover {
+            background: rgba(220, 20, 60, 0.1);
         }
 
         /* Silver theme */
@@ -1044,43 +954,33 @@
             color: #FFF;
         }
 
-        /* Bronze auth modal */
-        body.bronze-theme .auth-modal {
+        body.bronze-theme .user-profile {
             border-color: #CD7F32;
+        }
+
+        body.bronze-theme .user-display-name {
+            color: #CD7F32;
+        }
+
+        body.bronze-theme .user-username {
+            color: rgba(205, 127, 50, 0.7);
+        }
+
+        body.bronze-theme .user-avatar {
+            border-color: #CD7F32;
+        }
+
+        body.bronze-theme .profile-dropdown {
             background: rgba(25, 20, 15, 0.95);
-        }
-
-        body.bronze-theme .auth-title,
-        body.bronze-theme .input-label,
-        body.bronze-theme .auth-switch {
-            color: #CD7F32;
-        }
-
-        body.bronze-theme .auth-input {
             border-color: #CD7F32;
+        }
+
+        body.bronze-theme .profile-dropdown-item {
             color: #CD7F32;
         }
 
-        body.bronze-theme .auth-input:focus {
-            border-color: #B8722E;
-            box-shadow: 0 0 15px rgba(205, 127, 50, 0.2);
-        }
-
-        body.bronze-theme .auth-button {
-            background: #CD7F32;
-            color: #FFF;
-        }
-
-        body.bronze-theme .auth-button:hover {
-            background: #B8722E;
-        }
-
-        body.bronze-theme .auth-switch-link {
-            color: #CD7F32;
-        }
-
-        body.bronze-theme .auth-switch-link:hover {
-            color: #B8722E;
+        body.bronze-theme .profile-dropdown-item:hover {
+            background: rgba(205, 127, 50, 0.1);
         }
 
         /* Crimson theme panel styles */
@@ -1442,9 +1342,26 @@
                 max-width: 300px;
             }
 
-            .auth-modal {
-                width: 95%;
-                padding: 30px 20px;
+            .top-nav {
+                padding: 15px;
+            }
+
+            .user-profile {
+                padding: 6px 12px;
+                gap: 8px;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+            }
+
+            .user-display-name {
+                font-size: 12px;
+            }
+
+            .user-username {
+                font-size: 10px;
             }
         }
 
@@ -1478,53 +1395,58 @@
                 font-size: 0.9rem;
             }
 
-            .auth-modal {
-                padding: 25px 15px;
+            .top-nav {
+                padding: 10px;
+            }
+
+            .signup-button {
+                padding: 10px 18px;
+                font-size: 12px;
+            }
+
+            .user-info {
+                display: none; /* Hide text on very small screens, show only avatar */
             }
         }
     </style>
 </head>
 <body>
-    <!-- Authentication Modal -->
-    <div class="auth-overlay" id="authOverlay">
-        <div class="auth-modal">
-            <h2 class="auth-title" id="authTitle">Sign In</h2>
-            <form class="auth-form" id="authForm">
-                <div class="input-group">
-                    <label class="input-label">Username</label>
-                    <input type="text" class="auth-input" id="username" placeholder="Enter your username" required>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <!-- Sign Up Button (shown when not logged in) -->
+        <button class="signup-button" id="signupButton" onclick="handleDiscordSignup()">
+            <svg class="discord-icon" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0)">
+                <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="currentColor"/>
+                </g>
+                <defs>
+                <clipPath id="clip0">
+                <rect width="71" height="55" fill="white"/>
+                </clipPath>
+                </defs>
+            </svg>
+            Sign Up
+        </button>
+
+        <!-- User Profile (shown when logged in) -->
+        <div class="user-profile" id="userProfile" style="display: none;" onclick="toggleProfileDropdown()">
+            <img class="user-avatar" id="userAvatar" src="" alt="User Avatar">
+            <div class="user-info">
+                <div class="user-display-name" id="userDisplayName"></div>
+                <div class="user-username" id="userUsername"></div>
+            </div>
+            
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-dropdown-item" onclick="viewProfile()">
+                    👤 View Profile
                 </div>
-                <div class="input-group">
-                    <label class="input-label">Password</label>
-                    <input type="password" class="auth-input" id="password" placeholder="Enter your password" required>
+                <div class="profile-dropdown-item" onclick="viewSettings()">
+                    ⚙️ Settings
                 </div>
-                <div class="input-group" id="confirmPasswordGroup" style="display: none;">
-                    <label class="input-label">Confirm Password</label>
-                    <input type="password" class="auth-input" id="confirmPassword" placeholder="Confirm your password">
-                    <div class="password-strength" id="passwordStrength">
-                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
-                    </div>
-                    <div class="password-strength-text" id="passwordStrengthText"></div>
+                <div class="profile-dropdown-item logout" onclick="logout()">
+                    🚪 Logout
                 </div>
-                <div class="error-message" id="errorMessage"></div>
-                <button type="submit" class="auth-button" id="authButton">Sign In</button>
-                <button type="button" class="auth-button discord-login" id="discordLogin">
-                    <svg class="discord-icon" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clip-path="url(#clip0)">
-                        <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="currentColor"/>
-                        </g>
-                        <defs>
-                        <clipPath id="clip0">
-                        <rect width="71" height="55" fill="white"/>
-                        </clipPath>
-                        </defs>
-                    </svg>
-                    Login with Discord
-                </button>
-            </form>
-            <div class="auth-switch">
-                <span id="authSwitchText">Don't have an account?</span>
-                <span class="auth-switch-link" id="authSwitchLink">Sign Up</span>
             </div>
         </div>
     </div>
@@ -1630,208 +1552,124 @@
 
     <script>
         // Authentication system
-        let isSignUpMode = false;
         let currentUser = null;
 
-        // Initialize auth system
+        // Initialize authentication
         function initAuth() {
-            // Check if user is already logged in
             const savedUser = localStorage.getItem('mekhis_user');
             if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                hideAuthModal();
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    showUserProfile();
+                } catch (error) {
+                    console.error('Error parsing saved user:', error);
+                    localStorage.removeItem('mekhis_user');
+                }
+            }
+        }
+
+        function showUserProfile() {
+            if (!currentUser) return;
+            
+            const signupButton = document.getElementById('signupButton');
+            const userProfile = document.getElementById('userProfile');
+            const userAvatar = document.getElementById('userAvatar');
+            const userDisplayName = document.getElementById('userDisplayName');
+            const userUsername = document.getElementById('userUsername');
+
+            // Hide signup button and show user profile
+            signupButton.style.display = 'none';
+            userProfile.style.display = 'flex';
+
+            // Set user information
+            userAvatar.src = currentUser.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
+            userDisplayName.textContent = currentUser.displayName || currentUser.username;
+            
+            if (currentUser.discriminator) {
+                userUsername.textContent = `${currentUser.username}#${currentUser.discriminator}`;
             } else {
-                showAuthModal();
+                userUsername.textContent = `@${currentUser.username}`;
             }
         }
 
-        function showAuthModal() {
-            document.getElementById('authOverlay').classList.remove('hidden');
+        function hideUserProfile() {
+            const signupButton = document.getElementById('signupButton');
+            const userProfile = document.getElementById('userProfile');
+
+            // Show signup button and hide user profile
+            signupButton.style.display = 'flex';
+            userProfile.style.display = 'none';
         }
 
-        function hideAuthModal() {
-            document.getElementById('authOverlay').classList.add('hidden');
-        }
-
-        function toggleAuthMode() {
-            isSignUpMode = !isSignUpMode;
-            const title = document.getElementById('authTitle');
-            const button = document.getElementById('authButton');
-            const switchText = document.getElementById('authSwitchText');
-            const switchLink = document.getElementById('authSwitchLink');
-            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
-            const passwordStrength = document.getElementById('passwordStrength');
-            const passwordStrengthText = document.getElementById('passwordStrengthText');
-            const errorMessage = document.getElementById('errorMessage');
-
-            // Clear any error messages
-            errorMessage.classList.remove('show');
+        function handleDiscordSignup() {
+            const discordOAuthUrl = 'https://discord.com/oauth2/authorize?client_id=1406751245481541674&response_type=code&redirect_uri=https%3A%2F%2Fwww.mekhiscreations.org%2Fcallback.html&scope=identify';
             
-            if (isSignUpMode) {
-                title.textContent = 'Sign Up';
-                button.textContent = 'Sign Up';
-                switchText.textContent = 'Already have an account?';
-                switchLink.textContent = 'Sign In';
-                confirmPasswordGroup.style.display = 'block';
-            } else {
-                title.textContent = 'Sign In';
-                button.textContent = 'Sign In';
-                switchText.textContent = "Don't have an account?";
-                switchLink.textContent = 'Sign Up';
-                confirmPasswordGroup.style.display = 'none';
-                passwordStrength.classList.remove('show');
-                passwordStrengthText.classList.remove('show');
+            // Open Discord OAuth in a popup
+            const popup = window.open(discordOAuthUrl, 'discord-login', 'width=500,height=700,scrollbars=yes,resizable=yes');
+            
+            // Check if popup was closed manually
+            const checkClosed = setInterval(() => {
+                if (popup.closed) {
+                    clearInterval(checkClosed);
+                    // Check if user was authenticated
+                    setTimeout(() => {
+                        initAuth();
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function viewProfile() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.remove('show');
+            
+            if (currentUser) {
+                alert(`Profile: ${currentUser.displayName || currentUser.username}\nID: ${currentUser.id}\nJoined: ${new Date(currentUser.createdAt).toLocaleDateString()}`);
             }
         }
 
-        function checkPasswordStrength(password) {
-            let strength = 0;
-            let strengthText = '';
-            let strengthClass = '';
+        function viewSettings() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.remove('show');
+            alert('Settings panel coming soon!');
+        }
 
-            if (password.length >= 8) strength++;
-            if (/[a-z]/.test(password)) strength++;
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-            const strengthBar = document.getElementById('passwordStrengthBar');
-            const strengthTextEl = document.getElementById('passwordStrengthText');
-            const strengthContainer = document.getElementById('passwordStrength');
-
-            if (password.length > 0) {
-                strengthContainer.classList.add('show');
-                strengthTextEl.classList.add('show');
-
-                if (strength <= 2) {
-                    strengthText = 'Weak';
-                    strengthClass = 'strength-weak';
-                    strengthBar.style.width = '33%';
-                } else if (strength <= 3) {
-                    strengthText = 'Moderate';
-                    strengthClass = 'strength-moderate';
-                    strengthBar.style.width = '66%';
-                } else {
-                    strengthText = 'Strong';
-                    strengthClass = 'strength-strong';
-                    strengthBar.style.width = '100%';
-                }
-
-                strengthBar.className = `password-strength-bar ${strengthClass}`;
-                strengthTextEl.className = `password-strength-text show ${strengthClass}`;
-                strengthTextEl.textContent = `Password strength: ${strengthText}`;
-            } else {
-                strengthContainer.classList.remove('show');
-                strengthTextEl.classList.remove('show');
+        function logout() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.remove('show');
+            
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('mekhis_user');
+                currentUser = null;
+                hideUserProfile();
             }
         }
 
-        function showError(message) {
-            const errorEl = document.getElementById('errorMessage');
-            errorEl.textContent = message;
-            errorEl.classList.add('show');
-        }
-
-        function hideError() {
-            document.getElementById('errorMessage').classList.remove('show');
-        }
-
-        function handleAuth(event) {
-            event.preventDefault();
-            hideError();
-
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (!username || !password) {
-                showError('Please fill in all required fields.');
-                return;
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userProfile = document.getElementById('userProfile');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (!userProfile.contains(event.target)) {
+                dropdown.classList.remove('show');
             }
-
-            if (isSignUpMode) {
-                if (password !== confirmPassword) {
-                    showError('Passwords do not match.');
-                    return;
-                }
-
-                if (password.length < 6) {
-                    showError('Password must be at least 6 characters long.');
-                    return;
-                }
-
-                // Check if user already exists
-                const existingUsers = JSON.parse(localStorage.getItem('mekhis_users') || '{}');
-                if (existingUsers[username]) {
-                    showError('Username already exists. Please choose a different one.');
-                    return;
-                }
-
-                // Create new user
-                const newUser = {
-                    username: username,
-                    password: password, // In real app, this would be hashed
-                    createdAt: new Date().toISOString()
-                };
-
-                existingUsers[username] = newUser;
-                localStorage.setItem('mekhis_users', JSON.stringify(existingUsers));
-                localStorage.setItem('mekhis_user', JSON.stringify(newUser));
-                currentUser = newUser;
-
-                alert(`Welcome to Mekhis Creations, ${username}!`);
-                hideAuthModal();
-            } else {
-                // Sign in
-                const existingUsers = JSON.parse(localStorage.getItem('mekhis_users') || '{}');
-                const user = existingUsers[username];
-
-                if (!user || user.password !== password) {
-                    showError('Invalid username or password.');
-                    return;
-                }
-
-                localStorage.setItem('mekhis_user', JSON.stringify(user));
-                currentUser = user;
-
-                alert(`Welcome back, ${username}!`);
-                hideAuthModal();
-            }
-        }
-
-        function handleDiscordLogin() {
-            const discordOAuthUrl = 'https://discord.com/oauth2/authorize?client_id=1406751245481541674&response_type=code&redirect_uri=https%3A%2F%2Fwww.mekhiscreations.org%2Fcallback&scope=identify';
-            
-            // Show a message about Discord login
-            alert('Redirecting to Discord for authentication...');
-            
-            // In a real application, this would handle the OAuth flow
-            window.open(discordOAuthUrl, '_blank');
-        }
-
-        // Event listeners for authentication
-        document.addEventListener('DOMContentLoaded', function() {
-            // Auth form submission
-            document.getElementById('authForm').addEventListener('submit', handleAuth);
-            
-            // Auth mode toggle
-            document.getElementById('authSwitchLink').addEventListener('click', toggleAuthMode);
-            
-            // Discord login button
-            document.getElementById('discordLogin').addEventListener('click', handleDiscordLogin);
-            
-            // Password strength checker
-            document.getElementById('password').addEventListener('input', function() {
-                if (isSignUpMode) {
-                    checkPasswordStrength(this.value);
-                }
-            });
-
-            // Initialize authentication
-            initAuth();
         });
 
-        // Theme saving functions (fixed)
+        // Listen for Discord login success from popup
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'DISCORD_LOGIN_SUCCESS') {
+                setTimeout(() => {
+                    initAuth();
+                }, 500);
+            }
+        });
+
+        // Theme saving functions
         function saveThemeSettings() {
             const settings = {
                 style: currentStyle,
@@ -1848,14 +1686,12 @@
                     currentStyle = settings.style || 'dark';
                     currentTheme = settings.theme || 'silver';
                     
-                    // Apply the loaded theme
                     applyTheme();
                     updateActiveButtons();
                     updateThemeDisplay();
                 }
             } catch (error) {
                 console.log('Error loading theme settings:', error);
-                // Use defaults
                 currentStyle = 'dark';
                 currentTheme = 'silver';
             }
@@ -2017,6 +1853,10 @@
             positionStars();
             loadThemeSettings();
             setupScrollAnimations();
+            initAuth(); // Initialize authentication on page load
+            
+            // Also check auth on page focus (in case user logged in elsewhere)
+            window.addEventListener('focus', initAuth);
         });
         
         function setupScrollAnimations() {
