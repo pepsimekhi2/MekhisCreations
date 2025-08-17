@@ -1551,21 +1551,97 @@
     </div>
 
     <script>
-        // Authentication system
+        // Authentication system with security measures
         let currentUser = null;
+        const AUTH_KEY = 'mekhis_secure_auth';
+        const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-        // Initialize authentication
+        // Simple encryption for localStorage (not cryptographically secure, but prevents casual editing)
+        function simpleEncrypt(text) {
+            const key = 'mekhis_creation_key_2024';
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return btoa(result);
+        }
+
+        function simpleDecrypt(encrypted) {
+            try {
+                const text = atob(encrypted);
+                const key = 'mekhis_creation_key_2024';
+                let result = '';
+                for (let i = 0; i < text.length; i++) {
+                    result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+                }
+                return result;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        // Create a hash of user data for integrity checking
+        function createUserHash(userData) {
+            const hashString = userData.id + userData.username + userData.discriminator + userData.createdAt;
+            let hash = 0;
+            for (let i = 0; i < hashString.length; i++) {
+                const char = hashString.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return hash.toString();
+        }
+
+        // Verify user data integrity
+        function verifyUserData(userData) {
+            if (!userData.hash || !userData.timestamp || !userData.id) {
+                return false;
+            }
+
+            // Check if session has expired
+            const now = Date.now();
+            if (now - userData.timestamp > SESSION_DURATION) {
+                return false;
+            }
+
+            // Verify hash
+            const expectedHash = createUserHash(userData);
+            return userData.hash === expectedHash;
+        }
+
+        // Initialize authentication with security checks
         function initAuth() {
-            const savedUser = localStorage.getItem('mekhis_user');
-            if (savedUser) {
+            const savedAuth = localStorage.getItem(AUTH_KEY);
+            if (savedAuth) {
                 try {
-                    currentUser = JSON.parse(savedUser);
-                    showUserProfile();
+                    const decryptedData = simpleDecrypt(savedAuth);
+                    if (!decryptedData) {
+                        throw new Error('Failed to decrypt');
+                    }
+                    
+                    const userData = JSON.parse(decryptedData);
+                    
+                    // Verify data integrity and session validity
+                    if (verifyUserData(userData)) {
+                        currentUser = userData;
+                        showUserProfile();
+                    } else {
+                        // Data has been tampered with or session expired
+                        console.warn('User session invalid or tampered with');
+                        clearAuthData();
+                    }
                 } catch (error) {
-                    console.error('Error parsing saved user:', error);
-                    localStorage.removeItem('mekhis_user');
+                    console.error('Error validating user session:', error);
+                    clearAuthData();
                 }
             }
+        }
+
+        function clearAuthData() {
+            localStorage.removeItem(AUTH_KEY);
+            localStorage.removeItem('mekhis_user'); // Remove old format too
+            currentUser = null;
+            hideUserProfile();
         }
 
         function showUserProfile() {
@@ -1644,10 +1720,22 @@
             dropdown.classList.remove('show');
             
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('mekhis_user');
-                currentUser = null;
-                hideUserProfile();
+                clearAuthData();
             }
+        }
+
+        // Store user data securely
+        function storeUserData(userData) {
+            // Add security metadata
+            userData.timestamp = Date.now();
+            userData.hash = createUserHash(userData);
+            
+            // Encrypt and store
+            const encryptedData = simpleEncrypt(JSON.stringify(userData));
+            localStorage.setItem(AUTH_KEY, encryptedData);
+            
+            // Remove old insecure storage
+            localStorage.removeItem('mekhis_user');
         }
 
         // Close dropdown when clicking outside
@@ -1666,6 +1754,25 @@
                 setTimeout(() => {
                     initAuth();
                 }, 500);
+            }
+        });
+
+        // Periodic session validation (every 5 minutes)
+        setInterval(() => {
+            if (currentUser && !verifyUserData(currentUser)) {
+                console.warn('Session validation failed - logging out');
+                clearAuthData();
+                alert('Your session has expired or been tampered with. Please sign in again.');
+            }
+        }, 5 * 60 * 1000);
+
+        // Detect localStorage tampering
+        window.addEventListener('storage', function(event) {
+            if (event.key === AUTH_KEY && currentUser) {
+                // Re-validate current session
+                setTimeout(() => {
+                    initAuth();
+                }, 100);
             }
         });
 
