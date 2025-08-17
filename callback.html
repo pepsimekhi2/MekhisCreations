@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Login - Mekhis Creations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #2C2C2C 0%, #1A1A1A 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Fredoka One', cursive;
+            color: #C0C0C0;
+        }
+
+        .callback-container {
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid #C0C0C0;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .callback-title {
+            font-size: 2rem;
+            margin: 0 0 20px 0;
+            color: #C0C0C0;
+        }
+
+        .callback-message {
+            font-size: 1.2rem;
+            margin: 0 0 30px 0;
+            line-height: 1.4;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(192, 192, 192, 0.3);
+            border-top: 4px solid #C0C0C0;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .return-button {
+            background: #C0C0C0;
+            color: #2C2C2C;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .return-button:hover {
+            background: #A8A8A8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(192, 192, 192, 0.3);
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .success-message {
+            color: #28a745;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="callback-container">
+        <h1 class="callback-title">Discord Authentication</h1>
+        <div class="callback-message" id="message">Processing your Discord login...</div>
+        <div class="loading-spinner" id="spinner"></div>
+        <div id="result"></div>
+        <button class="return-button" onclick="returnToSite()" style="display: none;" id="returnButton">Return to Mekhis Creations</button>
+    </div>
+
+    <script>
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                code: urlParams.get('code'),
+                error: urlParams.get('error'),
+                error_description: urlParams.get('error_description')
+            };
+        }
+
+        function showResult(success, message, details = '') {
+            const messageEl = document.getElementById('message');
+            const spinnerEl = document.getElementById('spinner');
+            const resultEl = document.getElementById('result');
+            const returnButton = document.getElementById('returnButton');
+
+            spinnerEl.style.display = 'none';
+            returnButton.style.display = 'inline-block';
+
+            if (success) {
+                messageEl.textContent = 'Successfully authenticated with Discord!';
+                resultEl.innerHTML = `<div class="success-message">${message}</div>`;
+            } else {
+                messageEl.textContent = 'Authentication failed';
+                resultEl.innerHTML = `<div class="error-message">${message}${details ? '<br><br>' + details : ''}</div>`;
+            }
+        }
+
+        function returnToSite() {
+            window.close(); // Close the popup if opened in new window
+            // If not a popup, redirect to main site
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 100);
+        }
+
+        function processDiscordCallback() {
+            const params = getUrlParams();
+
+            if (params.error) {
+                showResult(false, 'Discord authentication was cancelled or failed.', params.error_description);
+                return;
+            }
+
+            if (!params.code) {
+                showResult(false, 'No authorization code received from Discord.');
+                return;
+            }
+
+            // In a real application, you would send this code to your backend
+            // to exchange it for an access token and get user information
+            console.log('Discord authorization code:', params.code);
+
+            // For now, we'll simulate a successful login
+            setTimeout(() => {
+                // Store a mock Discord user in localStorage
+                const discordUser = {
+                    username: 'DiscordUser_' + Math.random().toString(36).substr(2, 5),
+                    loginMethod: 'discord',
+                    code: params.code,
+                    createdAt: new Date().toISOString()
+                };
+
+                localStorage.setItem('mekhis_user', JSON.stringify(discordUser));
+                
+                showResult(true, `Welcome ${discordUser.username}! You've been logged in with Discord.`);
+
+                // Auto-redirect after 3 seconds
+                setTimeout(() => {
+                    returnToSite();
+                }, 3000);
+            }, 2000);
+        }
+
+        // Process the callback when page loads
+        document.addEventListener('DOMContentLoaded', processDiscordCallback);
+    </script>
+</body>
+</html>
