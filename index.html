@@ -1680,19 +1680,8 @@
         function handleDiscordSignup() {
             const discordOAuthUrl = 'https://discord.com/oauth2/authorize?client_id=1406751245481541674&response_type=code&redirect_uri=https%3A%2F%2Fwww.mekhiscreations.org%2Fcallback&scope=identify';
             
-            // Open Discord OAuth in a popup
-            const popup = window.open(discordOAuthUrl, 'discord-login', 'width=500,height=700,scrollbars=yes,resizable=yes');
-            
-            // Check if popup was closed manually
-            const checkClosed = setInterval(() => {
-                if (popup.closed) {
-                    clearInterval(checkClosed);
-                    // Check if user was authenticated
-                    setTimeout(() => {
-                        initAuth();
-                    }, 500);
-                }
-            }, 1000);
+            // Open Discord OAuth in a new tab
+            window.open(discordOAuthUrl, '_blank');
         }
 
         function toggleProfileDropdown() {
@@ -1748,13 +1737,12 @@
             }
         });
 
-        // Listen for Discord login success from popup
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'DISCORD_LOGIN_SUCCESS') {
-                setTimeout(() => {
-                    initAuth();
-                }, 500);
-            }
+        // Listen for when user returns from Discord auth (page focus)
+        window.addEventListener('focus', function() {
+            // Small delay to allow localStorage to be updated
+            setTimeout(() => {
+                initAuth();
+            }, 500);
         });
 
         // Periodic session validation (every 5 minutes)
