@@ -583,6 +583,14 @@
             });
         }
 
+        function isAdmin() {
+            if (!currentUser) return false;
+            const userIdentifier = currentUser.discriminator ? 
+                `${currentUser.username}#${currentUser.discriminator}` : 
+                `@${currentUser.username}`;
+            return userIdentifier === ADMIN_USERNAME;
+        }
+
         function postNews(title, content) {
             const newPost = {
                 title: title,
