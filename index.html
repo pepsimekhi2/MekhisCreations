@@ -156,21 +156,21 @@
             z-index: 1000;
         }
 
-        /* Sign Up Button */
+        /* Sign Up Button - Bigger */
         .signup-button {
             background: #5865F2;
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 16px 32px;
             border-radius: 25px;
             font-family: 'Fredoka One', cursive;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .signup-button:hover {
@@ -180,20 +180,20 @@
         }
 
         .discord-icon {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
         }
 
-        /* User Profile Display */
+        /* User Profile Display - Bigger */
         .user-profile {
             background: rgba(25, 25, 25, 0.9);
             backdrop-filter: blur(10px);
             border: 2px solid #C0C0C0;
             border-radius: 25px;
-            padding: 8px 16px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -206,8 +206,8 @@
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             border: 2px solid #C0C0C0;
         }
@@ -220,7 +220,7 @@
 
         .user-display-name {
             font-family: 'Fredoka One', cursive;
-            font-size: 14px;
+            font-size: 16px;
             color: #C0C0C0;
             margin: 0;
             line-height: 1;
@@ -228,13 +228,21 @@
 
         .user-username {
             font-family: 'Fredoka One', cursive;
-            font-size: 11px;
+            font-size: 12px;
             color: rgba(192, 192, 192, 0.7);
             margin: 0;
             line-height: 1;
         }
 
-        /* User Profile Dropdown */
+        .user-member-badge {
+            font-family: 'Fredoka One', cursive;
+            font-size: 10px;
+            color: rgba(192, 192, 192, 0.6);
+            margin: 2px 0 0 0;
+            line-height: 1;
+        }
+
+        /* User Profile Dropdown - Simplified */
         .profile-dropdown {
             position: absolute;
             top: 100%;
@@ -245,7 +253,7 @@
             border: 2px solid #C0C0C0;
             border-radius: 15px;
             padding: 15px;
-            min-width: 200px;
+            min-width: 150px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             opacity: 0;
             visibility: hidden;
@@ -774,6 +782,10 @@
             color: rgba(44, 62, 80, 0.7);
         }
 
+        body.light-style .user-member-badge {
+            color: rgba(44, 62, 80, 0.6);
+        }
+
         body.light-style .user-avatar {
             border-color: #2C3E50;
         }
@@ -913,6 +925,10 @@
 
         body.crimson-theme .user-username {
             color: rgba(220, 20, 60, 0.7);
+        }
+
+        body.crimson-theme .user-member-badge {
+            color: rgba(220, 20, 60, 0.6);
         }
 
         body.crimson-theme .user-avatar {
@@ -1129,6 +1145,10 @@
             color: rgba(205, 127, 50, 0.7);
         }
 
+        body.bronze-theme .user-member-badge {
+            color: rgba(205, 127, 50, 0.6);
+        }
+
         body.bronze-theme .user-avatar {
             border-color: #CD7F32;
         }
@@ -1217,11 +1237,41 @@
             color: #000;
         }
 
-        .header {
-            text-align: center;
+        /* Navigation buttons under header */
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
             position: relative;
             z-index: 10;
-            margin-bottom: 40px;
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid #C0C0C0;
+            color: #C0C0C0;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            background: #C0C0C0;
+            color: #2C2C2C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3);
+        }
+
+        .nav-button.active {
+            background: #C0C0C0;
+            color: #2C2C2C;
         }
 
         .main-title {
@@ -1249,8 +1299,11 @@
             transform: translateX(-50%);
         }
 
-        .main-title:hover::after {
-            width: 120%;
+        .header {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 20px;
         }
 
         .content-frame {
@@ -1614,16 +1667,11 @@
             <div class="user-info">
                 <div class="user-display-name" id="userDisplayName"></div>
                 <div class="user-username" id="userUsername"></div>
+                <div class="user-member-badge">Mekhis Creations Member</div>
             </div>
             
             <!-- Profile Dropdown -->
             <div class="profile-dropdown" id="profileDropdown">
-                <div class="profile-dropdown-item" onclick="viewProfile()">
-                    👤 View Profile
-                </div>
-                <div class="profile-dropdown-item" onclick="viewSettings()">
-                    ⚙️ Settings
-                </div>
                 <div class="profile-dropdown-item logout" onclick="logout()">
                     🚪 Logout
                 </div>
@@ -1652,6 +1700,11 @@
     <div class="header">
         <h1 class="main-title">Mekhis Creations</h1>
     </div>
+
+    <div class="nav-buttons">
+        <a href="#" class="nav-button active" onclick="setActivePage('home')">Home</a>
+        <a href="#" class="nav-button" onclick="setActivePage('news')">News</a>
+    </div>
     
     <div class="content-frame">
         Mekhis Creations is a passionate independent Roblox game studio founded and operated by Mekhi, a dedicated developer who pours their heart and soul into creating unique gaming experiences. With a growing community of lovely group members, the studio has achieved remarkable milestones including over 5,000 combined game visits and generated more than 1,000 Robux in revenue. What sets Mekhis Creations apart is the genuine commitment to innovation and quality, transforming creative visions into engaging Roblox games that captivate players and build lasting communities.
@@ -1678,7 +1731,6 @@
                 </div>
                 <div class="game-buttons">
                     <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/86169967274436/UPD-Pet-Universe#!/game-instances', 'Pet Universe'); return false;" class="play-button">Play Now</a>
-                    <button class="news-button" onclick="showGameNews('Pet Universe')">News</button>
                 </div>
             </div>
             <div class="game-frame">
@@ -1690,7 +1742,6 @@
                 </div>
                 <div class="game-buttons">
                     <a href="#" onclick="showRedirectModal('https://www.roblox.com/games/90831669132253/Pet-Universe-2#!/game-instances', 'Pet Universe 2'); return false;" class="play-button">Play Now</a>
-                    <button class="news-button" onclick="showGameNews('Pet Universe 2')">News</button>
                 </div>
             </div>
         </div>
@@ -1884,24 +1935,21 @@
             window.open(discordOAuthUrl, '_blank');
         }
 
-        function toggleProfileDropdown() {
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('show');
-        }
-
-        function viewProfile() {
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.remove('show');
+        function setActivePage(page) {
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
             
-            if (currentUser) {
-                alert(`Profile: ${currentUser.displayName || currentUser.username}\nID: ${currentUser.id}\nJoined: ${new Date(currentUser.createdAt).toLocaleDateString()}`);
+            event.target.classList.add('active');
+            
+            if (page === 'news') {
+                // Handle news page navigation
+                console.log('News page clicked');
             }
         }
 
-        function viewSettings() {
+        function toggleProfileDropdown() {
             const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.remove('show');
-            alert('Settings panel coming soon!');
+            dropdown.classList.toggle('show');
         }
 
         function logout() {
