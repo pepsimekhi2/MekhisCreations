@@ -1,0 +1,10 @@
+// Instead of localStorage, fetch from news.json
+async function loadNews() {
+    try {
+        const response = await fetch('/news.json');
+        const newsData = await response.json();
+        // Display news...
+    } catch (error) {
+        console.log('No news file found');
+    }
+}
