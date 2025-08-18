@@ -538,7 +538,25 @@
         }
 
         function loadNews() {
-            const newsData = JSON.parse(localStorage.getItem('mekhis_news') || '[]');
+            // Try to load from news.json first, fallback to localStorage
+            fetch('/news.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No news.json file found');
+                    }
+                    return response.json();
+                })
+                .then(newsData => {
+                    displayNews(newsData);
+                })
+                .catch(error => {
+                    console.log('Loading from localStorage as fallback');
+                    const localNews = JSON.parse(localStorage.getItem('mekhis_news') || '[]');
+                    displayNews(localNews);
+                });
+        }
+
+        function displayNews(newsData) {
             const newsContainer = document.getElementById('newsContainer');
             const noNews = document.getElementById('noNews');
 
@@ -557,7 +575,7 @@
                 newsItem.className = 'news-item';
                 newsItem.innerHTML = `
                     <h3 class="news-title">${news.title}</h3>
-                    <p class="news-date">${new Date(news.date).toLocaleDateString()}</p>
+                    <p class="news-date">${new Date(news.date).toLocaleDateString()} by ${news.author || 'Admin'}</p>
                     <p class="news-content">${news.content}</p>
                     ${isAdmin() ? `<button class="delete-button" onclick="deleteNews(${index})">Delete</button>` : ''}
                 `;
@@ -565,16 +583,7 @@
             });
         }
 
-        function isAdmin() {
-            if (!currentUser) return false;
-            const userIdentifier = currentUser.discriminator ? 
-                `${currentUser.username}#${currentUser.discriminator}` : 
-                `@${currentUser.username}`;
-            return userIdentifier === ADMIN_USERNAME;
-        }
-
         function postNews(title, content) {
-            const newsData = JSON.parse(localStorage.getItem('mekhis_news') || '[]');
             const newPost = {
                 title: title,
                 content: content,
@@ -582,9 +591,24 @@
                 author: currentUser.displayName || currentUser.username
             };
             
+            // Save to localStorage for now
+            const newsData = JSON.parse(localStorage.getItem('mekhis_news') || '[]');
             newsData.unshift(newPost);
             localStorage.setItem('mekhis_news', JSON.stringify(newsData));
-            loadNews();
+            
+            // Display the updated news
+            displayNews(newsData);
+            
+            // Show instructions for manual JSON update
+            const jsonContent = JSON.stringify(newsData, null, 2);
+            
+            alert(`News posted locally! 
+
+To make it visible to everyone, update your news.json file with this content:
+
+${jsonContent}
+
+Copy the above content and save it as news.json in your website root directory.`);
         }
 
         function deleteNews(index) {
