@@ -3,6 +3,10 @@
     {
       "source": "/callback",
       "destination": "/callback.html"
+    },
+    {
+      "source": "/news",
+      "destination": "/news.html"
     }
   ]
 }
