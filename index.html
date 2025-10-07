@@ -3,36 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <title>Mekhis Creations</title>
-  <!-- Link to Google Fonts: Federo -->
-  <link href="https://fonts.googleapis.com/css2?family=Federo&display=swap" rel="stylesheet">
+  <!-- Link to Google Fonts: Fredoka One -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --header-bg: #2563eb;
+      --header-color: #fff;
+      --body-bg: #181b28;
+      --main-color: #fff;
+    }
     body {
       margin: 0;
       padding: 0;
-      background-color: #181b28; /* Dark background for the vibe */
+      background-color: var(--body-bg);
+      color: var(--main-color);
+      font-family: 'Fredoka One', Arial, Helvetica, sans-serif;
+      transition: background 0.3s, color 0.3s;
     }
     .header {
       width: 100%;
       position: fixed;
       top: 0;
       left: 0;
-      background-color: #2563eb; /* Nice blue */
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25); /* Stronger drop shadow */
+      background-color: var(--header-bg);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
       text-align: center;
       z-index: 1000;
-      padding: 36px 0; /* Bigger header */
+      padding: 40px 0;
     }
     .header-title {
-      font-family: 'Federo', Arial, Helvetica, sans-serif;
-      font-size: 3.5rem; /* Even bigger text */
-      font-weight: normal; /* Remove bold */
-      color: #fff;
+      font-family: 'Fredoka One', Arial, Helvetica, sans-serif;
+      font-size: 3.5rem;
+      font-weight: normal;
+      color: var(--header-color);
       margin: 0;
       letter-spacing: 3px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3); /* Subtle text shadow */
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
     }
     main {
-      padding-top: 120px; /* More padding below the header */
+      padding-top: 130px;
+    }
+    /* Themes Button */
+    .themes-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 32px;
+      padding: 18px 36px;
+      font-size: 1.25rem;
+      font-family: 'Fredoka One', Arial, Helvetica, sans-serif;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.21);
+      cursor: pointer;
+      z-index: 2000;
+      transition: background 0.2s;
+    }
+    .themes-btn:hover {
+      background: #15317e;
+    }
+    /* Modal Styles */
+    .themes-modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.43);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+    }
+    .themes-modal-bg.open {
+      display: flex;
+    }
+    .themes-modal {
+      background: #21243b;
+      border-radius: 32px;
+      padding: 32px 40px 24px 40px;
+      min-width: 320px;
+      text-align: center;
+      box-shadow: 0 2px 28px 0 rgba(16,18,54,0.21);
+      position: relative;
+      color: #fff;
+      font-family: 'Fredoka One', Arial, Helvetica, sans-serif;
+      animation: pop 0.22s cubic-bezier(.64,.09,.25,1) 1;
+    }
+    @keyframes pop {
+      0%{transform: scale(0.87);}
+      100%{transform: scale(1);}
+    }
+    .themes-modal-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      border: none;
+      background: none;
+      color: #fff;
+      font-size: 1.7rem;
+      cursor: pointer;
+    }
+    .themes-list {
+      margin: 32px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+    }
+    .theme-option {
+      padding: 12px 38px;
+      border: none;
+      border-radius: 18px;
+      font-size: 1.15rem;
+      font-family: 'Fredoka One', Arial, Helvetica, sans-serif;
+      cursor: pointer;
+      color: #fff;
+      transition: background 0.18s;
+      background: #2563eb;
+    }
+    .theme-option.light {
+      background: #f5f5f5;
+      color: #1a1a1a;
+    }
+    .theme-option.dark {
+      background: #181b28;
+    }
+    .theme-option.crimson {
+      background: #b21f31;
+    }
+    .theme-option.galaxy {
+      background: linear-gradient(90deg,#2b1055 0%,#7597de 100%);
+    }
+    .theme-option:hover {
+      opacity: 0.77;
     }
   </style>
 </head>
@@ -43,5 +145,66 @@
   <main>
     <!-- Page content goes here -->
   </main>
+
+  <button class="themes-btn" id="openThemes">Themes</button>
+  <!-- Modal -->
+  <div class="themes-modal-bg" id="themesModalBg">
+    <div class="themes-modal">
+      <button class="themes-modal-close" id="closeThemes">&times;</button>
+      <h2>Select a Theme</h2>
+      <div class="themes-list">
+        <button class="theme-option light" data-theme="light">Light</button>
+        <button class="theme-option dark" data-theme="dark">Dark</button>
+        <button class="theme-option crimson" data-theme="crimson">Crimson</button>
+        <button class="theme-option galaxy" data-theme="galaxy">Galaxy</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Modal open/close
+    const openBtn = document.getElementById('openThemes');
+    const closeBtn = document.getElementById('closeThemes');
+    const modalBg = document.getElementById('themesModalBg');
+    openBtn.onclick = () => modalBg.classList.add('open');
+    closeBtn.onclick = () => modalBg.classList.remove('open');
+    modalBg.onclick = (e) => { if(e.target === modalBg) modalBg.classList.remove('open'); }
+
+    // Theme switching
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+      option.onclick = function() {
+        const theme = this.dataset.theme;
+        document.body.className = '';
+        switch(theme) {
+          case 'light':
+            document.documentElement.style.setProperty('--header-bg', '#e6f0ff');
+            document.documentElement.style.setProperty('--header-color', '#21243b');
+            document.documentElement.style.setProperty('--body-bg', '#fff');
+            document.documentElement.style.setProperty('--main-color', '#111');
+            break;
+          case 'dark':
+            document.documentElement.style.setProperty('--header-bg', '#2563eb');
+            document.documentElement.style.setProperty('--header-color', '#fff');
+            document.documentElement.style.setProperty('--body-bg', '#181b28');
+            document.documentElement.style.setProperty('--main-color', '#fff');
+            break;
+          case 'crimson':
+            document.documentElement.style.setProperty('--header-bg', '#b21f31');
+            document.documentElement.style.setProperty('--header-color', '#fff');
+            document.documentElement.style.setProperty('--body-bg', '#2b1e21');
+            document.documentElement.style.setProperty('--main-color', '#fff');
+            break;
+          case 'galaxy':
+            document.documentElement.style.setProperty('--header-bg', 'linear-gradient(90deg,#2b1055 0%,#7597de 100%)');
+            document.documentElement.style.setProperty('--header-color', '#fff');
+            document.documentElement.style.setProperty('--body-bg', '#191024');
+            document.documentElement.style.setProperty('--main-color', '#e7baff');
+            break;
+        }
+        modalBg.classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>
