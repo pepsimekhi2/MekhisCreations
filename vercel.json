@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/auth",
+      "destination": "https://www.mekhiscreations.org/auth",
+      "permanent": true
+    }
+  ]
+}
