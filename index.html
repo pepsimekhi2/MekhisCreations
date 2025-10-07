@@ -11,6 +11,7 @@
       --header-color: #fff;
       --body-bg: #181b28;
       --main-color: #fff;
+      --discord-blue: #2563eb;
     }
     body {
       margin: 0;
@@ -31,11 +32,11 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      padding: 40px 0;
+      padding: 20px 0;           /* smaller header */
     }
     .header-title {
       font-family: 'Fredoka One', Arial, Helvetica, sans-serif;
-      font-size: 3.5rem;
+      font-size: 2rem;          /* smaller font */
       font-weight: normal;
       color: var(--header-color);
       margin: 0;
@@ -47,25 +48,26 @@
     .discord-btn {
       margin-right: 50px;
       padding: 12px 28px;
-      background: #5865f2;
-      color: #fff;
+      background: #181b28;        /* dark background */
+      color: var(--discord-blue); /* blue text */
       border: none;
       border-radius: 18px;
       font-size: 1.1rem;
       font-family: 'Fredoka One', Arial, Helvetica, sans-serif;
       cursor: pointer;
       box-shadow: 0 2px 18px rgba(88,101,242,0.13);
-      transition: background 0.18s;
+      transition: background 0.18s, color 0.18s;
       position: absolute;
       right: 50px;
       top: 50%;
       transform: translateY(-50%);
     }
     .discord-btn:hover {
-      background: #3b46a8;
+      background: #22263a;
+      color: #4f85f2;
     }
     main {
-      padding-top: 130px;
+      padding-top: 80px;         /* match new header size */
     }
   </style>
 </head>
@@ -81,6 +83,20 @@
   </div>
   <main>
     <!-- Page content goes here -->
+    <div id="discord-code-message" style="text-align:center;"></div>
   </main>
+  <script>
+    // Example code handler for /auth?code=...
+    // Only for demonstration—real handling should be at /auth, not on this page.
+    (function() {
+      // Checks for ?code= in the URL; useful if you want to show/extract the code
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if(code){
+        document.getElementById('discord-code-message').textContent =
+          'Discord authorization code: ' + code;
+      }
+    })();
+  </script>
 </body>
 </html>
