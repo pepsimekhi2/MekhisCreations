@@ -49,6 +49,17 @@ export default async function handler(req, res) {
 
         const userData = await userResponse.json();
 
+        const sessionToken = Buffer.from(JSON.stringify({
+            id: userData.id,
+            username: userData.username,
+            discriminator: userData.discriminator,
+            avatar: userData.avatar,
+            timestamp: Date.now(),
+            signature: createSignature(userData.id, Date.now())
+        })).toString('base64');
+
+        res.setHeader('Set-Cookie', `discord_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`);
+
         return res.status(200).json({
             id: userData.id,
             username: userData.username,
@@ -60,4 +71,10 @@ export default async function handler(req, res) {
         console.error('Authentication error:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
+}
+
+function createSignature(userId, timestamp) {
+    const crypto = require('crypto');
+    const secret = 'vspl8ELgdJr2OGsX6-2cWxWjeg_O4wNi';
+    return crypto.createHmac('sha256', secret).update(`${userId}-${timestamp}`).digest('hex');
 }
