@@ -138,16 +138,24 @@
             window.location.href = discordAuthUrl;
         }
         
-        function logout() {
-            localStorage.removeItem('discordUser');
-            location.reload();
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                location.reload();
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
         }
         
-        function checkUserSession() {
-            const userData = localStorage.getItem('discordUser');
-            if (userData) {
-                const user = JSON.parse(userData);
-                displayUserProfile(user);
+        async function checkUserSession() {
+            try {
+                const response = await fetch('/api/verify-session');
+                if (response.ok) {
+                    const user = await response.json();
+                    displayUserProfile(user);
+                }
+            } catch (error) {
+                console.error('Session check error:', error);
             }
         }
         
