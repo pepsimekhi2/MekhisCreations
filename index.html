@@ -108,6 +108,129 @@
             padding: 40px;
             color: #e0e0e0;
         }
+        
+        .intro-text {
+            max-width: 900px;
+            margin: 30px auto 50px;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #e0e0e0;
+            padding: 25px 30px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stats-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+            margin-top: 50px;
+        }
+        
+        .stat-frame {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .stat-frame.small {
+            flex: 1;
+            max-width: 250px;
+        }
+        
+        .stat-frame.large {
+            flex: 2;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-title {
+            font-size: 1.2em;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .counter {
+            font-size: 4em;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Fredoka One', Arial, sans-serif;
+        }
+        
+        .mentions-section {
+            max-width: 1000px;
+            margin: 60px auto;
+            text-align: center;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .mentions-title {
+            font-size: 2em;
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+        
+        .mentions-subtitle {
+            font-size: 0.85em;
+            color: rgba(224, 224, 224, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .mentions-divider {
+            height: 3px;
+            background: linear-gradient(to right, transparent, #3b82f6, transparent);
+            margin: 25px 0 35px;
+        }
+        
+        .mentions-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .mention-card {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px 30px;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+        
+        .mention-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.2);
+        }
+        
+        .mention-name {
+            font-size: 1.2em;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .mention-handle {
+            font-size: 0.9em;
+            color: rgba(224, 224, 224, 0.6);
+        }
     </style>
 </head>
 <body>
@@ -126,8 +249,48 @@
         </div>
     </header>
     <main>
-        <p>Your content goes here.</p>
+        <div class="intro-text">
+            Mekhis Creations is a Roblox development studio dedicated to creating games that offer fair opportunities for free-to-play players, without giving pay-to-win advantages. With over 300 group members and thousands of game visits across just a few titles, we're rapidly growing and thriving as a community.
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-frame small">
+                <div class="stat-title">Total Group Members:</div>
+                <div class="counter" id="memberCounter" style="font-size: 3em;">0</div>
+            </div>
+            
+            <div class="stat-frame large">
+                <div class="stat-title">Total Visits Contributed:</div>
+                <div class="counter" id="visitCounter">0</div>
+            </div>
+            
+            <div class="stat-frame small">
+                <div class="stat-title">Published Games:</div>
+                <div class="counter" id="gamesCounter" style="font-size: 3em;">0</div>
+            </div>
+        </div>
+        
+        <div class="mentions-section">
+            <h2 class="mentions-title">Honorable Mentions</h2>
+            <p class="mentions-subtitle">These individuals have shown incredible dedication to our development and deserve a huge thank you for their contributions.</p>
+            <div class="mentions-divider"></div>
+            <div class="mentions-grid">
+                <div class="mention-card">
+                    <div class="mention-name">Spadebloke</div>
+                    <div class="mention-handle">@Spadebloke</div>
+                </div>
+                <div class="mention-card">
+                    <div class="mention-name">Santi</div>
+                    <div class="mention-handle">@im_santi_</div>
+                </div>
+                <div class="mention-card">
+                    <div class="mention-name">Hobee</div>
+                    <div class="mention-handle">@doge_800</div>
+                </div>
+            </div>
+        </div>
     </main>
+
     <script>
         const CLIENT_ID = '1270141507021705408';
         
@@ -174,6 +337,76 @@
         }
         
         checkUserSession();
+        
+        let visitCount = 0;
+        const visitTarget = 25000;
+        const visitCounter = document.getElementById('visitCounter');
+        let visitDelay = 5;
+        
+        function animateVisitCounter() {
+            if (visitCount < visitTarget) {
+                visitCount++;
+                visitCounter.textContent = visitCount.toLocaleString();
+                
+                if (visitCount < visitTarget * 0.5) {
+                    visitDelay = 5;
+                } else if (visitCount < visitTarget * 0.7) {
+                    visitDelay = 8;
+                } else if (visitCount < visitTarget * 0.85) {
+                    visitDelay = 15;
+                } else if (visitCount < visitTarget * 0.95) {
+                    visitDelay = 30;
+                } else {
+                    visitDelay = 50;
+                }
+                
+                setTimeout(animateVisitCounter, visitDelay);
+            } else {
+                visitCounter.textContent = '25,000+';
+            }
+        }
+        
+        let memberCount = 0;
+        const memberTarget = 330;
+        const memberCounter = document.getElementById('memberCounter');
+        let memberDelay = 10;
+        
+        function animateMemberCounter() {
+            if (memberCount < memberTarget) {
+                memberCount++;
+                memberCounter.textContent = memberCount.toLocaleString();
+                
+                if (memberCount < memberTarget * 0.5) {
+                    memberDelay = 10;
+                } else if (memberCount < memberTarget * 0.7) {
+                    memberDelay = 20;
+                } else if (memberCount < memberTarget * 0.85) {
+                    memberDelay = 35;
+                } else if (memberCount < memberTarget * 0.95) {
+                    memberDelay = 60;
+                } else {
+                    memberDelay = 100;
+                }
+                
+                setTimeout(animateMemberCounter, memberDelay);
+            }
+        }
+        
+        let gamesCount = 0;
+        const gamesTarget = 3;
+        const gamesCounter = document.getElementById('gamesCounter');
+        
+        function animateGamesCounter() {
+            if (gamesCount < gamesTarget) {
+                gamesCount++;
+                gamesCounter.textContent = gamesCount;
+                setTimeout(animateGamesCounter, 500);
+            }
+        }
+        
+        animateVisitCounter();
+        animateMemberCounter();
+        animateGamesCounter();
     </script>
 </body>
 </html>
