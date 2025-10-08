@@ -1,14 +1,8 @@
 {
-  "redirects": [
+  "rewrites": [
     {
       "source": "/auth",
-      "destination": "https://www.mekhiscreations.org/auth",
-      "permanent": true
-    },
-    {
-      "source": "/auth/:slug*",
-      "destination": "https://www.mekhiscreations.org/auth",
-      "permanent": true
+      "destination": "/auth.html"
     }
   ]
 }
