@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticating - Mekhis Creations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Fredoka One', Arial, sans-serif;
+            background-color: #0a0a0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #3b82f6;
+        }
+        
+        .loading {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(59, 130, 246, 0.3);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #ef4444;
+            margin-top: 20px;
+        }
+        
+        .user-info {
+            background-color: rgba(59, 130, 246, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            max-width: 400px;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+        
+        .username {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .back-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Fredoka One', Arial, sans-serif;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mekhis Creations</h1>
+        <div id="status">
+            <div class="loading">Authenticating with Discord...</div>
+            <div class="spinner"></div>
+        </div>
+        <div id="userInfo" style="display: none;"></div>
+    </div>
+
+    <script>
+        const CLIENT_ID = '1270141507021705408';
+        const CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
+        const REDIRECT_URI = 'https://www.mekhiscreations.org/auth';
+
+        async function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (!code) {
+                document.getElementById('status').innerHTML = '<div class="error">No authorization code found. Please try logging in again.</div>';
+                return;
+            }
+
+            try {
+                const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        client_id: CLIENT_ID,
+                        client_secret: CLIENT_SECRET,
+                        grant_type: 'authorization_code',
+                        code: code,
+                        redirect_uri: REDIRECT_URI,
+                    }),
+                });
+
+                if (!tokenResponse.ok) {
+                    throw new Error('Failed to exchange code for token');
+                }
+
+                const tokenData = await tokenResponse.json();
+                const accessToken = tokenData.access_token;
+
+                const userResponse = await fetch('https://discord.com/api/users/@me', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+
+                if (!userResponse.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+
+                const userData = await userResponse.json();
+
+                document.getElementById('status').style.display = 'none';
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('userInfo').innerHTML = `
+                    <div class="user-info">
+                        <img src="https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png" alt="Avatar" class="avatar">
+                        <div class="username">Welcome, ${userData.username}!</div>
+                        <div>ID: ${userData.id}</div>
+                        <button class="back-btn" onclick="window.location.href='/'">Go to Home</button>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Authentication error:', error);
+                document.getElementById('status').innerHTML = `
+                    <div class="error">
+                        <p>Authentication failed: ${error.message}</p>
+                        <button class="back-btn" onclick="window.location.href='/'">Back to Home</button>
+                    </div>
+                `;
+            }
+        }
+
+        handleDiscordCallback();
+    </script>
+</body>
+</html>
