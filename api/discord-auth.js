@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -74,7 +76,6 @@ export default async function handler(req, res) {
 }
 
 function createSignature(userId, timestamp) {
-    const crypto = require('crypto');
     const secret = 'vspl8ELgdJr2OGsX6-2cWxWjeg_O4wNi';
     return crypto.createHmac('sha256', secret).update(`${userId}-${timestamp}`).digest('hex');
 }
