@@ -107,58 +107,40 @@
     </div>
 
     <script>
-        const CLIENT_ID = '1270141507021705408';
-        const CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
-        const REDIRECT_URI = 'https://www.mekhiscreations.org/auth';
-
         async function handleDiscordCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
 
             if (!code) {
-                document.getElementById('status').innerHTML = '<div class="error">No authorization code found. Please try logging in again.</div>';
+                document.getElementById('status').innerHTML = '<div class="error">No authorization code found. Please try logging in again.</div><button class="back-btn" onclick="window.location.href=\'/\'">Back to Home</button>';
                 return;
             }
 
             try {
-                const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
+                const response = await fetch('/api/discord-auth', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/json',
                     },
-                    body: new URLSearchParams({
-                        client_id: CLIENT_ID,
-                        client_secret: CLIENT_SECRET,
-                        grant_type: 'authorization_code',
-                        code: code,
-                        redirect_uri: REDIRECT_URI,
-                    }),
+                    body: JSON.stringify({ code }),
                 });
 
-                if (!tokenResponse.ok) {
-                    throw new Error('Failed to exchange code for token');
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Authentication failed');
                 }
 
-                const tokenData = await tokenResponse.json();
-                const accessToken = tokenData.access_token;
+                const userData = await response.json();
 
-                const userResponse = await fetch('https://discord.com/api/users/@me', {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
-
-                if (!userResponse.ok) {
-                    throw new Error('Failed to fetch user data');
-                }
-
-                const userData = await userResponse.json();
+                const avatarUrl = userData.avatar 
+                    ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+                    : `https://cdn.discordapp.com/embed/avatars/${parseInt(userData.discriminator) % 5}.png`;
 
                 document.getElementById('status').style.display = 'none';
                 document.getElementById('userInfo').style.display = 'block';
                 document.getElementById('userInfo').innerHTML = `
                     <div class="user-info">
-                        <img src="https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png" alt="Avatar" class="avatar">
+                        <img src="${avatarUrl}" alt="Avatar" class="avatar">
                         <div class="username">Welcome, ${userData.username}!</div>
                         <div>ID: ${userData.id}</div>
                         <button class="back-btn" onclick="window.location.href='/'">Go to Home</button>
