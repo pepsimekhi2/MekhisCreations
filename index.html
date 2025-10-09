@@ -525,7 +525,13 @@
                 if (response.ok) {
                     const user = await response.json();
                     const urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.has('newLogin')) {
+                    
+                    // Check if this is a new login and hasn't been confirmed yet
+                    const hasConfirmed = sessionStorage.getItem('loginConfirmed');
+                    
+                    if (urlParams.has('newLogin') && !hasConfirmed) {
+                        // Remove the parameter from URL
+                        window.history.replaceState({}, '', '/');
                         showConfirmation(user);
                     } else {
                         displayUserProfile(user);
