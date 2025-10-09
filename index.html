@@ -269,6 +269,7 @@
             padding: 20px 30px;
             min-width: 200px;
             transition: all 0.3s ease;
+            position: relative;
         }
         
         .mention-card:hover {
@@ -286,6 +287,49 @@
         .mention-handle {
             font-size: 0.9em;
             color: rgba(224, 224, 224, 0.6);
+        }
+        
+        .heart-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+        
+        .heart-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .heart-icon {
+            color: rgba(239, 68, 68, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .heart-icon.liked {
+            color: #ef4444;
+        }
+        
+        .like-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.7em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .heart-btn:hover .like-count {
+            opacity: 1;
         }
         
         .modal-overlay {
@@ -484,15 +528,27 @@
             <p class="mentions-subtitle">These individuals have shown incredible dedication to our development and deserve a huge thank you for their contributions.</p>
             <div class="mentions-divider"></div>
             <div class="mentions-grid">
-                <div class="mention-card">
+                <div class="mention-card" data-mention-id="spadebloke">
+                    <button class="heart-btn" onclick="toggleLike('spadebloke')">
+                        <span class="heart-icon" id="heart-spadebloke">♡</span>
+                        <span class="like-count" id="count-spadebloke">0</span>
+                    </button>
                     <div class="mention-name">Spadebloke</div>
                     <div class="mention-handle">@Spadebloke</div>
                 </div>
-                <div class="mention-card">
+                <div class="mention-card" data-mention-id="santi">
+                    <button class="heart-btn" onclick="toggleLike('santi')">
+                        <span class="heart-icon" id="heart-santi">♡</span>
+                        <span class="like-count" id="count-santi">0</span>
+                    </button>
                     <div class="mention-name">Santi</div>
                     <div class="mention-handle">@im_santi_</div>
                 </div>
-                <div class="mention-card">
+                <div class="mention-card" data-mention-id="hobee">
+                    <button class="heart-btn" onclick="toggleLike('hobee')">
+                        <span class="heart-icon" id="heart-hobee">♡</span>
+                        <span class="like-count" id="count-hobee">0</span>
+                    </button>
                     <div class="mention-name">Hobee</div>
                     <div class="mention-handle">@doge_800</div>
                 </div>
@@ -502,6 +558,84 @@
 
     <script>
         const CLIENT_ID = '1270141507021705408';
+        const FIREBASE_URL = 'https://mekhis-creations-default-rtdb.firebaseio.com';
+        
+        // Firebase functions for likes
+        async function getLikes(mentionId) {
+            try {
+                const response = await fetch(`${FIREBASE_URL}/likes/${mentionId}.json`);
+                const data = await response.json();
+                return data || {};
+            } catch (error) {
+                console.error('Error fetching likes:', error);
+                return {};
+            }
+        }
+        
+        async function getUserLikeStatus(mentionId, userId) {
+            try {
+                const response = await fetch(`${FIREBASE_URL}/likes/${mentionId}/${userId}.json`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error checking like status:', error);
+                return false;
+            }
+        }
+        
+        async function setLike(mentionId, userId, value) {
+            try {
+                await fetch(`${FIREBASE_URL}/likes/${mentionId}/${userId}.json`, {
+                    method: 'PUT',
+                    body: JSON.stringify(value)
+                });
+            } catch (error) {
+                console.error('Error setting like:', error);
+            }
+        }
+        
+        async function updateLikeDisplay(mentionId) {
+            const likes = await getLikes(mentionId);
+            const likeCount = Object.values(likes).filter(v => v === true).length;
+            document.getElementById(`count-${mentionId}`).textContent = likeCount;
+            
+            // Check if current user has liked
+            const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+            const hasLiked = userLikes[mentionId] || false;
+            const heartIcon = document.getElementById(`heart-${mentionId}`);
+            
+            if (hasLiked) {
+                heartIcon.textContent = '♥';
+                heartIcon.classList.add('liked');
+            } else {
+                heartIcon.textContent = '♡';
+                heartIcon.classList.remove('liked');
+            }
+        }
+        
+        async function toggleLike(mentionId) {
+            const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+            const userId = localStorage.getItem('likeUserId') || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            if (!localStorage.getItem('likeUserId')) {
+                localStorage.setItem('likeUserId', userId);
+            }
+            
+            const hasLiked = userLikes[mentionId] || false;
+            const newLikeStatus = !hasLiked;
+            
+            userLikes[mentionId] = newLikeStatus;
+            localStorage.setItem('userLikes', JSON.stringify(userLikes));
+            
+            await setLike(mentionId, userId, newLikeStatus);
+            await updateLikeDisplay(mentionId);
+        }
+        
+        // Initialize likes for all mentions
+        async function initializeLikes() {
+            await updateLikeDisplay('spadebloke');
+            await updateLikeDisplay('santi');
+            await updateLikeDisplay('hobee');
+        }
         
         function loginWithDiscord() {
             const redirectUri = encodeURIComponent('https://www.mekhiscreations.org/auth');
@@ -580,6 +714,9 @@
         }
         
         function confirmLogin() {
+            // Mark login as confirmed
+            sessionStorage.setItem('loginConfirmed', 'true');
+            
             const overlay = document.getElementById('modalOverlay');
             overlay.innerHTML = `
                 <div class="welcome-modal">
@@ -595,12 +732,21 @@
         }
         
         async function denyLogin() {
+            // Clear the confirmation flag
+            sessionStorage.removeItem('loginConfirmed');
             await logout();
             const overlay = document.getElementById('modalOverlay');
             overlay.classList.remove('active');
         }
         
-        checkUserSession();
+        // Initialize everything when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            checkUserSession();
+            initializeLikes();
+            animateVisitCounter();
+            animateMemberCounter();
+            animateGamesCounter();
+        });
         
         let visitCount = 0;
         const visitTarget = 25000;
@@ -671,6 +817,7 @@
         animateVisitCounter();
         animateMemberCounter();
         animateGamesCounter();
+        initializeLikes();
     </script>
 </body>
 </html>
