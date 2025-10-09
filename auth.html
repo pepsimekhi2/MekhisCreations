@@ -58,26 +58,6 @@
             margin-top: 20px;
         }
         
-        .user-info {
-            background-color: rgba(59, 130, 246, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 20px;
-            max-width: 400px;
-        }
-        
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-        }
-        
-        .username {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-        
         .back-btn {
             background-color: #3b82f6;
             color: white;
@@ -103,7 +83,6 @@
             <div class="loading">Authenticating with Discord...</div>
             <div class="spinner"></div>
         </div>
-        <div id="userInfo" style="display: none;"></div>
     </div>
 
     <script>
@@ -132,19 +111,8 @@
 
                 const userData = await response.json();
 
-                const avatarUrl = userData.avatar 
-                    ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
-                    : `https://cdn.discordapp.com/embed/avatars/${parseInt(userData.discriminator) % 5}.png`;
-
-                document.getElementById('status').style.display = 'none';
-                document.getElementById('userInfo').style.display = 'block';
-                document.getElementById('userInfo').innerHTML = `
-                    <div class="user-info">
-                        <img src="${avatarUrl}" alt="Avatar" class="avatar">
-                        <div class="username">Welcome, ${userData.username}!</div>
-                        <button class="back-btn" onclick="window.location.href='/'">Go to Home</button>
-                    </div>
-                `;
+                // Redirect to home page with newLogin parameter to trigger confirmation modal
+                window.location.href = '/?newLogin=true';
 
             } catch (error) {
                 console.error('Authentication error:', error);
