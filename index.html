@@ -16,6 +16,28 @@
             font-family: 'Fredoka One', Arial, sans-serif;
             background-color: #0a0a0f;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .floating-member {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+            animation: floatAnim linear infinite;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        @keyframes floatAnim {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
         }
         
         header {
@@ -23,6 +45,8 @@
             padding: 30px 40px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
         
         .header-content {
@@ -43,97 +67,11 @@
             font-weight: normal;
         }
         
-        .discord-btn {
-            background-color: #5865F2;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-family: 'Fredoka One', Arial, sans-serif;
-            font-size: 1em;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: background-color 0.3s;
-        }
-        
-        .discord-btn:hover {
-            background-color: #4752C4;
-        }
-        
-        .discord-btn svg {
-            width: 24px;
-            height: 24px;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            justify-content: center;
-            position: relative;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        
-        .user-name {
-            color: white;
-            font-size: 1em;
-        }
-        
-        .logout-btn {
-            background-color: rgba(239, 68, 68, 0.3);
-            color: rgba(255, 255, 255, 0.6);
-            border: none;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-family: 'Fredoka One', Arial, sans-serif;
-            font-size: 0.7em;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: absolute;
-            right: -80px;
-        }
-        
-        .logout-btn:hover {
-            background-color: rgba(239, 68, 68, 0.6);
-            color: white;
-        }
-        
         main {
             padding: 40px;
             color: #e0e0e0;
-        }
-        
-        .auth-frame {
-            max-width: 500px;
-            margin: 0 auto 40px;
-            background: rgba(59, 130, 246, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-        
-        .auth-frame-title {
-            font-size: 1.3em;
-            color: #3b82f6;
-            margin-bottom: 20px;
-        }
-        
-        .auth-frame .discord-btn {
-            margin: 0 auto;
-        }
-        
-        .auth-frame .user-profile {
-            justify-content: center;
-            margin: 0 auto;
+            position: relative;
+            z-index: 5;
         }
         
         .intro-text {
@@ -148,6 +86,7 @@
             border-radius: 15px;
             border: 1px solid rgba(59, 130, 246, 0.2);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
         
         .stats-container {
@@ -156,6 +95,7 @@
             justify-content: center;
             align-items: stretch;
             margin-top: 50px;
+            flex-wrap: wrap;
         }
         
         .stat-frame {
@@ -170,11 +110,13 @@
         .stat-frame.small {
             flex: 1;
             max-width: 250px;
+            min-width: 200px;
         }
         
         .stat-frame.large {
             flex: 2;
             max-width: 500px;
+            min-width: 300px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -196,16 +138,78 @@
             font-family: 'Fredoka One', Arial, sans-serif;
         }
         
+        .games-section {
+            max-width: 1200px;
+            margin: 60px auto;
+            text-align: center;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .games-title {
+            font-size: 2em;
+            color: #3b82f6;
+            margin-bottom: 30px;
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .game-card {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.2);
+        }
+        
+        .game-icon {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #333;
+            margin-bottom: 15px;
+        }
+        
+        .game-name {
+            font-size: 1.3em;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .game-updated {
+            font-size: 0.85em;
+            color: rgba(224, 224, 224, 0.6);
+        }
+        
         .action-buttons {
             display: flex;
             gap: 20px;
             justify-content: center;
             margin: 50px auto;
             max-width: 900px;
+            flex-wrap: wrap;
         }
         
         .action-btn {
             flex: 1;
+            min-width: 200px;
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             border: none;
@@ -234,6 +238,7 @@
             padding: 40px;
             border: 1px solid rgba(59, 130, 246, 0.2);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
         
         .mentions-title {
@@ -269,7 +274,6 @@
             padding: 20px 30px;
             min-width: 200px;
             transition: all 0.3s ease;
-            position: relative;
         }
         
         .mention-card:hover {
@@ -289,197 +293,13 @@
             color: rgba(224, 224, 224, 0.6);
         }
         
-        .heart-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5em;
-            transition: all 0.3s ease;
-            padding: 5px;
-        }
-        
-        .heart-btn:hover {
-            transform: scale(1.2);
-        }
-        
-        .heart-icon {
-            color: rgba(239, 68, 68, 0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .heart-icon.liked {
-            color: #ef4444;
-        }
-        
-        .like-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border-radius: 10px;
-            padding: 2px 8px;
-            font-size: 0.7em;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        
-        .heart-btn:hover .like-count {
-            opacity: 1;
-        }
-        
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .modal-overlay.active {
-            display: flex;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideIn {
-            from { 
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to { 
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .confirmation-modal {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
-            border: 2px solid rgba(59, 130, 246, 0.5);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.4s ease;
-        }
-        
-        .confirmation-title {
-            font-size: 1.8em;
-            color: #3b82f6;
-            margin-bottom: 25px;
-        }
-        
-        .confirmation-user-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-        }
-        
-        .confirmation-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 3px solid #3b82f6;
-        }
-        
-        .confirmation-username {
-            font-size: 1.4em;
-            color: white;
-        }
-        
-        .confirmation-question {
-            font-size: 1.1em;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
-        }
-        
-        .confirmation-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        
-        .confirm-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 10px;
-            font-family: 'Fredoka One', Arial, sans-serif;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        
-        .confirm-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
-        }
-        
-        .deny-btn {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 10px;
-            font-family: 'Fredoka One', Arial, sans-serif;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-        
-        .deny-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(239, 68, 68, 0.5);
-        }
-        
-        .welcome-modal {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
-            border: 2px solid rgba(16, 185, 129, 0.5);
-            border-radius: 20px;
-            padding: 50px;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
-            animation: slideIn 0.4s ease;
-        }
-        
-        .welcome-title {
-            font-size: 2.5em;
-            color: #10b981;
-            margin-bottom: 15px;
-        }
-        
-        .welcome-message {
-            font-size: 1.2em;
-            color: white;
+        .loading {
+            color: rgba(224, 224, 224, 0.6);
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
-    <div id="modalOverlay" class="modal-overlay"></div>
-    
     <header>
         <div class="header-content">
             <h1>Mekhis Creations</h1>
@@ -487,15 +307,14 @@
         </div>
     </header>
     <main>
-        
         <div class="intro-text">
-            Mekhis Creations is a Roblox development studio dedicated to creating games that offer fair opportunities for free-to-play players, without giving pay-to-win advantages. With over 300 group members and thousands of game visits across just a few titles, we're rapidly growing and thriving as a community.
+            Mekhis Creations is a Roblox development studio dedicated to creating games that offer fair opportunities for free-to-play players, without giving pay-to-win advantages. With a growing community and thousands of game visits across our titles, we're rapidly expanding as a passionate development team.
         </div>
         
         <div class="stats-container">
             <div class="stat-frame small">
                 <div class="stat-title">Total Group Members:</div>
-                <div class="counter" id="memberCounter" style="font-size: 3em;">0</div>
+                <div class="counter" id="memberCounter" style="font-size: 3em;">330+</div>
             </div>
             
             <div class="stat-frame large">
@@ -505,13 +324,20 @@
             
             <div class="stat-frame small">
                 <div class="stat-title">Published Games:</div>
-                <div class="counter" id="gamesCounter" style="font-size: 3em;">0</div>
+                <div class="counter" id="gamesCounter" style="font-size: 3em;">3</div>
+            </div>
+        </div>
+        
+        <div class="games-section">
+            <h2 class="games-title">Our Games</h2>
+            <div class="games-grid" id="gamesGrid">
+                <!-- Games will be populated here -->
             </div>
         </div>
         
         <div class="action-buttons">
             <button class="action-btn" onclick="window.open('https://discord.gg/your-invite', '_blank')">Join our Discord</button>
-            <button class="action-btn" onclick="window.open('https://www.roblox.com/groups/your-group-id', '_blank')">Roblox Community</button>
+            <button class="action-btn" onclick="window.open('https://www.roblox.com/groups/33719761', '_blank')">Roblox Community</button>
         </div>
         
         <div class="mentions-section">
@@ -519,15 +345,15 @@
             <p class="mentions-subtitle">These individuals have shown incredible dedication to our development and deserve a huge thank you for their contributions.</p>
             <div class="mentions-divider"></div>
             <div class="mentions-grid">
-                <div class="mention-card" data-mention-id="spadebloke">
+                <div class="mention-card">
                     <div class="mention-name">Spadebloke</div>
                     <div class="mention-handle">@Spadebloke</div>
                 </div>
-                <div class="mention-card" data-mention-id="santi">
+                <div class="mention-card">
                     <div class="mention-name">Santi</div>
                     <div class="mention-handle">@im_santi_</div>
                 </div>
-                <div class="mention-card" data-mention-id="hobee">
+                <div class="mention-card">
                     <div class="mention-name">Hobee</div>
                     <div class="mention-handle">@doge_800</div>
                 </div>
@@ -536,267 +362,214 @@
     </main>
 
     <script>
-        const CLIENT_ID = '1270141507021705408';
-        const FIREBASE_URL = 'https://mekhis-creations-default-rtdb.firebaseio.com';
+        const GROUP_ID = '33719761';
         
-        // Firebase functions for likes
-        async function getLikes(mentionId) {
-            try {
-                const response = await fetch(`${FIREBASE_URL}/likes/${mentionId}.json`);
-                const data = await response.json();
-                return data || {};
-            } catch (error) {
-                console.error('Error fetching likes:', error);
-                return {};
-            }
-        }
+        // Multiple CORS proxies as fallbacks
+        const PROXIES = [
+            'https://api.allorigins.win/raw?url=',
+            'https://corsproxy.io/?',
+            'https://api.codetabs.com/v1/proxy?quest='
+        ];
         
-        async function getUserLikeStatus(mentionId, userId) {
-            try {
-                const response = await fetch(`${FIREBASE_URL}/likes/${mentionId}/${userId}.json`);
-                return await response.json();
-            } catch (error) {
-                console.error('Error checking like status:', error);
-                return false;
-            }
-        }
+        let currentProxyIndex = 0;
         
-        async function setLike(mentionId, userId, value) {
-            try {
-                await fetch(`${FIREBASE_URL}/likes/${mentionId}/${userId}.json`, {
-                    method: 'PUT',
-                    body: JSON.stringify(value)
-                });
-            } catch (error) {
-                console.error('Error setting like:', error);
-            }
-        }
-        
-        async function updateLikeDisplay(mentionId) {
-            const likes = await getLikes(mentionId);
-            const likeCount = Object.values(likes).filter(v => v === true).length;
-            document.getElementById(`count-${mentionId}`).textContent = likeCount;
-            
-            // Check if current user has liked
-            const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
-            const hasLiked = userLikes[mentionId] || false;
-            const heartIcon = document.getElementById(`heart-${mentionId}`);
-            
-            if (hasLiked) {
-                heartIcon.textContent = '♥';
-                heartIcon.classList.add('liked');
-            } else {
-                heartIcon.textContent = '♡';
-                heartIcon.classList.remove('liked');
-            }
-        }
-        
-        async function toggleLike(mentionId) {
-            const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
-            const userId = localStorage.getItem('likeUserId') || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            
-            if (!localStorage.getItem('likeUserId')) {
-                localStorage.setItem('likeUserId', userId);
-            }
-            
-            const hasLiked = userLikes[mentionId] || false;
-            const newLikeStatus = !hasLiked;
-            
-            userLikes[mentionId] = newLikeStatus;
-            localStorage.setItem('userLikes', JSON.stringify(userLikes));
-            
-            await setLike(mentionId, userId, newLikeStatus);
-            await updateLikeDisplay(mentionId);
-        }
-        
-        // Initialize likes for all mentions
-        async function initializeLikes() {
-            await updateLikeDisplay('spadebloke');
-            await updateLikeDisplay('santi');
-            await updateLikeDisplay('hobee');
-        }
-        
-        function loginWithDiscord() {
-            const redirectUri = encodeURIComponent('https://www.mekhiscreations.org/auth');
-            const scope = 'identify';
-            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
-            window.location.href = discordAuthUrl;
-        }
-        
-        async function logout() {
-            try {
-                await fetch('/api/logout', { method: 'POST' });
-                location.reload();
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-        }
-        
-        async function checkUserSession() {
-            try {
-                const response = await fetch('/api/verify-session');
-                if (response.ok) {
-                    const user = await response.json();
-                    const urlParams = new URLSearchParams(window.location.search);
+        // Fetch with automatic proxy fallback
+        async function fetchWithProxy(url) {
+            for (let i = 0; i < PROXIES.length; i++) {
+                try {
+                    const proxyUrl = PROXIES[currentProxyIndex] + encodeURIComponent(url);
+                    console.log(`Trying proxy ${currentProxyIndex + 1}:`, proxyUrl);
                     
-                    // Check if this is a new login and hasn't been confirmed yet
-                    const hasConfirmed = sessionStorage.getItem('loginConfirmed');
+                    const response = await fetch(proxyUrl);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     
-                    if (urlParams.has('newLogin') && !hasConfirmed) {
-                        // Remove the parameter from URL
-                        window.history.replaceState({}, '', '/');
-                        showConfirmation(user);
-                    } else {
-                        displayUserProfile(user);
+                    const data = await response.json();
+                    console.log('Success with proxy', currentProxyIndex + 1);
+                    return data;
+                } catch (error) {
+                    console.error(`Proxy ${currentProxyIndex + 1} failed:`, error.message);
+                    currentProxyIndex = (currentProxyIndex + 1) % PROXIES.length;
+                    
+                    if (i === PROXIES.length - 1) {
+                        throw new Error('All proxies failed');
+                    }
+                }
+            }
+        }
+        
+        // Load real group data from API
+        async function loadGroupData() {
+            try {
+                const groupUrl = `https://groups.roblox.com/v1/groups/${GROUP_ID}`;
+                const groupData = await fetchWithProxy(groupUrl);
+                
+                console.log('Group data:', groupData);
+                
+                if (groupData && groupData.memberCount) {
+                    animateMemberCounter(groupData.memberCount);
+                }
+            } catch (error) {
+                console.error('Error loading group data:', error);
+                document.getElementById('memberCounter').textContent = '330+';
+            }
+        }
+        
+        // Load real games from API
+        async function loadGames() {
+            const gamesGrid = document.getElementById('gamesGrid');
+            gamesGrid.innerHTML = '<div class="loading">Loading games...</div>';
+            
+            try {
+                const gamesUrl = `https://games.roblox.com/v2/groups/${GROUP_ID}/games?accessFilter=2&sortOrder=Asc&limit=50`;
+                const gamesData = await fetchWithProxy(gamesUrl);
+                
+                console.log('Games data:', gamesData);
+                
+                if (!gamesData || !gamesData.data || gamesData.data.length === 0) {
+                    gamesGrid.innerHTML = '<div class="loading">No games found.</div>';
+                    document.getElementById('gamesCounter').textContent = '0';
+                    return;
+                }
+                
+                document.getElementById('gamesCounter').textContent = gamesData.data.length;
+                gamesGrid.innerHTML = '';
+                
+                for (const game of gamesData.data) {
+                    let updatedText = 'Recently updated';
+                    let iconUrl = game.icon || 'https://via.placeholder.com/300x180?text=Game';
+                    
+                    try {
+                        const gameInfoUrl = `https://games.roblox.com/v1/games?universeIds=${game.id}`;
+                        const gameInfo = await fetchWithProxy(gameInfoUrl);
+                        
+                        if (gameInfo && gameInfo.data && gameInfo.data[0]) {
+                            if (gameInfo.data[0].updated) {
+                                const date = new Date(gameInfo.data[0].updated);
+                                updatedText = `Updated: ${date.toLocaleDateString()}`;
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Could not fetch game update info');
+                    }
+                    
+                    const gameCard = document.createElement('div');
+                    gameCard.className = 'game-card';
+                    gameCard.innerHTML = `
+                        <img src="${iconUrl}" alt="${game.name}" class="game-icon" onerror="this.src='https://via.placeholder.com/300x180?text=Game'">
+                        <div class="game-name">${game.name}</div>
+                        <div class="game-updated">${updatedText}</div>
+                    `;
+                    gameCard.onclick = () => window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
+                    gameCard.style.cursor = 'pointer';
+                    gamesGrid.appendChild(gameCard);
+                }
+            } catch (error) {
+                console.error('Error loading games:', error);
+                gamesGrid.innerHTML = '<div class="loading">Failed to load games. Please refresh the page.</div>';
+                document.getElementById('gamesCounter').textContent = '3';
+            }
+        }
+        
+        // Load floating member avatars from API
+        async function createFloatingMembers() {
+            try {
+                const membersUrl = `https://groups.roblox.com/v1/groups/${GROUP_ID}/users?sortOrder=Asc&limit=100`;
+                const membersData = await fetchWithProxy(membersUrl);
+                
+                console.log('Members data:', membersData);
+                
+                if (!membersData || !membersData.data) {
+                    console.error('No members data');
+                    return;
+                }
+                
+                const shuffled = membersData.data.sort(() => 0.5 - Math.random()).slice(0, 12);
+                
+                for (const member of shuffled) {
+                    try {
+                        const userId = member.user?.userId || member.userId;
+                        if (!userId) continue;
+                        
+                        const headUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`;
+                        const headData = await fetchWithProxy(headUrl);
+                        
+                        if (headData && headData.data && headData.data[0] && headData.data[0].imageUrl) {
+                            const img = document.createElement('img');
+                            img.src = headData.data[0].imageUrl;
+                            img.className = 'floating-member';
+                            img.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+                            img.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+                            img.style.animationDuration = (8 + Math.random() * 8) + 's';
+                            img.style.animationDelay = Math.random() * 3 + 's';
+                            document.body.appendChild(img);
+                        }
+                    } catch (e) {
+                        console.log('Error loading member headshot:', e.message);
                     }
                 }
             } catch (error) {
-                console.error('Session check error:', error);
+                console.error('Error loading floating members:', error);
             }
         }
         
-        function displayUserProfile(user) {
-            const avatarUrl = user.avatar 
-                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
+        function animateMemberCounter(target) {
+            const counter = document.getElementById('memberCounter');
+            let count = 0;
+            const duration = 2000;
+            const steps = 50;
+            const increment = target / steps;
+            const delay = duration / steps;
             
-            document.getElementById('authFrame').innerHTML = `
-                <div class="user-profile">
-                    <img src="${avatarUrl}" alt="Avatar" class="user-avatar">
-                    <span class="user-name">${user.username}</span>
-                    <button class="logout-btn" onclick="logout()">logout</button>
-                </div>
-            `;
+            function update() {
+                if (count < target) {
+                    count += increment;
+                    if (count > target) count = target;
+                    counter.textContent = Math.floor(count).toLocaleString();
+                    setTimeout(update, delay);
+                } else {
+                    counter.textContent = target.toLocaleString();
+                }
+            }
+            update();
         }
         
-        function showConfirmation(user) {
-            const avatarUrl = user.avatar 
-                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
-            
-            const overlay = document.getElementById('modalOverlay');
-            overlay.innerHTML = `
-                <div class="confirmation-modal">
-                    <div class="confirmation-title">Login Confirmation</div>
-                    <div class="confirmation-user-info">
-                        <img src="${avatarUrl}" alt="Avatar" class="confirmation-avatar">
-                        <div class="confirmation-username">${user.username}</div>
-                    </div>
-                    <div class="confirmation-question">Is this you?</div>
-                    <div class="confirmation-buttons">
-                        <button class="confirm-btn" onclick="confirmLogin()">Yes</button>
-                        <button class="deny-btn" onclick="denyLogin()">No</button>
-                    </div>
-                </div>
-            `;
-            overlay.classList.add('active');
-        }
-        
-        function confirmLogin() {
-            // Mark login as confirmed
-            sessionStorage.setItem('loginConfirmed', 'true');
-            
-            const overlay = document.getElementById('modalOverlay');
-            overlay.innerHTML = `
-                <div class="welcome-modal">
-                    <div class="welcome-title">Welcome!</div>
-                    <div class="welcome-message">You have successfully logged in</div>
-                </div>
-            `;
-            
-            setTimeout(() => {
-                overlay.classList.remove('active');
-                location.reload();
-            }, 2000);
-        }
-        
-        async function denyLogin() {
-            // Clear the confirmation flag
-            sessionStorage.removeItem('loginConfirmed');
-            await logout();
-            const overlay = document.getElementById('modalOverlay');
-            overlay.classList.remove('active');
-        }
-        
-        // Initialize everything when page loads
-        window.addEventListener('DOMContentLoaded', () => {
-            checkUserSession();
-            initializeLikes();
-            animateVisitCounter();
-            animateMemberCounter();
-            animateGamesCounter();
-        });
-        
-        let visitCount = 0;
-        const visitTarget = 25000;
-        const visitCounter = document.getElementById('visitCounter');
-        let visitDelay = 5;
-        
+        // Animate visit counter
         function animateVisitCounter() {
-            if (visitCount < visitTarget) {
-                visitCount++;
-                visitCounter.textContent = visitCount.toLocaleString();
-                
-                if (visitCount < visitTarget * 0.5) {
-                    visitDelay = 5;
-                } else if (visitCount < visitTarget * 0.7) {
-                    visitDelay = 8;
-                } else if (visitCount < visitTarget * 0.85) {
-                    visitDelay = 15;
-                } else if (visitCount < visitTarget * 0.95) {
-                    visitDelay = 30;
+            const counter = document.getElementById('visitCounter');
+            let count = 0;
+            const target = 25000;
+            const duration = 3000;
+            const steps = 60;
+            const increment = target / steps;
+            const delay = duration / steps;
+            
+            function update() {
+                if (count < target) {
+                    count += increment;
+                    if (count > target) count = target;
+                    counter.textContent = Math.floor(count).toLocaleString();
+                    setTimeout(update, delay);
                 } else {
-                    visitDelay = 50;
+                    counter.textContent = '25,000+';
                 }
-                
-                setTimeout(animateVisitCounter, visitDelay);
-            } else {
-                visitCounter.textContent = '25,000+';
             }
+            update();
         }
         
-        let memberCount = 0;
-        const memberTarget = 330;
-        const memberCounter = document.getElementById('memberCounter');
-        let memberDelay = 10;
-        
-        function animateMemberCounter() {
-            if (memberCount < memberTarget) {
-                memberCount++;
-                memberCounter.textContent = memberCount.toLocaleString();
-                
-                if (memberCount < memberTarget * 0.5) {
-                    memberDelay = 10;
-                } else if (memberCount < memberTarget * 0.7) {
-                    memberDelay = 20;
-                } else if (memberCount < memberTarget * 0.85) {
-                    memberDelay = 35;
-                } else if (memberCount < memberTarget * 0.95) {
-                    memberDelay = 60;
-                } else {
-                    memberDelay = 100;
-                }
-                
-                setTimeout(animateMemberCounter, memberDelay);
-            }
-        }
-        
-        let gamesCount = 0;
-        const gamesTarget = 3;
-        const gamesCounter = document.getElementById('gamesCounter');
-        
-        function animateGamesCounter() {
-            if (gamesCount < gamesTarget) {
-                gamesCount++;
-                gamesCounter.textContent = gamesCount;
-                setTimeout(animateGamesCounter, 500);
-            }
-        }
-        
-        animateVisitCounter();
-        animateMemberCounter();
-        animateGamesCounter();
-        initializeLikes();
+        // Initialize everything - load real data from Roblox API
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('Loading Mekhis Creations data...');
+            animateVisitCounter();
+            
+            // Load all data in parallel for faster loading
+            await Promise.all([
+                loadGroupData(),
+                loadGames(),
+                createFloatingMembers()
+            ]);
+            
+            console.log('All data loaded!');
+        });
     </script>
 </body>
 </html>
