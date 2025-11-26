@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    {
-      "source": "/auth",
-      "destination": "/auth.html"
-    }
+    { "source": "/api/proxy/(.*)", "destination": "https://external-api-url.com/$1" }
   ]
 }
