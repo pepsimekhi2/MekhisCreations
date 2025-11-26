@@ -174,15 +174,8 @@
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 12px;
             padding: 20px;
-            transition: all 0.3s ease;
             text-align: left;
             position: relative;
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-            background: rgba(59, 130, 246, 0.2);
         }
 
         .game-icon {
@@ -231,37 +224,6 @@
             font-size: 0.95em;
             color: #3b82f6;
             font-weight: bold;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin: 50px auto;
-            max-width: 900px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            flex: 1;
-            min-width: 200px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            border: none;
-            padding: 18px 30px;
-            border-radius: 12px;
-            font-family: 'Fredoka One', Arial, sans-serif;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-        }
-
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
         }
 
         .group-section {
@@ -523,10 +485,8 @@
 
     <script>
         const GROUP_ID = '33719761';
-        // Update this to your actual API endpoint URL
-        const API_BASE_URL = '/api'; // Change this to your deployed URL if needed
+        const API_BASE_URL = '/api';
 
-        // Animate member counter
         function animateMemberCounter(targetCount) {
             const counter = document.getElementById('memberCounter');
             const duration = 2000;
@@ -549,7 +509,6 @@
             updateCounter();
         }
 
-        // Animate visit counter with actual total
         function animateVisitCounter(targetCount) {
             const counter = document.getElementById('visitCounter');
             const duration = 3000;
@@ -572,14 +531,6 @@
             updateCounter();
         }
 
-        // Format date to Month Day, Year
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        }
-
-        // Calculate time ago
         function timeAgo(dateString) {
             const date = new Date(dateString);
             const now = new Date();
@@ -612,7 +563,6 @@
             }
         }
 
-        // Load group data from your API
         async function loadGroupData() {
             try {
                 const response = await fetch(`${API_BASE_URL}/group.js?groupId=${GROUP_ID}`);
@@ -628,7 +578,6 @@
                     animateMemberCounter(data.memberCount);
                 }
 
-                // Load group display section
                 await loadGroupDisplay(data);
             } catch (error) {
                 console.error('Group API failed, using default', error);
@@ -636,7 +585,6 @@
             }
         }
 
-        // Load group display section
         async function loadGroupDisplay(groupData) {
             const groupSection = document.getElementById('groupSection');
             
@@ -645,7 +593,6 @@
                 return;
             }
 
-            // Fetch group icon
             let groupIcon = '';
             try {
                 const iconResponse = await fetch(
@@ -661,7 +608,6 @@
                 console.error('Failed to fetch group icon:', error);
             }
 
-            // Fetch owner headshot
             let ownerAvatar = '';
             if (groupData.owner && groupData.owner.userId) {
                 try {
@@ -716,7 +662,6 @@
             `;
         }
 
-        // Load games from your API
         async function loadGames() {
             const gamesGrid = document.getElementById('gamesGrid');
             gamesGrid.innerHTML = '<div class="loading">Loading games...</div>';
@@ -742,7 +687,6 @@
 
                 document.getElementById('gamesCounter').textContent = data.data.length;
                 
-                // Fetch visit counts for all games
                 const rootPlaceIds = data.data.map(g => g.rootPlaceId).join(',');
                 let visitsData = {};
                 
@@ -760,7 +704,6 @@
                     console.error('Failed to fetch visits:', visitsError);
                 }
                 
-                // Calculate total visits across all games
                 let totalVisits = 0;
                 for (const game of data.data) {
                     const gameVisits = visitsData[game.id] || 0;
@@ -768,7 +711,6 @@
                 }
                 animateVisitCounter(totalVisits);
                 
-                // Sort games by visits (highest first) and add rank
                 const gamesWithVisits = data.data.map(game => ({
                     ...game,
                     visits: visitsData[game.id] || 0
@@ -776,26 +718,17 @@
                 
                 gamesGrid.innerHTML = '';
 
-                gamesWithVisits.forEach((game, index) => {
+                gamesWithVisits.forEach((game) => {
                     const gameCard = document.createElement('div');
                     gameCard.className = 'game-card';
                     
-                    // Use the icon from your API or fallback to a data URI placeholder
                     const gameIcon = game.icon || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="180" viewBox="0 0 300 180"%3E%3Crect fill="%23333" width="300" height="180"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23666" font-family="Arial" font-size="20"%3EGame%3C/text%3E%3C/svg%3E';
                     
                     const description = game.description || 'No description available';
                     const visits = game.visits.toLocaleString();
-                    const lastUpdated = game.updated ? formatDate(game.updated) : 'Recently updated';
-                    const rank = index + 1;
-                    
-                    // Add rank badge for top 3
-                    let rankBadge = '';
-                    if (rank <= 3) {
-                        rankBadge = `<div class="game-rank rank-${rank}">#${rank}</div>`;
-                    }
+                    const lastUpdated = game.updated ? timeAgo(game.updated) : 'Recently';
                     
                     gameCard.innerHTML = `
-                        ${rankBadge}
                         <img src="${gameIcon}" 
                              alt="${game.name}" 
                              class="game-icon" 
@@ -813,9 +746,6 @@
                             </div>
                         </div>
                     `;
-                    gameCard.onclick = () => {
-                        window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
-                    };
                     gamesGrid.appendChild(gameCard);
                 });
             } catch (error) {
@@ -826,7 +756,6 @@
             }
         }
 
-        // Create floating member avatars
         async function createFloatingMembers() {
             try {
                 const response = await fetch(
@@ -844,7 +773,6 @@
                     return;
                 }
 
-                // Create floating avatars from members with thumbnails
                 for (const member of data.data) {
                     if (member.thumbnailUrl) {
                         const img = document.createElement('img');
@@ -862,7 +790,6 @@
             }
         }
 
-        // Initialize on page load
         window.addEventListener('DOMContentLoaded', async () => {
             await Promise.all([
                 loadGroupData(),
