@@ -177,12 +177,45 @@
             transition: all 0.3s ease;
             text-align: left;
             cursor: pointer;
+            position: relative;
         }
 
         .game-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
             background: rgba(59, 130, 246, 0.2);
+        }
+
+        .game-rank {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .game-rank.rank-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+        }
+
+        .game-rank.rank-2 {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+            color: #000;
+        }
+
+        .game-rank.rank-3 {
+            background: linear-gradient(135deg, #CD7F32, #8B4513);
+            color: #fff;
         }
 
         .game-icon {
@@ -370,10 +403,10 @@
         </div>
 
         <div class="action-buttons">
-            <button class="action-btn" onclick="window.open('https://discord.gg/your-invite','_blank')">
+            <button class="action-btn" onclick="window.open('https://discord.gg/GRjBeWjsQv','_blank')">
                 Join our Discord
             </button>
-            <button class="action-btn" onclick="window.open('https://www.roblox.com/groups/33719761','_blank')">
+            <button class="action-btn" onclick="window.open('https://www.roblox.com/communities/33719761/Mekhis-Creations#!/about','_blank')">
                 Roblox Community
             </button>
         </div>
@@ -532,9 +565,15 @@
                 }
                 animateVisitCounter(totalVisits);
                 
+                // Sort games by visits (highest first) and add rank
+                const gamesWithVisits = data.data.map(game => ({
+                    ...game,
+                    visits: visitsData[game.id] || 0
+                })).sort((a, b) => b.visits - a.visits);
+                
                 gamesGrid.innerHTML = '';
 
-                for (const game of data.data) {
+                gamesWithVisits.forEach((game, index) => {
                     const gameCard = document.createElement('div');
                     gameCard.className = 'game-card';
                     
@@ -542,11 +581,18 @@
                     const gameIcon = game.icon || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="180" viewBox="0 0 300 180"%3E%3Crect fill="%23333" width="300" height="180"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23666" font-family="Arial" font-size="20"%3EGame%3C/text%3E%3C/svg%3E';
                     
                     const description = game.description || 'No description available';
-                    const gameVisits = visitsData[game.id] || 0;
-                    const visits = gameVisits.toLocaleString();
+                    const visits = game.visits.toLocaleString();
                     const lastUpdated = game.updated ? formatDate(game.updated) : 'Recently updated';
+                    const rank = index + 1;
+                    
+                    // Add rank badge for top 3
+                    let rankBadge = '';
+                    if (rank <= 3) {
+                        rankBadge = `<div class="game-rank rank-${rank}">#${rank}</div>`;
+                    }
                     
                     gameCard.innerHTML = `
+                        ${rankBadge}
                         <img src="${gameIcon}" 
                              alt="${game.name}" 
                              class="game-icon" 
@@ -568,7 +614,7 @@
                         window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
                     };
                     gamesGrid.appendChild(gameCard);
-                }
+                });
             } catch (error) {
                 console.error('Games API failed', error);
                 gamesGrid.innerHTML = '<div class="loading">Failed to load games.</div>';
