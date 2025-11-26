@@ -18,10 +18,10 @@ export default async function handler(req, res) {
       return sendCors(res).status(200).json(gamesData);
     }
 
-    // ----- USE GAME ID AS universeId -----
+    // game.id IS the universeId
     const ids = games.map(g => g.id).join(",");
 
-    const thumbUrl = `https://thumbnails.roproxy.com/v1/games/icons?universeIds=${ids}&size=512x512&format=Png&isCircular=false`;
+    const thumbUrl = `https://thumbnails.roproxy.com/v1/games/thumbnails?universeIds=${ids}&size=768x432&format=Png&isCircular=false`;
     const thumbRes = await fetch(thumbUrl);
 
     const thumbs = {};
@@ -32,10 +32,10 @@ export default async function handler(req, res) {
       });
     }
 
-    // attach icons to each game
+    // attach thumbnails to each game
     gamesData.data = games.map(g => ({
       ...g,
-      icon: thumbs[g.id] || null
+      thumbnail: thumbs[g.id] || null
     }));
 
     return sendCors(res).status(200).json(gamesData);
