@@ -176,7 +176,6 @@
             padding: 20px;
             transition: all 0.3s ease;
             text-align: left;
-            cursor: pointer;
             position: relative;
         }
 
@@ -184,38 +183,6 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
             background: rgba(59, 130, 246, 0.2);
-        }
-
-        .game-rank {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em;
-            font-weight: bold;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .game-rank.rank-1 {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #000;
-        }
-
-        .game-rank.rank-2 {
-            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
-            color: #000;
-        }
-
-        .game-rank.rank-3 {
-            background: linear-gradient(135deg, #CD7F32, #8B4513);
-            color: #fff;
         }
 
         .game-icon {
@@ -292,6 +259,131 @@
         }
 
         .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .group-section {
+            max-width: 800px;
+            margin: 60px auto;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .group-header {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+
+        .group-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .group-info {
+            flex: 1;
+        }
+
+        .group-name {
+            font-size: 2em;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .group-description {
+            font-size: 0.95em;
+            color: rgba(224, 224, 224, 0.7);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .group-shout {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .group-shout-label {
+            font-size: 0.85em;
+            color: #3b82f6;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .group-shout-text {
+            color: rgba(224, 224, 224, 0.9);
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .group-owner {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .group-owner-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .group-owner-info {
+            flex: 1;
+        }
+
+        .group-owner-label {
+            font-size: 0.75em;
+            color: rgba(224, 224, 224, 0.6);
+            margin-bottom: 4px;
+        }
+
+        .group-owner-name {
+            font-size: 1.1em;
+            color: white;
+        }
+
+        .group-owner-username {
+            font-size: 0.9em;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        .group-join-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-family: 'Fredoka One', Arial, sans-serif;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .group-join-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
@@ -406,9 +498,10 @@
             <button class="action-btn" onclick="window.open('https://discord.gg/GRjBeWjsQv','_blank')">
                 Join our Discord
             </button>
-            <button class="action-btn" onclick="window.open('https://www.roblox.com/communities/33719761/Mekhis-Creations#!/about','_blank')">
-                Roblox Community
-            </button>
+        </div>
+
+        <div class="group-section" id="groupSection">
+            <div class="loading">Loading group information...</div>
         </div>
 
         <div class="mentions-section">
@@ -478,7 +571,7 @@
                     counter.textContent = Math.floor(current).toLocaleString();
                     setTimeout(updateCounter, increment);
                 } else {
-                    counter.textContent = targetCount.toLocaleString() + '+';
+                    counter.textContent = targetCount.toLocaleString();
                 }
             }
 
@@ -490,6 +583,39 @@
             const date = new Date(dateString);
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
+        }
+
+        // Calculate time ago
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSeconds = Math.floor(diffMs / 1000);
+            const diffMinutes = Math.floor(diffSeconds / 60);
+            const diffHours = Math.floor(diffMinutes / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            const diffMonths = Math.floor(diffDays / 30);
+            const diffYears = Math.floor(diffDays / 365);
+
+            if (diffYears > 0) {
+                const remainingMonths = Math.floor((diffDays % 365) / 30);
+                return remainingMonths > 0 
+                    ? `${diffYears} year${diffYears > 1 ? 's' : ''} & ${remainingMonths} month${remainingMonths > 1 ? 's' : ''} ago`
+                    : `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
+            } else if (diffMonths > 0) {
+                const remainingDays = diffDays % 30;
+                return remainingDays > 0 
+                    ? `${diffMonths} month${diffMonths > 1 ? 's' : ''} & ${remainingDays} day${remainingDays > 1 ? 's' : ''} ago`
+                    : `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
+            } else if (diffDays > 0) {
+                return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            } else if (diffHours > 0) {
+                return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            } else if (diffMinutes > 0) {
+                return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+            } else {
+                return 'Just now';
+            }
         }
 
         // Load group data from your API
@@ -507,10 +633,93 @@
                 if (data && data.memberCount) {
                     animateMemberCounter(data.memberCount);
                 }
+
+                // Load group display section
+                await loadGroupDisplay(data);
             } catch (error) {
                 console.error('Group API failed, using default', error);
                 document.getElementById('memberCounter').textContent = '330+';
             }
+        }
+
+        // Load group display section
+        async function loadGroupDisplay(groupData) {
+            const groupSection = document.getElementById('groupSection');
+            
+            if (!groupData) {
+                groupSection.innerHTML = '<div class="loading">Failed to load group information.</div>';
+                return;
+            }
+
+            // Fetch group icon
+            let groupIcon = '';
+            try {
+                const iconResponse = await fetch(
+                    `https://thumbnails.roproxy.com/v1/groups/icons?groupIds=${GROUP_ID}&size=150x150&format=Png&isCircular=false`
+                );
+                if (iconResponse.ok) {
+                    const iconData = await iconResponse.json();
+                    if (iconData.data && iconData.data.length > 0) {
+                        groupIcon = iconData.data[0].imageUrl;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch group icon:', error);
+            }
+
+            // Fetch owner headshot
+            let ownerAvatar = '';
+            if (groupData.owner && groupData.owner.userId) {
+                try {
+                    const avatarResponse = await fetch(
+                        `https://thumbnails.roproxy.com/v1/users/avatar-headshot?userIds=${groupData.owner.userId}&size=150x150&format=Png&isCircular=false`
+                    );
+                    if (avatarResponse.ok) {
+                        const avatarData = await avatarResponse.json();
+                        if (avatarData.data && avatarData.data.length > 0) {
+                            ownerAvatar = avatarData.data[0].imageUrl;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch owner avatar:', error);
+                }
+            }
+
+            const groupName = groupData.name || 'Mekhis Creations';
+            const groupDescription = groupData.description || 'No description available';
+            const shoutText = groupData.shout?.body || 'No recent announcements';
+            const ownerDisplayName = groupData.owner?.displayName || 'Unknown';
+            const ownerUsername = groupData.owner?.username || 'unknown';
+
+            groupSection.innerHTML = `
+                <div class="group-header">
+                    ${groupIcon ? `<img src="${groupIcon}" alt="${groupName}" class="group-icon">` : ''}
+                    <div class="group-info">
+                        <div class="group-name">${groupName}</div>
+                        <div class="group-description">${groupDescription}</div>
+                    </div>
+                </div>
+                
+                ${shoutText !== 'No recent announcements' ? `
+                <div class="group-shout">
+                    <div class="group-shout-label">Recent Announcement</div>
+                    <div class="group-shout-text">${shoutText}</div>
+                </div>
+                ` : ''}
+                
+                <div class="group-owner">
+                    ${ownerAvatar ? `<img src="${ownerAvatar}" alt="${ownerDisplayName}" class="group-owner-avatar">` : ''}
+                    <div class="group-owner-info">
+                        <div class="group-owner-label">Group Owner</div>
+                        <div class="group-owner-name">${ownerDisplayName}</div>
+                        <div class="group-owner-username">@${ownerUsername}</div>
+                    </div>
+                </div>
+                
+                <button class="group-join-btn" onclick="window.open('https://www.roblox.com/communities/${GROUP_ID}/Mekhis-Creations#!/about','_blank')">
+                    Be Apart of the Community
+                </button>
+            `;
         }
 
         // Load games from your API
