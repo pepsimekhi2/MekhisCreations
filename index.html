@@ -475,11 +475,15 @@
                 for (const game of data.data) {
                     const gameCard = document.createElement('div');
                     gameCard.className = 'game-card';
+                    
+                    // Use the icon from your API or fallback to a data URI placeholder
+                    const gameIcon = game.icon || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="180" viewBox="0 0 300 180"%3E%3Crect fill="%23333" width="300" height="180"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23666" font-family="Arial" font-size="20"%3EGame%3C/text%3E%3C/svg%3E';
+                    
                     gameCard.innerHTML = `
-                        <img src="${game.icon || 'https://via.placeholder.com/300x180?text=Game'}" 
+                        <img src="${gameIcon}" 
                              alt="${game.name}" 
                              class="game-icon" 
-                             onerror="this.src='https://via.placeholder.com/300x180?text=Game'">
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22180%22 viewBox=%220 0 300 180%22%3E%3Crect fill=%22%23333%22 width=%22300%22 height=%22180%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23666%22 font-family=%22Arial%22 font-size=%2220%22%3EGame%3C/text%3E%3C/svg%3E'">
                         <div class="game-name">${game.name}</div>
                         <div class="game-updated">Recently updated</div>
                     `;
