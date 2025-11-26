@@ -204,11 +204,8 @@
             font-size: 0.9em;
             color: rgba(224, 224, 224, 0.7);
             margin-bottom: 12px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            line-height: 1.5;
+            min-height: 60px;
         }
 
         .game-stats {
@@ -509,10 +506,29 @@
 
                 document.getElementById('gamesCounter').textContent = data.data.length;
                 
+                // Fetch visit counts for all games
+                const rootPlaceIds = data.data.map(g => g.rootPlaceId).join(',');
+                let visitsData = {};
+                
+                try {
+                    const visitsResponse = await fetch(
+                        `https://games.roproxy.com/v1/games?universeIds=${data.data.map(g => g.id).join(',')}`
+                    );
+                    if (visitsResponse.ok) {
+                        const visitsJson = await visitsResponse.json();
+                        (visitsJson.data || []).forEach(game => {
+                            visitsData[game.id] = game.visits || 0;
+                        });
+                    }
+                } catch (visitsError) {
+                    console.error('Failed to fetch visits:', visitsError);
+                }
+                
                 // Calculate total visits across all games
                 let totalVisits = 0;
                 for (const game of data.data) {
-                    totalVisits += game.visits || 0;
+                    const gameVisits = visitsData[game.id] || 0;
+                    totalVisits += gameVisits;
                 }
                 animateVisitCounter(totalVisits);
                 
@@ -526,7 +542,8 @@
                     const gameIcon = game.icon || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="180" viewBox="0 0 300 180"%3E%3Crect fill="%23333" width="300" height="180"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23666" font-family="Arial" font-size="20"%3EGame%3C/text%3E%3C/svg%3E';
                     
                     const description = game.description || 'No description available';
-                    const visits = (game.visits || 0).toLocaleString();
+                    const gameVisits = visitsData[game.id] || 0;
+                    const visits = gameVisits.toLocaleString();
                     const lastUpdated = game.updated ? formatDate(game.updated) : 'Recently updated';
                     
                     gameCard.innerHTML = `
