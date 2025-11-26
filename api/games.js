@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     // Fetch thumbnails
     let thumbnails = {};
     if (universeIds.length > 0) {
-      const ids = encodeURIComponent(universeIds.join(","));
+      const ids = universeIds.join(",");
       const thumbUrl = `https://thumbnails.roproxy.com/v1/games/icons?universeIds=${ids}&size=512x512&format=Png&isCircular=false`;
 
       const thumbRes = await fetch(thumbUrl);
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
   }
 }
 
-// Helper: placeId → universeId via roproxy
+// placeId → universeId via proxy
 async function getUniverseId(placeId) {
   const url = `https://apis.roproxy.com/universes/v1/places/${placeId}/universe`;
   const res = await fetch(url);
