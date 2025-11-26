@@ -513,39 +513,21 @@
                 const data = await response.json();
                 console.log('Members data:', data);
                 
-                if (!data || !data.data) {
+                if (!data || !data.data || data.data.length === 0) {
                     return;
                 }
 
-                const randomMembers = data.data
-                    .sort(() => 0.5 - Math.random())
-                    .slice(0, 12);
-
-                for (const member of randomMembers) {
-                    try {
-                        const userId = member.user?.userId || member.userId;
-                        if (!userId) continue;
-
-                        const thumbResponse = await fetch(
-                            `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`
-                        );
-                        
-                        if (!thumbResponse.ok) continue;
-                        
-                        const thumbData = await thumbResponse.json();
-                        
-                        if (thumbData && thumbData.data && thumbData.data[0] && thumbData.data[0].imageUrl) {
-                            const img = document.createElement('img');
-                            img.src = thumbData.data[0].imageUrl;
-                            img.className = 'floating-member';
-                            img.style.left = Math.random() * (window.innerWidth - 60) + 'px';
-                            img.style.top = Math.random() * (window.innerHeight - 60) + 'px';
-                            img.style.animationDuration = (8 + Math.random() * 8) + 's';
-                            img.style.animationDelay = (Math.random() * 3) + 's';
-                            document.body.appendChild(img);
-                        }
-                    } catch (error) {
-                        console.log('Member fetch error:', error.message);
+                // Create floating avatars from members with thumbnails
+                for (const member of data.data) {
+                    if (member.thumbnailUrl) {
+                        const img = document.createElement('img');
+                        img.src = member.thumbnailUrl;
+                        img.className = 'floating-member';
+                        img.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+                        img.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+                        img.style.animationDuration = (8 + Math.random() * 8) + 's';
+                        img.style.animationDelay = (Math.random() * 3) + 's';
+                        document.body.appendChild(img);
                     }
                 }
             } catch (error) {
