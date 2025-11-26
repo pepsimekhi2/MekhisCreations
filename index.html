@@ -1,1 +1,566 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mekhis Creations</title><link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Fredoka One',Arial,sans-serif;background-color:#0a0a0f;min-height:100vh;overflow-x:hidden;position:relative}.floating-member{position:fixed;width:60px;height:60px;border-radius:50%;object-fit:cover;pointer-events:none;opacity:0.3;z-index:0;animation:floatAnim linear infinite;box-shadow:0 4px 15px rgba(59,130,246,0.3);border:2px solid rgba(59,130,246,0.2)}@keyframes floatAnim{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(180deg)}100%{transform:translateY(0) rotate(360deg)}}header{background-color:#3b82f6;padding:30px 40px;box-shadow:0 2px 10px rgba(0,0,0,0.3);text-align:center;position:relative;z-index:10}.header-content{display:flex;flex-direction:column;align-items:center}h1{color:white;font-size:3em;margin-bottom:8px}.tagline{color:rgba(255,255,255,0.9);font-size:1.2em;font-weight:normal}main{padding:40px;color:#e0e0e0;position:relative;z-index:5}.intro-text{max-width:900px;margin:30px auto 50px;text-align:center;font-size:1.1em;line-height:1.8;color:#e0e0e0;padding:25px 30px;background:rgba(59,130,246,0.1);border-radius:15px;border:1px solid rgba(59,130,246,0.2);box-shadow:0 4px 20px rgba(0,0,0,0.3);backdrop-filter:blur(10px)}.stats-container{display:flex;gap:30px;justify-content:center;align-items:stretch;margin-top:50px;flex-wrap:wrap}.stat-frame{background:rgba(59,130,246,0.1);border-radius:15px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.3);backdrop-filter:blur(10px);border:1px solid rgba(59,130,246,0.2)}.stat-frame.small{flex:1;max-width:250px;min-width:200px}.stat-frame.large{flex:2;max-width:500px;min-width:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}.stat-title{font-size:1.2em;color:#3b82f6;margin-bottom:20px;text-align:center}.counter{font-size:4em;color:white;font-weight:bold;text-align:center;font-family:'Fredoka One',Arial,sans-serif}.games-section{max-width:1200px;margin:60px auto;text-align:center;background:rgba(59,130,246,0.1);border-radius:15px;padding:40px;border:1px solid rgba(59,130,246,0.2);box-shadow:0 4px 20px rgba(0,0,0,0.3);backdrop-filter:blur(10px)}.games-title{font-size:2em;color:#3b82f6;margin-bottom:30px}.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;margin-top:30px}.game-card{background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:20px;transition:all 0.3s ease;text-align:left;cursor:pointer}.game-card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(59,130,246,0.3);background:rgba(59,130,246,0.2)}.game-icon{width:100%;height:180px;border-radius:8px;object-fit:cover;background:#333;margin-bottom:15px}.game-name{font-size:1.3em;color:white;margin-bottom:8px}.game-updated{font-size:0.85em;color:rgba(224,224,224,0.6)}.action-buttons{display:flex;gap:20px;justify-content:center;margin:50px auto;max-width:900px;flex-wrap:wrap}.action-btn{flex:1;min-width:200px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;border:none;padding:18px 30px;border-radius:12px;font-family:'Fredoka One',Arial,sans-serif;font-size:1.1em;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(59,130,246,0.3);border:1px solid rgba(59,130,246,0.4)}.action-btn:hover{transform:translateY(-3px);box-shadow:0 6px 25px rgba(59,130,246,0.5);background:linear-gradient(135deg,#2563eb,#1d4ed8)}.mentions-section{max-width:1000px;margin:60px auto;text-align:center;background:rgba(59,130,246,0.1);border-radius:15px;padding:40px;border:1px solid rgba(59,130,246,0.2);box-shadow:0 4px 20px rgba(0,0,0,0.3);backdrop-filter:blur(10px)}.mentions-title{font-size:2em;color:#3b82f6;margin-bottom:10px}.mentions-subtitle{font-size:0.85em;color:rgba(224,224,224,0.7);margin-bottom:20px;line-height:1.6}.mentions-divider{height:3px;background:linear-gradient(to right,transparent,#3b82f6,transparent);margin:25px 0 35px}.mentions-grid{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}.mention-card{background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:20px 30px;min-width:200px;transition:all 0.3s ease}.mention-card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(59,130,246,0.3);background:rgba(59,130,246,0.2)}.mention-name{font-size:1.2em;color:white;margin-bottom:5px}.mention-handle{font-size:0.9em;color:rgba(224,224,224,0.6)}.loading{color:rgba(224,224,224,0.6);font-size:0.9em}</style></head><body><header><div class="header-content"><h1>Mekhis Creations</h1><p class="tagline">We build it, You play it!</p></div></header><main><div class="intro-text">Mekhis Creations is a Roblox development studio dedicated to creating games that offer fair opportunities for free-to-play players, without giving pay-to-win advantages. With a growing community and thousands of game visits across our titles, we're rapidly expanding as a passionate development team.</div><div class="stats-container"><div class="stat-frame small"><div class="stat-title">Total Group Members:</div><div class="counter" id="memberCounter" style="font-size:3em">330+</div></div><div class="stat-frame large"><div class="stat-title">Total Visits Contributed:</div><div class="counter" id="visitCounter">0</div></div><div class="stat-frame small"><div class="stat-title">Published Games:</div><div class="counter" id="gamesCounter" style="font-size:3em">3</div></div></div><div class="games-section"><h2 class="games-title">Our Games</h2><div class="games-grid" id="gamesGrid"></div></div><div class="action-buttons"><button class="action-btn" onclick="window.open('https://discord.gg/your-invite','_blank')">Join our Discord</button><button class="action-btn" onclick="window.open('https://www.roblox.com/groups/33719761','_blank')">Roblox Community</button></div><div class="mentions-section"><h2 class="mentions-title">Honorable Mentions</h2><p class="mentions-subtitle">These individuals have shown incredible dedication to our development and deserve a huge thank you for their contributions.</p><div class="mentions-divider"></div><div class="mentions-grid"><div class="mention-card"><div class="mention-name">Spadebloke</div><div class="mention-handle">@Spadebloke</div></div><div class="mention-card"><div class="mention-name">Santi</div><div class="mention-handle">@im_santi_</div></div><div class="mention-card"><div class="mention-name">Hobee</div><div class="mention-handle">@doge_800</div></div></div></div></main><script>const GROUP_ID='33719761';function animateMemberCounter(t){const e=document.getElementById('memberCounter'),r=2e3/50;let a=0;function n(){a<t?(a+=t/50,a>t&&(a=t),e.textContent=Math.floor(a).toLocaleString(),setTimeout(n,r)):e.textContent=t.toLocaleString()}n()}function animateVisitCounter(){const t=document.getElementById('visitCounter');let e=0;const r=25e3,a=3e3/60;function n(){e<r?(e+=r/60,e>r&&(e=r),t.textContent=Math.floor(e).toLocaleString(),setTimeout(n,a)):t.textContent='25,000+'}n()}async function loadGroupData(){try{const t=await fetch('https://groups.roblox.com/v1/groups/'+GROUP_ID);if(!t.ok)throw new Error('HTTP '+t.status);const e=await t.json();console.log('Group data:',e),e&&e.memberCount&&animateMemberCounter(e.memberCount)}catch(t){console.error('Group API failed, using default',t),document.getElementById('memberCounter').textContent='330+'}}async function loadGames(){const t=document.getElementById('gamesGrid');t.innerHTML='<div class="loading">Loading games...</div>';try{const e=await fetch('https://games.roblox.com/v2/groups/'+GROUP_ID+'/games?accessFilter=2&sortOrder=Asc&limit=50');if(!e.ok)throw new Error('HTTP '+e.status);const r=await e.json();if(console.log('Games data:',r),!r||!r.data||0===r.data.length)return t.innerHTML='<div class="loading">No games found.</div>',void(document.getElementById('gamesCounter').textContent='0');document.getElementById('gamesCounter').textContent=r.data.length,t.innerHTML='';for(const e of r.data){const r=document.createElement('div');r.className='game-card',r.innerHTML=`<img src="${e.icon||'https://via.placeholder.com/300x180?text=Game'}" alt="${e.name}" class="game-icon" onerror="this.src='https://via.placeholder.com/300x180?text=Game'"><div class="game-name">${e.name}</div><div class="game-updated">Recently updated</div>`,r.onclick=()=>window.open('https://www.roblox.com/games/'+e.rootPlaceId,'_blank'),t.appendChild(r)}}catch(e){console.error('Games API failed',e),t.innerHTML='<div class="loading">Failed to load games.</div>',document.getElementById('gamesCounter').textContent='3'}}async function createFloatingMembers(){try{const t=await fetch('https://groups.roblox.com/v1/groups/'+GROUP_ID+'/users?sortOrder=Asc&limit=100');if(!t.ok)throw new Error('HTTP '+t.status);const e=await t.json();if(console.log('Members data:',e),!e||!e.data)return;const r=e.data.sort(()=>.5-Math.random()).slice(0,12);for(const t of r)try{const e=t.user?.userId||t.userId;if(!e)continue;const a=await fetch('https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds='+e+'&size=150x150&format=Png&isCircular=false');if(!a.ok)continue;const n=await a.json();if(n&&n.data&&n.data[0]&&n.data[0].imageUrl){const a=document.createElement('img');a.src=n.data[0].imageUrl,a.className='floating-member',a.style.left=Math.random()*(window.innerWidth-60)+'px',a.style.top=Math.random()*(window.innerHeight-60)+'px',a.style.animationDuration=8+8*Math.random()+'s',a.style.animationDelay=3*Math.random()+'s',document.body.appendChild(a)}}catch(t){console.log('Member fetch error:',t.message)}}catch(t){console.error('Members API failed:',t)}}window.addEventListener('DOMContentLoaded',async()=>{animateVisitCounter(),await Promise.all([loadGroupData(),loadGames(),createFloatingMembers()]),console.log('All data loaded!')})</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mekhis Creations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka One', Arial, sans-serif;
+            background-color: #0a0a0f;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .floating-member {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+            animation: floatAnim linear infinite;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        @keyframes floatAnim {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        header {
+            background-color: #3b82f6;
+            padding: 30px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2em;
+            font-weight: normal;
+        }
+
+        main {
+            padding: 40px;
+            color: #e0e0e0;
+            position: relative;
+            z-index: 5;
+        }
+
+        .intro-text {
+            max-width: 900px;
+            margin: 30px auto 50px;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #e0e0e0;
+            padding: 25px 30px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .stat-frame {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .stat-frame.small {
+            flex: 1;
+            max-width: 250px;
+            min-width: 200px;
+        }
+
+        .stat-frame.large {
+            flex: 2;
+            max-width: 500px;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-title {
+            font-size: 1.2em;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .counter {
+            font-size: 4em;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Fredoka One', Arial, sans-serif;
+        }
+
+        .games-section {
+            max-width: 1200px;
+            margin: 60px auto;
+            text-align: center;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .games-title {
+            font-size: 2em;
+            color: #3b82f6;
+            margin-bottom: 30px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .game-icon {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #333;
+            margin-bottom: 15px;
+        }
+
+        .game-name {
+            font-size: 1.3em;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .game-updated {
+            font-size: 0.85em;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 50px auto;
+            max-width: 900px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-family: 'Fredoka One', Arial, sans-serif;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .mentions-section {
+            max-width: 1000px;
+            margin: 60px auto;
+            text-align: center;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .mentions-title {
+            font-size: 2em;
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+
+        .mentions-subtitle {
+            font-size: 0.85em;
+            color: rgba(224, 224, 224, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .mentions-divider {
+            height: 3px;
+            background: linear-gradient(to right, transparent, #3b82f6, transparent);
+            margin: 25px 0 35px;
+        }
+
+        .mentions-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mention-card {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px 30px;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .mention-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .mention-name {
+            font-size: 1.2em;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .mention-handle {
+            font-size: 0.9em;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        .loading {
+            color: rgba(224, 224, 224, 0.6);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Mekhis Creations</h1>
+            <p class="tagline">We build it, You play it!</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="intro-text">
+            Mekhis Creations is a Roblox development studio dedicated to creating games that offer fair opportunities for free-to-play players, without giving pay-to-win advantages. With a growing community and thousands of game visits across our titles, we're rapidly expanding as a passionate development team.
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-frame small">
+                <div class="stat-title">Total Group Members:</div>
+                <div class="counter" id="memberCounter" style="font-size: 3em;">330+</div>
+            </div>
+
+            <div class="stat-frame large">
+                <div class="stat-title">Total Visits Contributed:</div>
+                <div class="counter" id="visitCounter">0</div>
+            </div>
+
+            <div class="stat-frame small">
+                <div class="stat-title">Published Games:</div>
+                <div class="counter" id="gamesCounter" style="font-size: 3em;">3</div>
+            </div>
+        </div>
+
+        <div class="games-section">
+            <h2 class="games-title">Our Games</h2>
+            <div class="games-grid" id="gamesGrid"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="window.open('https://discord.gg/your-invite','_blank')">
+                Join our Discord
+            </button>
+            <button class="action-btn" onclick="window.open('https://www.roblox.com/groups/33719761','_blank')">
+                Roblox Community
+            </button>
+        </div>
+
+        <div class="mentions-section">
+            <h2 class="mentions-title">Honorable Mentions</h2>
+            <p class="mentions-subtitle">
+                These individuals have shown incredible dedication to our development and deserve a huge thank you for their contributions.
+            </p>
+            <div class="mentions-divider"></div>
+            <div class="mentions-grid">
+                <div class="mention-card">
+                    <div class="mention-name">Spadebloke</div>
+                    <div class="mention-handle">@Spadebloke</div>
+                </div>
+                <div class="mention-card">
+                    <div class="mention-name">Santi</div>
+                    <div class="mention-handle">@im_santi_</div>
+                </div>
+                <div class="mention-card">
+                    <div class="mention-name">Hobee</div>
+                    <div class="mention-handle">@doge_800</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const GROUP_ID = '33719761';
+        // Update this to your actual API endpoint URL
+        const API_BASE_URL = '/api'; // Change this to your deployed URL if needed
+
+        // Animate member counter
+        function animateMemberCounter(targetCount) {
+            const counter = document.getElementById('memberCounter');
+            const duration = 2000;
+            const increment = duration / 50;
+            let current = 0;
+
+            function updateCounter() {
+                if (current < targetCount) {
+                    current += targetCount / 50;
+                    if (current > targetCount) {
+                        current = targetCount;
+                    }
+                    counter.textContent = Math.floor(current).toLocaleString();
+                    setTimeout(updateCounter, increment);
+                } else {
+                    counter.textContent = targetCount.toLocaleString();
+                }
+            }
+
+            updateCounter();
+        }
+
+        // Animate visit counter
+        function animateVisitCounter() {
+            const counter = document.getElementById('visitCounter');
+            const targetCount = 25000;
+            const duration = 3000;
+            const increment = duration / 60;
+            let current = 0;
+
+            function updateCounter() {
+                if (current < targetCount) {
+                    current += targetCount / 60;
+                    if (current > targetCount) {
+                        current = targetCount;
+                    }
+                    counter.textContent = Math.floor(current).toLocaleString();
+                    setTimeout(updateCounter, increment);
+                } else {
+                    counter.textContent = '25,000+';
+                }
+            }
+
+            updateCounter();
+        }
+
+        // Load group data from your API
+        async function loadGroupData() {
+            try {
+               const response = await fetch(`${API_BASE_URL}/group?groupId=${GROUP_ID}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Group data:', data);
+                
+                if (data && data.memberCount) {
+                    animateMemberCounter(data.memberCount);
+                }
+            } catch (error) {
+                console.error('Group API failed, using default', error);
+                document.getElementById('memberCounter').textContent = '330+';
+            }
+        }
+
+        // Load games
+        async function loadGames() {
+            const gamesGrid = document.getElementById('gamesGrid');
+            gamesGrid.innerHTML = '<div class="loading">Loading games...</div>';
+
+            try {
+                const response = await fetch(
+                    `https://games.roblox.com/v2/groups/${GROUP_ID}/games?accessFilter=2&sortOrder=Asc&limit=50`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Games data:', data);
+                
+                if (!data || !data.data || data.data.length === 0) {
+                    gamesGrid.innerHTML = '<div class="loading">No games found.</div>';
+                    document.getElementById('gamesCounter').textContent = '0';
+                    return;
+                }
+
+                document.getElementById('gamesCounter').textContent = data.data.length;
+                gamesGrid.innerHTML = '';
+
+                for (const game of data.data) {
+                    const gameCard = document.createElement('div');
+                    gameCard.className = 'game-card';
+                    gameCard.innerHTML = `
+                        <img src="${game.icon || 'https://via.placeholder.com/300x180?text=Game'}" 
+                             alt="${game.name}" 
+                             class="game-icon" 
+                             onerror="this.src='https://via.placeholder.com/300x180?text=Game'">
+                        <div class="game-name">${game.name}</div>
+                        <div class="game-updated">Recently updated</div>
+                    `;
+                    gameCard.onclick = () => {
+                        window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
+                    };
+                    gamesGrid.appendChild(gameCard);
+                }
+            } catch (error) {
+                console.error('Games API failed', error);
+                gamesGrid.innerHTML = '<div class="loading">Failed to load games.</div>';
+                document.getElementById('gamesCounter').textContent = '3';
+            }
+        }
+
+        // Create floating member avatars
+        async function createFloatingMembers() {
+            try {
+                const response = await fetch(
+                    `https://groups.roblox.com/v1/groups/${GROUP_ID}/users?sortOrder=Asc&limit=100`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Members data:', data);
+                
+                if (!data || !data.data) {
+                    return;
+                }
+
+                const randomMembers = data.data
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 12);
+
+                for (const member of randomMembers) {
+                    try {
+                        const userId = member.user?.userId || member.userId;
+                        if (!userId) continue;
+
+                        const thumbResponse = await fetch(
+                            `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`
+                        );
+                        
+                        if (!thumbResponse.ok) continue;
+                        
+                        const thumbData = await thumbResponse.json();
+                        
+                        if (thumbData && thumbData.data && thumbData.data[0] && thumbData.data[0].imageUrl) {
+                            const img = document.createElement('img');
+                            img.src = thumbData.data[0].imageUrl;
+                            img.className = 'floating-member';
+                            img.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+                            img.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+                            img.style.animationDuration = (8 + Math.random() * 8) + 's';
+                            img.style.animationDelay = (Math.random() * 3) + 's';
+                            document.body.appendChild(img);
+                        }
+                    } catch (error) {
+                        console.log('Member fetch error:', error.message);
+                    }
+                }
+            } catch (error) {
+                console.error('Members API failed:', error);
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            animateVisitCounter();
+            
+            await Promise.all([
+                loadGroupData(),
+                loadGames(),
+                createFloatingMembers()
+            ]);
+            
+            console.log('All data loaded!');
+        });
+    </script>
+</body>
+</html>
