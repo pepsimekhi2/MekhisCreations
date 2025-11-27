@@ -821,7 +821,6 @@
     <script>
         const GROUP_ID = '33719761';
         const API_BASE_URL = '/api';
-        const FIREBASE_URL = 'https://mekhis-creations-default-rtdb.firebaseio.com';
         
         let currentUserData = null;
         let verificationCode = null;
@@ -856,14 +855,14 @@
 
             // Check if already on wall
             try {
-                const checkResponse = await fetch(`${FIREBASE_URL}/wall/${userId}.json`);
+                const checkResponse = await fetch(`${API_BASE_URL}/wall.js?method=GET&userId=${userId}`);
                 const exists = await checkResponse.json();
-                if (exists) {
+                if (exists && exists.userId) {
                     alert('This user is already on The Wall!');
                     return;
                 }
             } catch (error) {
-                console.error('Error checking Firebase:', error);
+                console.error('Error checking wall:', error);
             }
 
             // Show loading
@@ -930,7 +929,7 @@
                     return;
                 }
 
-                // Save to Firebase
+                // Save to Firebase via API
                 const wallData = {
                     userId: currentUserData.id,
                     displayName: currentUserData.displayName,
@@ -939,8 +938,8 @@
                     addedAt: new Date().toISOString()
                 };
 
-                const firebaseResponse = await fetch(`${FIREBASE_URL}/wall/${currentUserData.id}.json`, {
-                    method: 'PUT',
+                const firebaseResponse = await fetch(`${API_BASE_URL}/wall.js?method=POST`, {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -948,7 +947,8 @@
                 });
 
                 if (!firebaseResponse.ok) {
-                    throw new Error('Failed to save to wall');
+                    const errorData = await firebaseResponse.json();
+                    throw new Error(errorData.error || 'Failed to save to wall');
                 }
 
                 // Save to localStorage (permanent)
@@ -965,7 +965,7 @@
 
             } catch (error) {
                 console.error('Verification error:', error);
-                errorDiv.innerHTML = '<div class="error-text">Verification failed. Please try again.</div>';
+                errorDiv.innerHTML = `<div class="error-text">${error.message}</div>`;
             }
         }
 
@@ -974,7 +974,7 @@
             wallGrid.innerHTML = '<div class="loading">Loading wall members...</div>';
 
             try {
-                const response = await fetch(`${FIREBASE_URL}/wall.json`);
+                const response = await fetch(`${API_BASE_URL}/wall.js?method=GET`);
                 const data = await response.json();
 
                 if (!data || Object.keys(data).length === 0) {
