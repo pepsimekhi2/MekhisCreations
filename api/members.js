@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     // Randomly select up to 12 members for floating avatars
     const selectedMembers = data.data
       .sort(() => 0.5 - Math.random())
-      .slice(0, 12);
+      .slice(0, 25);
     
     // Extract user IDs
     const userIds = selectedMembers
