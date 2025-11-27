@@ -931,12 +931,13 @@
 
                 // Save to Firebase via API using query parameters
                 const addedAt = new Date().toISOString();
+                const headshotUrl = currentUserData.headshot || currentUserData.avatar || 'https://via.placeholder.com/150';
                 const params = new URLSearchParams({
                     method: 'POST',
                     userId: currentUserData.id,
                     displayName: currentUserData.displayName,
                     username: currentUserData.name,
-                    headshot: currentUserData.headshot,
+                    headshot: headshotUrl,
                     addedAt: addedAt
                 });
 
@@ -952,7 +953,7 @@
                     userId: currentUserData.id,
                     displayName: currentUserData.displayName,
                     username: currentUserData.name,
-                    headshot: currentUserData.headshot,
+                    headshot: headshotUrl,
                     addedAt: addedAt
                 };
                 localStorage.setItem(`wall_${currentUserData.id}`, JSON.stringify(wallData));
@@ -997,9 +998,10 @@
                     memberDiv.className = 'wall-user';
                     
                     const timeAdded = timeAgo(member.addedAt);
+                    const headshotUrl = member.headshot || 'https://via.placeholder.com/150';
                     
                     memberDiv.innerHTML = `
-                        <img src="${member.headshot}" class="wall-user-avatar" alt="${member.displayName}">
+                        <img src="${headshotUrl}" class="wall-user-avatar" alt="${member.displayName}">
                         <div class="wall-user-name">${member.displayName}</div>
                         <div class="wall-user-username">@${member.username}</div>
                         <div class="wall-user-date">${timeAdded}</div>
