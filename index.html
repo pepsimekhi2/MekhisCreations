@@ -915,8 +915,8 @@
             errorDiv.innerHTML = '<div class="loading">Verifying...</div>';
 
             try {
-                // Fetch fresh user data to check description
-                const response = await fetch(`${API_BASE_URL}/userdata.js?userId=${currentUserData.id}`);
+                // Fetch fresh user data to check description using full URL
+                const response = await fetch(`https://www.mekhiscreations.org/api/userdata.js?userId=${currentUserData.id}`);
                 if (!response.ok) {
                     throw new Error('Failed to verify');
                 }
