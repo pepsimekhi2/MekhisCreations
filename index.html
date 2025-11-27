@@ -929,22 +929,18 @@
                     return;
                 }
 
-                // Save to Firebase via API
-                const wallData = {
+                // Save to Firebase via API using query parameters
+                const addedAt = new Date().toISOString();
+                const params = new URLSearchParams({
+                    method: 'POST',
                     userId: currentUserData.id,
                     displayName: currentUserData.displayName,
                     username: currentUserData.name,
                     headshot: currentUserData.headshot,
-                    addedAt: new Date().toISOString()
-                };
-
-                const firebaseResponse = await fetch(`${API_BASE_URL}/wall.js?method=POST`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(wallData)
+                    addedAt: addedAt
                 });
+
+                const firebaseResponse = await fetch(`${API_BASE_URL}/wall.js?${params.toString()}`);
 
                 if (!firebaseResponse.ok) {
                     const errorData = await firebaseResponse.json();
@@ -952,6 +948,13 @@
                 }
 
                 // Save to localStorage (permanent)
+                const wallData = {
+                    userId: currentUserData.id,
+                    displayName: currentUserData.displayName,
+                    username: currentUserData.name,
+                    headshot: currentUserData.headshot,
+                    addedAt: addedAt
+                };
                 localStorage.setItem(`wall_${currentUserData.id}`, JSON.stringify(wallData));
 
                 // Show success
