@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   const FIREBASE_URL = 'https://mekhis-creations-default-rtdb.firebaseio.com';
 
   try {
-    const { method, userId, action } = req.query;
+    const { method, userId, displayName, username, headshot, addedAt } = req.query;
 
     // GET - Fetch all wall members or check if user exists
     if (method === 'GET') {
@@ -25,22 +25,28 @@ export default async function handler(req, res) {
 
     // POST - Add user to wall
     if (method === 'POST') {
-      const wallData = req.body;
-      
-      if (!wallData || !wallData.userId) {
-        return sendCors(res).status(400).json({ error: 'Missing user data' });
+      if (!userId || !displayName || !username || !headshot || !addedAt) {
+        return sendCors(res).status(400).json({ error: 'Missing required parameters' });
       }
 
       // Check if user already exists
-      const checkResponse = await fetch(`${FIREBASE_URL}/wall/${wallData.userId}.json`);
+      const checkResponse = await fetch(`${FIREBASE_URL}/wall/${userId}.json`);
       const exists = await checkResponse.json();
       
-      if (exists) {
+      if (exists && exists.userId) {
         return sendCors(res).status(409).json({ error: 'User already on wall' });
       }
 
+      const wallData = {
+        userId,
+        displayName,
+        username,
+        headshot,
+        addedAt
+      };
+
       // Add user to wall
-      const response = await fetch(`${FIREBASE_URL}/wall/${wallData.userId}.json`, {
+      const response = await fetch(`${FIREBASE_URL}/wall/${userId}.json`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
