@@ -502,21 +502,47 @@
     </div>
 
     <script>
+        const GROUP_ID = '33719761';
         const API_BASE_URL = '/api';
         let currentUserData = null;
         let verificationCode = null;
         let linkedAccount = null;
 
+        // Cookie helper functions
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + JSON.stringify(value) + ";" + expires + ";path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) {
+                    try {
+                        return JSON.parse(c.substring(nameEQ.length, c.length));
+                    } catch (e) {
+                        return null;
+                    }
+                }
+            }
+            return null;
+        }
+
         // Check if account is already linked on page load
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             checkLinkedAccount();
             setupCodeInputs();
+            await createFloatingMembers();
         });
 
         function checkLinkedAccount() {
-            const stored = localStorage.getItem('linkedAccount');
-            if (stored) {
-                linkedAccount = JSON.parse(stored);
+            linkedAccount = getCookie('linkedAccount');
+            if (linkedAccount) {
                 displayLinkedAccount();
             }
         }
@@ -687,7 +713,8 @@
                     linkedAt: new Date().toISOString()
                 };
 
-                localStorage.setItem('linkedAccount', JSON.stringify(linkedAccount));
+                // Save as cookie (expires in 365 days)
+                setCookie('linkedAccount', linkedAccount, 365);
 
                 document.getElementById('modalStep4').style.display = 'none';
                 document.getElementById('modalStep5').style.display = 'block';
@@ -699,6 +726,39 @@
             } catch (error) {
                 console.error('Verification error:', error);
                 errorDiv.innerHTML = `<div class="error-text">${error.message}</div>`;
+            }
+        }
+
+        async function createFloatingMembers() {
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/members.js?groupId=${GROUP_ID}`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data || !data.data || data.data.length === 0) {
+                    return;
+                }
+
+                for (const member of data.data) {
+                    if (member.thumbnailUrl) {
+                        const img = document.createElement('img');
+                        img.src = member.thumbnailUrl;
+                        img.className = 'floating-member';
+                        img.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+                        img.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+                        img.style.animationDuration = (8 + Math.random() * 8) + 's';
+                        img.style.animationDelay = (Math.random() * 3) + 's';
+                        document.body.appendChild(img);
+                    }
+                }
+            } catch (error) {
+                console.error('Members API failed:', error);
             }
         }
     </script>
