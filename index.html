@@ -16,15 +16,40 @@
             background: linear-gradient(to bottom, white 0%, #EBEBEB 33%, #D2D2D2 66%, #838383 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visualizer-background {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0 20px;
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        .bar {
+            width: 6px;
+            background: linear-gradient(to top, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.8));
+            border-radius: 3px;
+            transition: height 0.15s ease;
+            filter: blur(1px);
         }
 
         .logo-container {
             text-align: center;
-            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
         }
 
         .logo-container img {
@@ -38,115 +63,61 @@
         .logo-container img.beat {
             transform: translateY(-30px) scale(1.1);
         }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        button:hover {
-            background: #764ba2;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(118, 75, 162, 0.5);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .visualizer {
-            display: flex;
-            gap: 3px;
-            height: 60px;
-            align-items: flex-end;
-            margin-top: 20px;
-        }
-
-        .bar {
-            width: 4px;
-            background: linear-gradient(to top, #667eea, #764ba2);
-            border-radius: 2px;
-            transition: height 0.1s ease;
-        }
     </style>
 </head>
 <body>
+    <div class="visualizer-background" id="visualizer"></div>
+
     <div class="logo-container">
         <img id="logo" src="https://raw.githubusercontent.com/pepsimekhi2/MekhisCreations/2d7959cc7049c1caa2d166744e64bc31aa6487d4/images/Logo" alt="Mekhi's Creations Logo">
     </div>
 
-    <div class="controls">
-        <button id="playBtn">Play</button>
-    </div>
-
-    <div class="visualizer" id="visualizer"></div>
-
     <script>
         const logo = document.getElementById('logo');
-        const playBtn = document.getElementById('playBtn');
         const visualizer = document.getElementById('visualizer');
         
         let audioContext;
         let analyser;
         let source;
         let audio;
-        let isPlaying = false;
         let animationId;
+        let isWaiting = false;
 
         // Create visualizer bars
-        for (let i = 0; i < 64; i++) {
+        for (let i = 0; i < 80; i++) {
             const bar = document.createElement('div');
             bar.className = 'bar';
-            bar.style.height = '5px';
+            bar.style.height = '10px';
             visualizer.appendChild(bar);
         }
 
         const bars = document.querySelectorAll('.bar');
 
         async function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 256;
-                
-                audio = new Audio('https://cdn.jsdelivr.net/gh/pepsimekhi2/MekhisCreations@main/LEAVE%20ME%20LONE.mp3');
-                audio.crossOrigin = 'anonymous';
-                
-                source = audioContext.createMediaElementSource(audio);
-                source.connect(analyser);
-                analyser.connect(audioContext.destination);
-            }
-        }
-
-        playBtn.addEventListener('click', async () => {
-            await initAudio();
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 512;
             
-            if (!isPlaying) {
-                audio.play();
-                isPlaying = true;
-                playBtn.textContent = 'Pause';
-                visualize();
-            } else {
-                audio.pause();
-                isPlaying = false;
-                playBtn.textContent = 'Play';
-                cancelAnimationFrame(animationId);
-            }
-        });
+            audio = new Audio('https://cdn.jsdelivr.net/gh/pepsimekhi2/MekhisCreations@main/LEAVE%20ME%20LONE.mp3');
+            audio.crossOrigin = 'anonymous';
+            audio.volume = 0.2; // Faint volume
+            
+            source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            // Handle song end with 25 second delay
+            audio.addEventListener('ended', () => {
+                isWaiting = true;
+                setTimeout(() => {
+                    isWaiting = false;
+                    audio.currentTime = 0;
+                    audio.play();
+                }, 25000); // 25 second pause
+            });
+
+            visualize();
+        }
 
         function visualize() {
             const bufferLength = analyser.frequencyBinCount;
@@ -154,32 +125,58 @@
             
             function draw() {
                 animationId = requestAnimationFrame(draw);
-                analyser.getByteFrequencyData(dataArray);
                 
-                // Calculate bass (low frequencies)
-                let bass = 0;
-                for (let i = 0; i < 10; i++) {
-                    bass += dataArray[i];
+                if (!isWaiting) {
+                    analyser.getByteFrequencyData(dataArray);
+                    
+                    // Calculate bass (low frequencies)
+                    let bass = 0;
+                    for (let i = 0; i < 10; i++) {
+                        bass += dataArray[i];
+                    }
+                    bass = bass / 10;
+                    
+                    // Make logo bounce on bass beats
+                    if (bass > 140) {
+                        logo.classList.add('beat');
+                        setTimeout(() => logo.classList.remove('beat'), 100);
+                    }
+                    
+                    // Update visualizer bars
+                    bars.forEach((bar, i) => {
+                        const index = Math.floor(i * bufferLength / bars.length);
+                        const value = dataArray[index];
+                        const height = (value / 255) * 180;
+                        bar.style.height = Math.max(10, height) + 'px';
+                    });
+                } else {
+                    // Fade out bars during wait
+                    bars.forEach((bar) => {
+                        bar.style.height = '10px';
+                    });
                 }
-                bass = bass / 10;
-                
-                // Make logo bounce on bass beats
-                if (bass > 140) {
-                    logo.classList.add('beat');
-                    setTimeout(() => logo.classList.remove('beat'), 100);
-                }
-                
-                // Update visualizer bars
-                bars.forEach((bar, i) => {
-                    const index = Math.floor(i * bufferLength / bars.length);
-                    const value = dataArray[index];
-                    const height = (value / 255) * 60;
-                    bar.style.height = height + 'px';
-                });
             }
             
             draw();
         }
+
+        // Auto-start on user interaction
+        document.addEventListener('click', async () => {
+            if (!audioContext) {
+                await initAudio();
+                audio.play().catch(e => console.log('Autoplay prevented:', e));
+            }
+        }, { once: true });
+
+        // Try autoplay immediately
+        window.addEventListener('load', async () => {
+            try {
+                await initAudio();
+                await audio.play();
+            } catch (e) {
+                console.log('Autoplay blocked. Click anywhere to start.');
+            }
+        });
     </script>
 </body>
 </html>
