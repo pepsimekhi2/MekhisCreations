@@ -160,13 +160,21 @@
             draw();
         }
 
-        // Auto-start on user interaction
-        document.addEventListener('click', async () => {
+        // Auto-start on any user interaction
+        async function startAudio() {
             if (!audioContext) {
                 await initAudio();
-                audio.play().catch(e => console.log('Autoplay prevented:', e));
+                try {
+                    await audio.play();
+                } catch (e) {
+                    console.log('Error playing:', e);
+                }
             }
-        }, { once: true });
+        }
+
+        document.body.addEventListener('click', startAudio, { once: true });
+        document.body.addEventListener('touchstart', startAudio, { once: true });
+        document.body.addEventListener('keydown', startAudio, { once: true });
 
         // Try autoplay immediately
         window.addEventListener('load', async () => {
@@ -174,7 +182,7 @@
                 await initAudio();
                 await audio.play();
             } catch (e) {
-                console.log('Autoplay blocked. Click anywhere to start.');
+                // Silently fail - will start on first interaction
             }
         });
     </script>
