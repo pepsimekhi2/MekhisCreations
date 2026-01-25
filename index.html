@@ -16,40 +16,12 @@
             background: linear-gradient(to bottom, white 0%, #EBEBEB 33%, #D2D2D2 66%, #838383 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .visualizer-background {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 200px;
-            display: flex;
-            gap: 4px;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 0 20px;
-            opacity: 0.15;
-            z-index: 1;
-        }
-
-        .bar {
-            width: 6px;
-            background: linear-gradient(to top, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.8));
-            border-radius: 3px;
-            transition: height 0.15s ease;
-            filter: blur(1px);
+            padding-top: 60px;
         }
 
         .logo-container {
             text-align: center;
-            position: relative;
-            z-index: 2;
         }
 
         .logo-container img {
@@ -57,145 +29,17 @@
             width: 90%;
             height: auto;
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
-            transition: transform 0.1s ease-out;
+            transition: transform 0.3s ease;
         }
 
-        .logo-container img.beat {
-            transform: translateY(-30px) scale(1.1);
+        .logo-container img:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <div class="visualizer-background" id="visualizer"></div>
-
     <div class="logo-container">
-        <img id="logo" src="https://raw.githubusercontent.com/pepsimekhi2/MekhisCreations/2d7959cc7049c1caa2d166744e64bc31aa6487d4/images/Logo" alt="Mekhi's Creations Logo">
+        <img src="https://raw.githubusercontent.com/pepsimekhi2/MekhisCreations/2d7959cc7049c1caa2d166744e64bc31aa6487d4/images/Logo" alt="Mekhi's Creations Logo">
     </div>
-
-    <script>
-        const logo = document.getElementById('logo');
-        const visualizer = document.getElementById('visualizer');
-        
-        let audioContext;
-        let analyser;
-        let source;
-        let audio;
-        let animationId;
-        let isWaiting = false;
-
-        // Create visualizer bars
-        for (let i = 0; i < 80; i++) {
-            const bar = document.createElement('div');
-            bar.className = 'bar';
-            bar.style.height = '10px';
-            visualizer.appendChild(bar);
-        }
-
-        const bars = document.querySelectorAll('.bar');
-
-        async function initAudio() {
-            if (audioContext) return; // Already initialized
-            
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            analyser.fftSize = 512;
-            
-            audio = new Audio('https://www.dropbox.com/scl/fi/u3awt1r3ju44hydvdqh0b/LEAVE-ME-LONE.mp3?rlkey=qtcsf5kimc90psqkoc19h6iwf&st=afx173ml&dl=1');
-            audio.volume = 0.3;
-            audio.preload = 'auto';
-            
-            // Debug logging
-            audio.addEventListener('loadeddata', () => console.log('Audio loaded'));
-            audio.addEventListener('playing', () => console.log('Audio is playing'));
-            audio.addEventListener('error', (e) => console.log('Audio error:', e));
-            
-            source = audioContext.createMediaElementSource(audio);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-
-            // Handle song end with 25 second delay
-            audio.addEventListener('ended', () => {
-                isWaiting = true;
-                setTimeout(() => {
-                    isWaiting = false;
-                    audio.currentTime = 0;
-                    audio.play();
-                }, 25000); // 25 second pause
-            });
-
-            visualize();
-            
-            // Force play
-            await audio.play();
-            console.log('Audio started playing');
-        }
-
-        function visualize() {
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            
-            function draw() {
-                animationId = requestAnimationFrame(draw);
-                
-                if (!isWaiting) {
-                    analyser.getByteFrequencyData(dataArray);
-                    
-                    // Calculate bass (low frequencies)
-                    let bass = 0;
-                    for (let i = 0; i < 10; i++) {
-                        bass += dataArray[i];
-                    }
-                    bass = bass / 10;
-                    
-                    // Make logo bounce on bass beats
-                    if (bass > 140) {
-                        logo.classList.add('beat');
-                        setTimeout(() => logo.classList.remove('beat'), 100);
-                    }
-                    
-                    // Update visualizer bars
-                    bars.forEach((bar, i) => {
-                        const index = Math.floor(i * bufferLength / bars.length);
-                        const value = dataArray[index];
-                        const height = (value / 255) * 180;
-                        bar.style.height = Math.max(10, height) + 'px';
-                    });
-                } else {
-                    // Fade out bars during wait
-                    bars.forEach((bar) => {
-                        bar.style.height = '10px';
-                    });
-                }
-            }
-            
-            draw();
-        }
-
-        // Auto-start on any user interaction
-        async function startAudio() {
-            if (!audioContext) {
-                await initAudio();
-                try {
-                    await audio.play();
-                } catch (e) {
-                    console.log('Error playing:', e);
-                }
-            }
-        }
-
-        document.body.addEventListener('click', startAudio, { once: true });
-        document.body.addEventListener('touchstart', startAudio, { once: true });
-        document.body.addEventListener('keydown', startAudio, { once: true });
-
-        // Try autoplay immediately
-        window.addEventListener('load', async () => {
-            try {
-                await initAudio();
-                await audio.play();
-            } catch (e) {
-                // Silently fail - will start on first interaction
-            }
-        });
-    </script>
 </body>
 </html>
