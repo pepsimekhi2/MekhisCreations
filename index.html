@@ -80,14 +80,91 @@
             color: #b0b0b0;
             text-align: center;
         }
-        .highlight {
+        .stats-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(25, 25, 25, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(10, 183, 255, 0.3);
+            text-align: center;
+        }
+        .stats-title {
             font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #0AB7FF;
+            margin-bottom: 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: rgba(10, 183, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(10, 183, 255, 0.2);
+        }
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #0AB7FF;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+        .loading {
+            color: #0AB7FF;
+            font-style: italic;
+        }
+        .error {
+            color: #ff6b6b;
+            font-weight: 500;
+        }
+        .refresh-button {
+            background: rgba(10, 183, 255, 0.2);
+            color: #0AB7FF;
+            border: 1px solid rgba(10, 183, 255, 0.4);
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        .refresh-button:hover {
+            background: rgba(10, 183, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 183, 255, 0.2);
+        }
+        .refresh-button:active {
+            transform: translateY(0);
+        }
+        .highlight {
             font-weight: 500;
             color: #0AB7FF;
             background-color: rgba(10, 183, 255, 0.2);
             padding: 2px 8px;
             border-radius: 4px;
             border: 1px solid rgba(10, 183, 255, 0.4);
+        }
+        .last-updated {
+            margin-top: 10px;
+            color: #888;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -102,9 +179,33 @@
         
         <div class="description-container">
             <p class="description-text">
-                We are a Roblox game studio dedicated to creating fun, free-to-play, and accessible games for everyone. Our focus is on making games that are simple, enjoyable, and entertaining for our players. With a growing community of <span class="highlight">[X]</span> members and <span class="highlight">[X]</span> experiences under our belt, our games have attracted <span class="highlight">[X]</span> visits and continue to bring fun to players around the world.
+                We are a Roblox game studio dedicated to creating fun, free-to-play, and accessible games for everyone. Our focus is on making games that are simple, enjoyable, and entertaining for our players. With a growing community of <span class="highlight" id="members-placeholder">[X]</span> members and <span class="highlight" id="games-placeholder">[X]</span> experiences under our belt, our games have attracted <span class="highlight" id="visits-placeholder">[X]</span> visits and continue to bring fun to players around the world.
             </p>
         </div>
+        
+        <div class="stats-container" id="stats-container" style="display: none;">
+            <div class="stats-title">Live Stats</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="members-count">Loading...</span>
+                    <span class="stat-label">Group Members</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="games-count">Loading...</span>
+                    <span class="stat-label">Games Created</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="visits-count">Loading...</span>
+                    <span class="stat-label">Total Visits</span>
+                </div>
+            </div>
+            <button class="refresh-button" id="refresh-stats">Refresh Stats</button>
+            <div class="last-updated">
+                Last updated: <span id="last-updated">--:--:--</span>
+            </div>
+        </div>
     </div>
+
+    <script src="api.js"></script>
 </body>
 </html>
