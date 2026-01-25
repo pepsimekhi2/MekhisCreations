@@ -94,6 +94,8 @@
         const bars = document.querySelectorAll('.bar');
 
         async function initAudio() {
+            if (audioContext) return; // Already initialized
+            
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioContext.createAnalyser();
             analyser.fftSize = 512;
@@ -117,6 +119,10 @@
             });
 
             visualize();
+            
+            // Force play
+            await audio.play();
+            console.log('Audio started playing');
         }
 
         function visualize() {
