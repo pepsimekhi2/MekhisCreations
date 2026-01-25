@@ -100,9 +100,15 @@
             analyser = audioContext.createAnalyser();
             analyser.fftSize = 512;
             
-            audio = new Audio('https://cdn.jsdelivr.net/gh/pepsimekhi2/MekhisCreations@main/LEAVE%20ME%20LONE.mp3');
+            audio = new Audio('https://www.dropbox.com/scl/fi/u3awt1r3ju44hydvdqh0b/LEAVE-ME-LONE.mp3?rlkey=qtcsf5kimc90psqkoc19h6iwf&st=afx173ml&dl=1');
             audio.crossOrigin = 'anonymous';
-            audio.volume = 0.2; // Faint volume
+            audio.volume = 0.3; // Slightly higher to ensure it's audible
+            audio.preload = 'auto';
+            
+            // Debug logging
+            audio.addEventListener('loadeddata', () => console.log('Audio loaded'));
+            audio.addEventListener('playing', () => console.log('Audio is playing'));
+            audio.addEventListener('error', (e) => console.log('Audio error:', e));
             
             source = audioContext.createMediaElementSource(audio);
             source.connect(analyser);
