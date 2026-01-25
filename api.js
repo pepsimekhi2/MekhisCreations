@@ -1,5 +1,5 @@
 // Replace with your actual group ID
-const GROUP_ID = 'YOUR_ACTUAL_GROUP_ID_HERE';
+const GROUP_ID = '33719761';
 
 async function fetchGroupInfo() {
     try {
