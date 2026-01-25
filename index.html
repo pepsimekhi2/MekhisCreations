@@ -16,12 +16,14 @@
             background: linear-gradient(to bottom, white 0%, #EBEBEB 33%, #D2D2D2 66%, #838383 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             padding-top: 60px;
         }
 
         .logo-container {
             text-align: center;
+            margin-bottom: 40px;
         }
 
         .logo-container img {
@@ -29,17 +31,50 @@
             width: 90%;
             height: auto;
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
-            transition: transform 0.3s ease;
+            animation: bounce 0.5s ease-in-out infinite;
         }
 
-        .logo-container img:hover {
-            transform: scale(1.05);
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        .video-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            aspect-ratio: 16 / 9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
     <div class="logo-container">
         <img src="https://raw.githubusercontent.com/pepsimekhi2/MekhisCreations/2d7959cc7049c1caa2d166744e64bc31aa6487d4/images/Logo" alt="Mekhi's Creations Logo">
+    </div>
+
+    <div class="video-container">
+        <iframe 
+            src="https://www.youtube.com/embed/Ing7tdSIcQk?autoplay=1&mute=0" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
     </div>
 </body>
 </html>
