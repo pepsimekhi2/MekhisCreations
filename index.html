@@ -21,8 +21,7 @@
             text-align: center;
             width: 100%;
             max-width: 1000px;
-            padding-top: 0;
-            margin-top: 0;
+            transform: translateY(-40px);
         }
         .logo-container img {
             width: 80%;
@@ -30,16 +29,24 @@
             height: auto;
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
             transition: transform 0.3s ease;
-            margin-top: -60px;
         }
         .logo-container img:hover {
             transform: scale(1.05);
+        }
+        .bar {
+            width: 70%;
+            height: 4px;
+            background-color: #000000;
+            margin: 20px auto 0;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
     <div class="logo-container">
         <img src="https://raw.githubusercontent.com/pepsimekhi2/MekhisCreations/2d7959cc7049c1caa2d166744e64bc31aa6487d4/images/Logo" alt="Mekhi's Creations Logo">
+        <div class="bar"></div>
     </div>
 </body>
 </html>
