@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Data — Mekhis Creations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #3b82f6;
+            --blue-dark: #2563eb;
+            --blue-deeper: #1d4ed8;
+            --bg: #0a0a0f;
+            --panel: rgba(59, 130, 246, 0.08);
+            --panel-border: rgba(59, 130, 246, 0.2);
+            --text: #e0e0e0;
+            --text-dim: rgba(224, 224, 224, 0.6);
+            --text-dimmer: rgba(224, 224, 224, 0.4);
+            --green: #22c55e;
+            --yellow: #ffd700;
+            --red: #ef4444;
+            --mono: 'Share Tech Mono', monospace;
+            --display: 'Fredoka One', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--display);
+            background-color: var(--bg);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* ── LOCK SCREEN ── */
+        #lockScreen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        #lockScreen.hidden {
+            display: none;
+        }
+
+        .lock-card {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 50px 45px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 80px rgba(59,130,246,0.05);
+            backdrop-filter: blur(12px);
+        }
+
+        .lock-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .lock-title {
+            font-size: 2em;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .lock-subtitle {
+            font-size: 0.95em;
+            color: var(--text-dim);
+            margin-bottom: 35px;
+            font-family: var(--mono);
+            font-size: 0.85em;
+        }
+
+        .lock-input {
+            width: 100%;
+            padding: 15px 18px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            color: white;
+            font-family: var(--mono);
+            font-size: 1.1em;
+            letter-spacing: 4px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .lock-input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+
+        .lock-input.error {
+            border-color: var(--red);
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .lock-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: var(--display);
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+        }
+
+        .lock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59,130,246,0.5);
+            background: linear-gradient(135deg, var(--blue-dark), var(--blue-deeper));
+        }
+
+        .lock-error {
+            color: var(--red);
+            font-family: var(--mono);
+            font-size: 0.85em;
+            margin-top: 12px;
+            min-height: 20px;
+        }
+
+        /* ── MAIN APP ── */
+        #app {
+            display: none;
+        }
+
+        #app.visible {
+            display: block;
+        }
+
+        header {
+            background-color: var(--blue);
+            padding: 25px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-left h1 {
+            color: white;
+            font-size: 2em;
+        }
+
+        .header-left p {
+            color: rgba(255,255,255,0.8);
+            font-family: var(--mono);
+            font-size: 0.8em;
+            margin-top: 3px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 25px;
+        }
+
+        .hstat {
+            text-align: center;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+
+        .hstat-value {
+            font-size: 1.6em;
+            color: white;
+        }
+
+        .hstat-label {
+            font-size: 0.7em;
+            color: rgba(255,255,255,0.8);
+            font-family: var(--mono);
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 35px 40px;
+        }
+
+        /* ── CONTROLS ── */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 220px;
+            padding: 12px 18px;
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            color: white;
+            font-family: var(--mono);
+            font-size: 0.9em;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+
+        .sort-select {
+            padding: 12px 18px;
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            color: white;
+            font-family: var(--display);
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .sort-select option {
+            background: #1a1a2e;
+        }
+
+        .refresh-btn {
+            padding: 12px 22px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: var(--display);
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(59,130,246,0.3);
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(59,130,246,0.5);
+        }
+
+        /* ── PLAYER TABLE ── */
+        .table-wrap {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: rgba(59,130,246,0.2);
+        }
+
+        th {
+            padding: 16px 18px;
+            text-align: left;
+            color: var(--blue);
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            font-family: var(--mono);
+            border-bottom: 1px solid var(--panel-border);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            color: white;
+        }
+
+        th .sort-arrow {
+            margin-left: 5px;
+            opacity: 0.5;
+        }
+
+        th.active .sort-arrow {
+            opacity: 1;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(59,130,246,0.08);
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+
+        tbody tr:hover {
+            background: rgba(59,130,246,0.1);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 14px 18px;
+            font-size: 0.9em;
+            vertical-align: middle;
+        }
+
+        .player-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--panel-border);
+            object-fit: cover;
+            background: #1a1a2e;
+            flex-shrink: 0;
+        }
+
+        .player-name {
+            color: white;
+            font-size: 1em;
+        }
+
+        .player-username {
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-size: 0.78em;
+        }
+
+        .uid-cell {
+            font-family: var(--mono);
+            font-size: 0.8em;
+            color: var(--text-dim);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-family: var(--mono);
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .badge-green {
+            background: rgba(34,197,94,0.15);
+            color: var(--green);
+            border: 1px solid rgba(34,197,94,0.3);
+        }
+
+        .badge-yellow {
+            background: rgba(255,215,0,0.15);
+            color: var(--yellow);
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+
+        .badge-red {
+            background: rgba(239,68,68,0.15);
+            color: var(--red);
+            border: 1px solid rgba(239,68,68,0.3);
+        }
+
+        .mono-cell {
+            font-family: var(--mono);
+            font-size: 0.85em;
+            color: var(--blue);
+        }
+
+        .dim-cell {
+            font-family: var(--mono);
+            font-size: 0.8em;
+            color: var(--text-dim);
+        }
+
+        /* ── DETAIL PANEL ── */
+        .detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 500;
+            justify-content: flex-end;
+        }
+
+        .detail-overlay.active {
+            display: flex;
+        }
+
+        .detail-panel {
+            width: 520px;
+            max-width: 95vw;
+            height: 100%;
+            background: #0d0d18;
+            border-left: 1px solid var(--panel-border);
+            overflow-y: auto;
+            padding: 30px;
+            animation: slideIn 0.25s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to   { transform: translateX(0); }
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.5em;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .detail-close:hover {
+            color: white;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .detail-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid var(--blue);
+            object-fit: cover;
+        }
+
+        .detail-name {
+            font-size: 1.6em;
+            color: white;
+        }
+
+        .detail-username {
+            font-family: var(--mono);
+            font-size: 0.85em;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .detail-uid {
+            font-family: var(--mono);
+            font-size: 0.75em;
+            color: var(--text-dimmer);
+            margin-top: 4px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section-title {
+            font-size: 0.75em;
+            font-family: var(--mono);
+            color: var(--blue);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .detail-stat {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .detail-stat-label {
+            font-family: var(--mono);
+            font-size: 0.72em;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+        }
+
+        .detail-stat-value {
+            font-size: 1.1em;
+            color: white;
+        }
+
+        .detail-stat-value.accent {
+            color: var(--blue);
+        }
+
+        .detail-stat-value.green {
+            color: var(--green);
+        }
+
+        .detail-stat-value.yellow {
+            color: var(--yellow);
+        }
+
+        /* Sessions list */
+        .sessions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .session-item {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: grid;
+            grid-template-columns: 24px 1fr 1fr;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .session-num {
+            font-family: var(--mono);
+            font-size: 0.75em;
+            color: var(--blue);
+            text-align: center;
+            background: rgba(59,130,246,0.15);
+            border-radius: 6px;
+            padding: 3px 0;
+        }
+
+        .session-date {
+            font-family: var(--mono);
+            font-size: 0.78em;
+            color: var(--text-dim);
+        }
+
+        .session-dur {
+            font-family: var(--mono);
+            font-size: 0.82em;
+            color: white;
+            text-align: right;
+        }
+
+        .no-sessions {
+            font-family: var(--mono);
+            font-size: 0.85em;
+            color: var(--text-dimmer);
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* ── LOADING / EMPTY ── */
+        .state-box {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-size: 0.9em;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(59,130,246,0.2);
+            border-top-color: var(--blue);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.6); }
+
+        @media (max-width: 768px) {
+            main { padding: 20px; }
+            header { padding: 18px 20px; }
+            .header-stats { display: none; }
+            .detail-panel { width: 100vw; }
+            td:nth-child(3), td:nth-child(4), th:nth-child(3), th:nth-child(4) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── LOCK SCREEN ── -->
+<div id="lockScreen">
+    <div class="lock-card">
+        <span class="lock-icon">🔒</span>
+        <div class="lock-title">Restricted Access</div>
+        <div class="lock-subtitle">mekhiscreations.org / plrdata</div>
+        <input
+            type="password"
+            class="lock-input"
+            id="passwordInput"
+            placeholder="enter password"
+            onkeydown="if(event.key==='Enter') unlock()"
+            autocomplete="off"
+        >
+        <button class="lock-btn" onclick="unlock()">Unlock</button>
+        <div class="lock-error" id="lockError"></div>
+    </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+    <header>
+        <div class="header-inner">
+            <div class="header-left">
+                <h1>Player Data</h1>
+                <p>mekhiscreations.org / plrdata &nbsp;·&nbsp; live firebase tracking</p>
+            </div>
+            <div class="header-stats">
+                <div class="hstat">
+                    <div class="hstat-value" id="hTotalPlayers">—</div>
+                    <div class="hstat-label">TOTAL PLAYERS</div>
+                </div>
+                <div class="hstat">
+                    <div class="hstat-value" id="hTotalSessions">—</div>
+                    <div class="hstat-label">TOTAL SESSIONS</div>
+                </div>
+                <div class="hstat">
+                    <div class="hstat-value" id="hTutCompleted">—</div>
+                    <div class="hstat-label">TUTORIAL DONE</div>
+                </div>
+                <div class="hstat">
+                    <div class="hstat-value" id="hAvgPlaytime">—</div>
+                    <div class="hstat-label">AVG PLAYTIME</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search username, display name or user ID..." oninput="renderTable()">
+            <select class="sort-select" id="sortSelect" onchange="renderTable()">
+                <option value="lastJoined">Sort: Last Joined</option>
+                <option value="firstJoined">Sort: First Joined</option>
+                <option value="playCount">Sort: Play Count</option>
+                <option value="totalPlaySeconds">Sort: Total Playtime</option>
+                <option value="tutorialSeconds">Sort: Tutorial Time</option>
+            </select>
+            <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th onclick="setSortCol('playCount')">Sessions <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('totalPlaySeconds')">Total Playtime <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('tutorialSeconds')">Tutorial <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('firstJoined')">First Joined <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('lastJoined')">Last Joined <span class="sort-arrow">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody id="playerTableBody">
+                    <tr><td colspan="6"><div class="state-box"><div class="spinner"></div>Loading player data...</div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<!-- ── DETAIL PANEL ── -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
+    <div class="detail-panel" id="detailPanel">
+        <button class="detail-close" onclick="closeDetailPanel()">✕</button>
+        <div id="detailContent"></div>
+    </div>
+</div>
+
+<script>
+    // ── PASSWORD ──
+    // "duck" stored as XOR-obfuscated base64 (key=42). Not plaintext in source.
+    const _k = 42;
+    const _e = "Tl9JQQ==";
+    function _decode(e) {
+        const b = atob(e);
+        return Array.from(b).map(c => String.fromCharCode(c.charCodeAt(0) ^ _k)).join('');
+    }
+
+    function unlock() {
+        const input = document.getElementById('passwordInput').value;
+        if (input === _decode(_e)) {
+            document.getElementById('lockScreen').classList.add('hidden');
+            document.getElementById('app').classList.add('visible');
+            sessionStorage.setItem('plrdata_auth', '1');
+            loadData();
+        } else {
+            const inp = document.getElementById('passwordInput');
+            inp.classList.add('error');
+            document.getElementById('lockError').textContent = 'Incorrect password.';
+            setTimeout(() => { inp.classList.remove('error'); inp.value = ''; }, 500);
+        }
+    }
+
+    // Check if already authed this session
+    if (sessionStorage.getItem('plrdata_auth') === '1') {
+        document.getElementById('lockScreen').classList.add('hidden');
+        document.getElementById('app').classList.add('visible');
+    }
+
+    // ── DATA ──
+    const FIREBASE_URL = 'https://ban-cloud-d854d-default-rtdb.firebaseio.com';
+    let allPlayers = [];
+
+    function fmtSeconds(s) {
+        if (!s && s !== 0) return '—';
+        s = Math.floor(s);
+        const h = Math.floor(s / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        if (h > 0) return `${h}h ${m}m`;
+        if (m > 0) return `${m}m ${sec}s`;
+        return `${sec}s`;
+    }
+
+    function fmtDate(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+    }
+
+    function fmtDateTime(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    }
+
+    function timeAgo(iso) {
+        if (!iso) return '—';
+        const diff = Date.now() - new Date(iso).getTime();
+        const m = Math.floor(diff / 60000);
+        const h = Math.floor(m / 60);
+        const d = Math.floor(h / 24);
+        if (d > 0) return `${d}d ago`;
+        if (h > 0) return `${h}h ago`;
+        if (m > 0) return `${m}m ago`;
+        return 'Just now';
+    }
+
+    async function loadData() {
+        document.getElementById('playerTableBody').innerHTML =
+            `<tr><td colspan="6"><div class="state-box"><div class="spinner"></div>Loading player data...</div></td></tr>`;
+
+        try {
+            const res = await fetch(`${FIREBASE_URL}/playertracking.json`);
+            const raw = await res.json();
+
+            if (!raw || typeof raw !== 'object') {
+                document.getElementById('playerTableBody').innerHTML =
+                    `<tr><td colspan="6"><div class="state-box">No player data found.</div></td></tr>`;
+                return;
+            }
+
+            allPlayers = Object.entries(raw).map(([uid, data]) => ({ uid, ...data }));
+
+            // Compute header stats
+            const totalSessions = allPlayers.reduce((acc, p) => acc + (p.playCount || 0), 0);
+            const tutDone = allPlayers.filter(p => p.tutorialCompleted).length;
+            const totalSeconds = allPlayers.reduce((acc, p) => acc + (p.totalPlaySeconds || 0), 0);
+            const avgSeconds = allPlayers.length ? Math.floor(totalSeconds / allPlayers.length) : 0;
+
+            document.getElementById('hTotalPlayers').textContent = allPlayers.length.toLocaleString();
+            document.getElementById('hTotalSessions').textContent = totalSessions.toLocaleString();
+            document.getElementById('hTutCompleted').textContent = tutDone.toLocaleString();
+            document.getElementById('hAvgPlaytime').textContent = fmtSeconds(avgSeconds);
+
+            renderTable();
+        } catch (err) {
+            document.getElementById('playerTableBody').innerHTML =
+                `<tr><td colspan="6"><div class="state-box">Failed to load data: ${err.message}</div></td></tr>`;
+        }
+    }
+
+    let sortCol = 'lastJoined';
+    let sortDir = -1; // -1 = desc, 1 = asc
+
+    function setSortCol(col) {
+        if (sortCol === col) sortDir *= -1;
+        else { sortCol = col; sortDir = -1; }
+        document.getElementById('sortSelect').value = col;
+        renderTable();
+    }
+
+    function renderTable() {
+        const query = document.getElementById('searchBox').value.toLowerCase();
+        sortCol = document.getElementById('sortSelect').value;
+
+        let filtered = allPlayers.filter(p => {
+            if (!query) return true;
+            return (p.username || '').toLowerCase().includes(query)
+                || (p.displayName || '').toLowerCase().includes(query)
+                || (p.uid || '').includes(query);
+        });
+
+        filtered.sort((a, b) => {
+            let av = a[sortCol], bv = b[sortCol];
+            if (sortCol === 'lastJoined' || sortCol === 'firstJoined') {
+                av = av ? new Date(av).getTime() : 0;
+                bv = bv ? new Date(bv).getTime() : 0;
+            } else {
+                av = av || 0;
+                bv = bv || 0;
+            }
+            return (av < bv ? -1 : av > bv ? 1 : 0) * sortDir;
+        });
+
+        if (filtered.length === 0) {
+            document.getElementById('playerTableBody').innerHTML =
+                `<tr><td colspan="6"><div class="state-box">No players match your search.</div></td></tr>`;
+            return;
+        }
+
+        const rows = filtered.map(p => {
+            const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${p.uid}&width=48&height=48&format=png`;
+            const tutBadge = p.tutorialCompleted
+                ? `<span class="badge badge-green">✓ Done</span>`
+                : `<span class="badge badge-red">✗ No</span>`;
+            const tutTime = p.tutorialCompleted && p.tutorialSeconds
+                ? `<span class="dim-cell">${fmtSeconds(p.tutorialSeconds)}</span>`
+                : tutBadge;
+
+            return `<tr onclick="openDetail('${p.uid}')">
+                <td>
+                    <div class="player-cell">
+                        <img class="player-avatar" src="${avatarUrl}" alt="${p.displayName}" onerror="this.style.opacity=0.3">
+                        <div>
+                            <div class="player-name">${p.displayName || '—'}</div>
+                            <div class="player-username">@${p.username || '—'}</div>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="mono-cell">${p.playCount || 0}</span></td>
+                <td><span class="mono-cell">${fmtSeconds(p.totalPlaySeconds)}</span></td>
+                <td>${tutTime}</td>
+                <td><span class="dim-cell">${fmtDate(p.firstJoined)}</span></td>
+                <td><span class="dim-cell">${timeAgo(p.lastJoined)}</span></td>
+            </tr>`;
+        }).join('');
+
+        document.getElementById('playerTableBody').innerHTML = rows;
+    }
+
+    // ── DETAIL PANEL ──
+    function openDetail(uid) {
+        const p = allPlayers.find(x => x.uid === uid);
+        if (!p) return;
+
+        const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${uid}&width=150&height=150&format=png`;
+        const sessions = p.sessions ? Object.entries(p.sessions) : [];
+
+        const sessionRows = sessions.length
+            ? sessions.map(([idx, s]) => `
+                <div class="session-item">
+                    <div class="session-num">#${idx}</div>
+                    <div>
+                        <div class="session-date">${fmtDateTime(s.joinedAt)}</div>
+                        ${s.leftAt ? `<div class="session-date" style="color:var(--text-dimmer)">↳ ${fmtDateTime(s.leftAt)}</div>` : '<div class="session-date" style="color:var(--green)">↳ Active now</div>'}
+                    </div>
+                    <div class="session-dur">${s.durationSeconds != null ? fmtSeconds(s.durationSeconds) : '—'}</div>
+                </div>`).join('')
+            : '<div class="no-sessions">No session data recorded yet.</div>';
+
+        document.getElementById('detailContent').innerHTML = `
+            <div class="detail-header">
+                <img class="detail-avatar" src="${avatarUrl}" alt="${p.displayName}" onerror="this.style.opacity=0.3">
+                <div>
+                    <div class="detail-name">${p.displayName || '—'}</div>
+                    <div class="detail-username">@${p.username || '—'}</div>
+                    <div class="detail-uid">UID: ${uid}</div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">Overview</div>
+                <div class="detail-grid">
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Play Count</div>
+                        <div class="detail-stat-value accent">${p.playCount || 0} sessions</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Total Playtime</div>
+                        <div class="detail-stat-value accent">${fmtSeconds(p.totalPlaySeconds)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">First Joined</div>
+                        <div class="detail-stat-value">${fmtDate(p.firstJoined)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Last Joined</div>
+                        <div class="detail-stat-value">${fmtDate(p.lastJoined)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Last Seen</div>
+                        <div class="detail-stat-value">${timeAgo(p.lastSeen)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Tutorial</div>
+                        <div class="detail-stat-value ${p.tutorialCompleted ? 'green' : ''}">${p.tutorialCompleted ? '✓ Completed' : '✗ Not done'}</div>
+                    </div>
+                    ${p.tutorialCompleted ? `
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Tutorial Date</div>
+                        <div class="detail-stat-value">${fmtDate(p.tutorialDate)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Time to Complete</div>
+                        <div class="detail-stat-value yellow">${fmtSeconds(p.tutorialSeconds)}</div>
+                    </div>` : ''}
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">Session History (${sessions.length})</div>
+                <div class="sessions-list">${sessionRows}</div>
+            </div>
+        `;
+
+        document.getElementById('detailOverlay').classList.add('active');
+    }
+
+    function closeDetail(e) {
+        if (e.target === document.getElementById('detailOverlay')) closeDetailPanel();
+    }
+
+    function closeDetailPanel() {
+        document.getElementById('detailOverlay').classList.remove('active');
+    }
+
+    // Auto-load if already authenticated
+    if (sessionStorage.getItem('plrdata_auth') === '1') {
+        loadData();
+    }
+</script>
+</body>
+</html>
