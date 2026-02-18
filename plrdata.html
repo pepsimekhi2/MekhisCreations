@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player Data — Mekhis Creations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -25,7 +25,7 @@
             --green: #22c55e;
             --yellow: #ffd700;
             --red: #ef4444;
-            --mono: 'Share Tech Mono', monospace;
+            --mono: 'Fredoka One', Arial, sans-serif;
             --display: 'Fredoka One', Arial, sans-serif;
         }
 
@@ -836,6 +836,30 @@
         renderTable();
     }
 
+
+    // ── HEADSHOT CACHE & RESOLVER ──
+    const _headshotCache = {};
+
+    async function resolveHeadshots(imgEls) {
+        for (const img of imgEls) {
+            const uid = img.dataset.uid;
+            if (!uid) continue;
+            if (_headshotCache[uid]) {
+                img.src = _headshotCache[uid];
+                continue;
+            }
+            try {
+                const res = await fetch(`/api/userdata.js?userId=${uid}`);
+                if (!res.ok) continue;
+                const data = await res.json();
+                const url = data.headshot || data.avatar || '';
+                _headshotCache[uid] = url;
+                img.src = url;
+            } catch (e) {
+                // leave blank / onerror handles it
+            }
+        }
+    }
     function renderTable() {
         const query = document.getElementById('searchBox').value.toLowerCase();
         sortCol = document.getElementById('sortSelect').value;
@@ -866,7 +890,6 @@
         }
 
         const rows = filtered.map(p => {
-            const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${p.uid}&width=48&height=48&format=png`;
             const tutBadge = p.tutorialCompleted
                 ? `<span class="badge badge-green">✓ Done</span>`
                 : `<span class="badge badge-red">✗ No</span>`;
@@ -877,7 +900,7 @@
             return `<tr onclick="openDetail('${p.uid}')">
                 <td>
                     <div class="player-cell">
-                        <img class="player-avatar" src="${avatarUrl}" alt="${p.displayName}" onerror="this.style.opacity=0.3">
+                        <img class="player-avatar" data-uid="${p.uid}" src="" alt="${p.displayName}" onerror="this.style.opacity=0.3">
                         <div>
                             <div class="player-name">${p.displayName || '—'}</div>
                             <div class="player-username">@${p.username || '—'}</div>
@@ -893,6 +916,7 @@
         }).join('');
 
         document.getElementById('playerTableBody').innerHTML = rows;
+        resolveHeadshots(document.querySelectorAll('.player-avatar[data-uid]'));
     }
 
     // ── DETAIL PANEL ──
@@ -900,7 +924,6 @@
         const p = allPlayers.find(x => x.uid === uid);
         if (!p) return;
 
-        const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${uid}&width=150&height=150&format=png`;
         const sessions = p.sessions ? Object.entries(p.sessions) : [];
 
         const sessionRows = sessions.length
@@ -917,7 +940,7 @@
 
         document.getElementById('detailContent').innerHTML = `
             <div class="detail-header">
-                <img class="detail-avatar" src="${avatarUrl}" alt="${p.displayName}" onerror="this.style.opacity=0.3">
+                <img class="detail-avatar" data-uid="${uid}" src="" alt="${p.displayName}" onerror="this.style.opacity=0.3">
                 <div>
                     <div class="detail-name">${p.displayName || '—'}</div>
                     <div class="detail-username">@${p.username || '—'}</div>
@@ -971,6 +994,7 @@
         `;
 
         document.getElementById('detailOverlay').classList.add('active');
+        resolveHeadshots(document.querySelectorAll('.detail-avatar[data-uid]'));
     }
 
     function closeDetail(e) {
