@@ -1,10 +1,10 @@
-<<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mekhis Creations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -25,8 +25,7 @@
             --green: #22c55e;
             --yellow: #ffd700;
             --red: #ef4444;
-            --orange: #f97316;
-            --mono: 'Space Mono', 'Fredoka One', Arial, sans-serif;
+            --mono: 'Fredoka One', Arial, sans-serif;
             --display: 'Fredoka One', Arial, sans-serif;
         }
 
@@ -199,11 +198,6 @@
         .hstat-value {
             font-size: 1.6em;
             color: white;
-            transition: color 0.4s ease;
-        }
-
-        .hstat-value.changed {
-            color: #ffd700;
         }
 
         .hstat-label {
@@ -212,51 +206,10 @@
             font-family: var(--mono);
         }
 
-        /* ── TABS ── */
-        .tab-nav {
-            display: flex;
-            gap: 0;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px;
-            border-bottom: 1px solid var(--panel-border);
-        }
-
-        .tab-btn {
-            padding: 16px 24px;
-            background: none;
-            border: none;
-            color: var(--text-dim);
-            font-family: var(--display);
-            font-size: 0.95em;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-bottom: 2px solid transparent;
-            position: relative;
-            top: 1px;
-        }
-
-        .tab-btn:hover {
-            color: var(--text);
-        }
-
-        .tab-btn.active {
-            color: var(--blue);
-            border-bottom-color: var(--blue);
-        }
-
         main {
             max-width: 1400px;
             margin: 0 auto;
             padding: 35px 40px;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
         }
 
         /* ── CONTROLS ── */
@@ -286,7 +239,7 @@
             border-color: var(--blue);
         }
 
-        .sort-select, .filter-select {
+        .sort-select {
             padding: 12px 18px;
             background: var(--panel);
             border: 1px solid var(--panel-border);
@@ -297,7 +250,7 @@
             cursor: pointer;
         }
 
-        .sort-select option, .filter-select option {
+        .sort-select option {
             background: #1a1a2e;
         }
 
@@ -317,11 +270,6 @@
         .refresh-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(59,130,246,0.5);
-        }
-
-        .refresh-btn.loading {
-            opacity: 0.6;
-            pointer-events: none;
         }
 
         /* ── PLAYER TABLE ── */
@@ -403,11 +351,6 @@
             object-fit: cover;
             background: #1a1a2e;
             flex-shrink: 0;
-            cursor: pointer;
-        }
-
-        .player-avatar:hover {
-            border-color: var(--blue);
         }
 
         .player-name {
@@ -425,11 +368,6 @@
             font-family: var(--mono);
             font-size: 0.8em;
             color: var(--text-dim);
-            cursor: pointer;
-        }
-
-        .uid-cell:hover {
-            color: var(--blue);
         }
 
         .badge {
@@ -445,6 +383,12 @@
             background: rgba(34,197,94,0.15);
             color: var(--green);
             border: 1px solid rgba(34,197,94,0.3);
+        }
+
+        .badge-yellow {
+            background: rgba(255,215,0,0.15);
+            color: var(--yellow);
+            border: 1px solid rgba(255,215,0,0.3);
         }
 
         .badge-red {
@@ -465,419 +409,188 @@
             color: var(--text-dim);
         }
 
-        /* ── PROFILE MODAL ── */
-        .profile-modal {
+        /* ── DETAIL PANEL ── */
+        .detail-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background: rgba(0,0,0,0.75);
+            z-index: 500;
+            justify-content: flex-end;
         }
 
-        .profile-modal.active {
+        .detail-overlay.active {
             display: flex;
         }
 
-        .profile-card {
+        .detail-panel {
+            width: 520px;
+            max-width: 95vw;
+            height: 100%;
             background: #0d0d18;
-            border: 1px solid var(--panel-border);
-            border-radius: 20px;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
+            border-left: 1px solid var(--panel-border);
             overflow-y: auto;
-            animation: slideDown 0.3s ease;
+            padding: 30px;
+            animation: slideIn 0.25s ease;
         }
 
-        @keyframes slideDown {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to   { transform: translateX(0); }
         }
 
-        .profile-close {
+        .detail-close {
             position: absolute;
             top: 20px;
-            right: 20px;
+            right: 25px;
             background: none;
             border: none;
             color: var(--text-dim);
-            font-size: 1.8em;
+            font-size: 1.5em;
             cursor: pointer;
-            z-index: 1001;
+            line-height: 1;
             transition: color 0.2s;
         }
 
-        .profile-close:hover {
+        .detail-close:hover {
             color: white;
         }
 
-        .profile-content {
-            padding: 40px;
-        }
-
-        .profile-header {
+        .detail-header {
             display: flex;
-            gap: 25px;
-            margin-bottom: 40px;
-            align-items: flex-start;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
             border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 30px;
         }
 
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 15px;
+        .detail-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
             border: 3px solid var(--blue);
             object-fit: cover;
-            flex-shrink: 0;
         }
 
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-name {
-            font-size: 2em;
+        .detail-name {
+            font-size: 1.6em;
             color: white;
+        }
+
+        .detail-username {
+            font-family: var(--mono);
+            font-size: 0.85em;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .detail-uid {
+            font-family: var(--mono);
+            font-size: 0.75em;
+            color: var(--text-dimmer);
+            margin-top: 4px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section-title {
+            font-size: 0.75em;
+            font-family: var(--mono);
+            color: var(--blue);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .detail-stat {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .detail-stat-label {
+            font-family: var(--mono);
+            font-size: 0.72em;
+            color: var(--text-dim);
             margin-bottom: 5px;
         }
 
-        .profile-username {
-            font-family: var(--mono);
-            font-size: 0.95em;
-            color: var(--text-dim);
-            margin-bottom: 3px;
-        }
-
-        .profile-id {
-            font-family: var(--mono);
-            font-size: 0.85em;
-            color: var(--text-dimmer);
-            margin-bottom: 15px;
-        }
-
-        .profile-status {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .status-badge {
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-family: var(--mono);
-            font-size: 0.8em;
-            background: rgba(59,130,246,0.15);
-            color: var(--blue);
-            border: 1px solid rgba(59,130,246,0.3);
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-box {
-            background: var(--panel);
-            border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 18px;
-        }
-
-        .stat-label {
-            font-family: var(--mono);
-            font-size: 0.75em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .stat-value {
-            font-size: 1.3em;
+        .detail-stat-value {
+            font-size: 1.1em;
             color: white;
-            font-weight: bold;
         }
 
-        .stat-value.accent {
+        .detail-stat-value.accent {
             color: var(--blue);
         }
 
-        .stat-value.green {
+        .detail-stat-value.green {
             color: var(--green);
         }
 
-        /* ── BAN SECTION ── */
-        .ban-section {
-            background: rgba(239,68,68,0.08);
-            border: 1px solid rgba(239,68,68,0.2);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 30px;
+        .detail-stat-value.yellow {
+            color: var(--yellow);
         }
 
-        .ban-title {
-            font-size: 1.1em;
-            color: var(--red);
-            margin-bottom: 15px;
+        /* Sessions list */
+        .sessions-list {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-        }
-
-        .ban-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-label {
-            font-family: var(--mono);
-            font-size: 0.8em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .form-input, .form-textarea {
-            padding: 12px 15px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            color: white;
-            font-family: var(--mono);
-            font-size: 0.9em;
-            transition: border-color 0.2s;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--red);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .ban-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .ban-btn {
-            flex: 1;
-            padding: 12px 18px;
-            border: none;
-            border-radius: 8px;
-            font-family: var(--display);
-            font-size: 0.95em;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: bold;
-        }
-
-        .ban-btn.confirm {
-            background: linear-gradient(135deg, var(--red), #dc2626);
-            color: white;
-            box-shadow: 0 3px 10px rgba(239,68,68,0.3);
-        }
-
-        .ban-btn.confirm:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(239,68,68,0.5);
-        }
-
-        .ban-btn.cancel {
-            background: var(--panel);
-            color: var(--text-dim);
-            border: 1px solid var(--panel-border);
-        }
-
-        .ban-btn.cancel:hover {
-            background: rgba(59,130,246,0.15);
-            color: var(--text);
-        }
-
-        /* ── SERVERS TAB ── */
-        .servers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .server-card {
-            background: var(--panel);
-            border: 1px solid var(--panel-border);
-            border-radius: 15px;
-            padding: 20px;
-            transition: all 0.3s;
-        }
-
-        .server-card:hover {
-            border-color: var(--blue);
-            background: rgba(59,130,246,0.12);
-        }
-
-        .server-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--panel-border);
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 8px var(--green);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .status-dot.offline {
-            background: var(--red);
-            box-shadow: 0 0 8px var(--red);
-        }
-
-        .server-name {
-            font-size: 1.2em;
-            color: white;
-            flex: 1;
-        }
-
-        .server-id {
-            font-family: var(--mono);
-            font-size: 0.75em;
-            color: var(--text-dimmer);
-        }
-
-        .server-info {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .server-stat {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .server-stat-label {
-            font-family: var(--mono);
-            font-size: 0.85em;
-            color: var(--text-dim);
-        }
-
-        .server-stat-value {
-            font-size: 1.1em;
-            color: var(--blue);
-            font-weight: bold;
-        }
-
-        .player-list {
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            max-height: 150px;
+            max-height: 300px;
             overflow-y: auto;
         }
 
-        .player-item {
-            padding: 6px 10px;
-            font-family: var(--mono);
-            font-size: 0.8em;
-            color: var(--text-dim);
-            border-bottom: 1px solid var(--panel-border);
-        }
-
-        .player-item:last-child {
-            border-bottom: none;
-        }
-
-        .player-item-name {
-            color: white;
-            font-weight: bold;
-        }
-
-        .server-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .server-btn {
-            flex: 1;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            font-family: var(--display);
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .server-btn.restart {
-            background: var(--orange);
-            color: white;
-        }
-
-        .server-btn.restart:hover {
-            background: #ea580c;
-            transform: translateY(-2px);
-        }
-
-        .server-btn.info {
+        .session-item {
             background: var(--panel);
-            color: var(--blue);
             border: 1px solid var(--panel-border);
-        }
-
-        .server-btn.info:hover {
-            background: rgba(59,130,246,0.15);
-        }
-
-        .global-restart {
-            background: linear-gradient(135deg, var(--red), #dc2626);
-            color: white;
-            padding: 15px 30px;
-            border: none;
             border-radius: 10px;
-            font-family: var(--display);
-            font-size: 1em;
-            cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 10px rgba(239,68,68,0.3);
-            transition: all 0.2s;
+            padding: 12px 15px;
+            display: grid;
+            grid-template-columns: 24px 1fr 1fr;
+            gap: 8px;
+            align-items: center;
         }
 
-        .global-restart:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(239,68,68,0.5);
+        .session-num {
+            font-family: var(--mono);
+            font-size: 0.75em;
+            color: var(--blue);
+            text-align: center;
+            background: rgba(59,130,246,0.15);
+            border-radius: 6px;
+            padding: 3px 0;
+        }
+
+        .session-date {
+            font-family: var(--mono);
+            font-size: 0.78em;
+            color: var(--text-dim);
+        }
+
+        .session-dur {
+            font-family: var(--mono);
+            font-size: 0.82em;
+            color: white;
+            text-align: right;
+        }
+
+        .no-sessions {
+            font-family: var(--mono);
+            font-size: 0.85em;
+            color: var(--text-dimmer);
+            text-align: center;
+            padding: 20px;
         }
 
         /* ── LOADING / EMPTY ── */
@@ -903,27 +616,36 @@
             to { transform: rotate(360deg); }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
         /* scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.6); }
 
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .refresh-btn.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .hstat-value {
+            transition: color 0.4s ease;
+        }
+
+        .hstat-value.changed {
+            color: #ffd700;
+        }
+
         @media (max-width: 768px) {
             main { padding: 20px; }
             header { padding: 18px 20px; }
             .header-stats { display: none; }
-            .profile-card { width: 95vw; max-height: 95vh; }
-            .profile-content { padding: 20px; }
-            .profile-header { flex-direction: column; align-items: center; text-align: center; }
+            .detail-panel { width: 100vw; }
             td:nth-child(3), td:nth-child(4), th:nth-child(3), th:nth-child(4) { display: none; }
-            .servers-grid { grid-template-columns: 1fr; }
-            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -953,7 +675,7 @@
     <header>
         <div class="header-inner">
             <div class="header-left">
-                <h1>Player Management</h1>
+                <h1>Player Data</h1>
                 <p>mekhiscreations.org / plrdata &nbsp;·&nbsp; live firebase tracking</p>
             </div>
             <div class="header-stats">
@@ -977,79 +699,56 @@
         </div>
     </header>
 
-    <div class="tab-nav">
-        <button class="tab-btn active" onclick="switchTab('players')">👥 Players</button>
-        <button class="tab-btn" onclick="switchTab('servers')">🖥️ Servers</button>
-        <button class="tab-btn" onclick="switchTab('bans')">⛔ Bans</button>
-    </div>
-
     <main>
-        <!-- ── PLAYERS TAB ── -->
-        <div id="players-tab" class="tab-content active">
-            <div class="controls">
-                <input type="text" class="search-box" id="searchBox" placeholder="Search username, display name or user ID..." oninput="renderTable()">
-                <select class="sort-select" id="sortSelect" onchange="renderTable()">
-                    <option value="lastJoined">Sort: Last Joined</option>
-                    <option value="firstJoined">Sort: First Joined</option>
-                    <option value="playCount">Sort: Play Count</option>
-                    <option value="totalPlaySeconds">Sort: Total Playtime</option>
-                </select>
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <div style="display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:0.8em;color:var(--text-dim);">
-                        <span id="liveDot" style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 6px var(--green);animation:pulse 2s ease-in-out infinite;"></span>
-                        <span id="lastUpdatedLabel">Live</span>
-                    </div>
-                    <button class="refresh-btn" id="refreshBtn" onclick="loadData()">↻ Refresh</button>
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search username, display name or user ID..." oninput="renderTable()">
+            <select class="sort-select" id="sortSelect" onchange="renderTable()">
+                <option value="lastJoined">Sort: Last Joined</option>
+                <option value="firstJoined">Sort: First Joined</option>
+                <option value="playCount">Sort: Play Count</option>
+                <option value="totalPlaySeconds">Sort: Total Playtime</option>
+                <option value="tutorialSeconds">Sort: Tutorial Time</option>
+            </select>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div style="display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:0.8em;color:var(--text-dim);">
+                    <span id="liveDot" style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 6px var(--green);animation:pulse 2s ease-in-out infinite;"></span>
+                    <span id="lastUpdatedLabel">Live</span>
                 </div>
-            </div>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th onclick="setSortCol('playCount')">Sessions <span class="sort-arrow">↕</span></th>
-                            <th onclick="setSortCol('totalPlaySeconds')">Total Playtime <span class="sort-arrow">↕</span></th>
-                            <th onclick="setSortCol('firstJoined')">First Joined <span class="sort-arrow">↕</span></th>
-                            <th onclick="setSortCol('lastJoined')">Last Joined <span class="sort-arrow">↕</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="playerTableBody">
-                        <tr><td colspan="5"><div class="state-box"><div class="spinner"></div>Loading player data...</div></td></tr>
-                    </tbody>
-                </table>
+                <button class="refresh-btn" id="refreshBtn" onclick="loadData()">↻ Refresh</button>
             </div>
         </div>
 
-        <!-- ── SERVERS TAB ── -->
-        <div id="servers-tab" class="tab-content">
-            <div style="margin-bottom: 20px;">
-                <button class="global-restart" onclick="restartAllServers()">⚡ Restart All Servers</button>
-            </div>
-            <div class="servers-grid" id="serversGrid">
-                <div class="state-box"><div class="spinner"></div>Loading server data...</div>
-            </div>
-        </div>
-
-        <!-- ── BANS TAB ── -->
-        <div id="bans-tab" class="tab-content">
-            <div id="bansContent">
-                <div class="state-box">Select a player to manage bans</div>
-            </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th onclick="setSortCol('playCount')">Sessions <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('totalPlaySeconds')">Total Playtime <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('tutorialSeconds')">Tutorial <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('firstJoined')">First Joined <span class="sort-arrow">↕</span></th>
+                        <th onclick="setSortCol('lastJoined')">Last Joined <span class="sort-arrow">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody id="playerTableBody">
+                    <tr><td colspan="6"><div class="state-box"><div class="spinner"></div>Loading player data...</div></td></tr>
+                </tbody>
+            </table>
         </div>
     </main>
 </div>
 
-<!-- ── PROFILE MODAL ── -->
-<div class="profile-modal" id="profileModal" onclick="if(event.target===this) closeProfile()">
-    <button class="profile-close" onclick="closeProfile()">✕</button>
-    <div class="profile-card">
-        <div class="profile-content" id="profileContent"></div>
+<!-- ── DETAIL PANEL ── -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
+    <div class="detail-panel" id="detailPanel">
+        <button class="detail-close" onclick="closeDetailPanel()">✕</button>
+        <div id="detailContent"></div>
     </div>
 </div>
 
 <script>
     // ── PASSWORD ──
+    // "duck" stored as XOR-obfuscated base64 (key=42). Not plaintext in source.
     const _k = 42;
     const _e = "Tl9JQQ==";
     function _decode(e) {
@@ -1072,6 +771,7 @@
         }
     }
 
+    // Check if already authed this session
     if (sessionStorage.getItem('plrdata_auth') === '1') {
         document.getElementById('lockScreen').classList.add('hidden');
         document.getElementById('app').classList.add('visible');
@@ -1118,7 +818,7 @@
 
     async function loadData() {
         document.getElementById('playerTableBody').innerHTML =
-            `<tr><td colspan="5"><div class="state-box"><div class="spinner"></div>Loading player data...</div></td></tr>`;
+            `<tr><td colspan="6"><div class="state-box"><div class="spinner"></div>Loading player data...</div></td></tr>`;
 
         try {
             const res = await fetch(`${FIREBASE_URL}/playertracking.json`);
@@ -1126,7 +826,7 @@
 
             if (!raw || typeof raw !== 'object') {
                 document.getElementById('playerTableBody').innerHTML =
-                    `<tr><td colspan="5"><div class="state-box">No player data found.</div></td></tr>`;
+                    `<tr><td colspan="6"><div class="state-box">No player data found.</div></td></tr>`;
                 return;
             }
 
@@ -1144,15 +844,14 @@
             document.getElementById('hAvgPlaytime').textContent = fmtSeconds(avgSeconds);
 
             renderTable();
-            loadServers();
         } catch (err) {
             document.getElementById('playerTableBody').innerHTML =
-                `<tr><td colspan="5"><div class="state-box">Failed to load data: ${err.message}</div></td></tr>`;
+                `<tr><td colspan="6"><div class="state-box">Failed to load data: ${err.message}</div></td></tr>`;
         }
     }
 
     let sortCol = 'lastJoined';
-    let sortDir = -1;
+    let sortDir = -1; // -1 = desc, 1 = asc
 
     function setSortCol(col) {
         if (sortCol === col) sortDir *= -1;
@@ -1161,6 +860,30 @@
         renderTable();
     }
 
+
+    // ── HEADSHOT CACHE & RESOLVER ──
+    const _headshotCache = {};
+
+    async function resolveHeadshots(imgEls) {
+        for (const img of imgEls) {
+            const uid = img.dataset.uid;
+            if (!uid) continue;
+            if (_headshotCache[uid]) {
+                img.src = _headshotCache[uid];
+                continue;
+            }
+            try {
+                const res = await fetch(`/api/userdata.js?userId=${uid}`);
+                if (!res.ok) continue;
+                const data = await res.json();
+                const url = data.headshot || data.avatar || '';
+                _headshotCache[uid] = url;
+                img.src = url;
+            } catch (e) {
+                // leave blank / onerror handles it
+            }
+        }
+    }
     function renderTable() {
         const query = document.getElementById('searchBox').value.toLowerCase();
         sortCol = document.getElementById('sortSelect').value;
@@ -1186,15 +909,22 @@
 
         if (filtered.length === 0) {
             document.getElementById('playerTableBody').innerHTML =
-                `<tr><td colspan="5"><div class="state-box">No players match your search.</div></td></tr>`;
+                `<tr><td colspan="6"><div class="state-box">No players match your search.</div></td></tr>`;
             return;
         }
 
         const rows = filtered.map(p => {
-            return `<tr onclick="openProfile('${p.uid}')">
+            const tutBadge = p.tutorialCompleted
+                ? `<span class="badge badge-green">✓ Done</span>`
+                : `<span class="badge badge-red">✗ No</span>`;
+            const tutTime = p.tutorialCompleted && p.tutorialSeconds
+                ? `<span class="dim-cell">${fmtSeconds(p.tutorialSeconds)}</span>`
+                : tutBadge;
+
+            return `<tr onclick="openDetail('${p.uid}')">
                 <td>
                     <div class="player-cell">
-                        <img class="player-avatar" src="" alt="${p.displayName}" onerror="this.style.opacity=0.3">
+                        <img class="player-avatar" data-uid="${p.uid}" src="" alt="${p.displayName}" onerror="this.style.opacity=0.3">
                         <div>
                             <div class="player-name">${p.displayName || '—'}</div>
                             <div class="player-username">@${p.username || '—'}</div>
@@ -1203,262 +933,104 @@
                 </td>
                 <td><span class="mono-cell">${p.playCount || 0}</span></td>
                 <td><span class="mono-cell">${fmtSeconds(p.totalPlaySeconds)}</span></td>
+                <td>${tutTime}</td>
                 <td><span class="dim-cell">${fmtDate(p.firstJoined)}</span></td>
                 <td><span class="dim-cell">${timeAgo(p.lastJoined)}</span></td>
             </tr>`;
         }).join('');
 
         document.getElementById('playerTableBody').innerHTML = rows;
-        resolveHeadshots(document.querySelectorAll('.player-avatar'));
+        resolveHeadshots(document.querySelectorAll('.player-avatar[data-uid]'));
     }
 
-    // ── HEADSHOT RESOLVER ── 
-    const _headshotCache = {};
-
-    async function resolveHeadshots(imgEls) {
-        for (const img of imgEls) {
-            const row = img.closest('tr');
-            if (!row) continue;
-            const uid = row.dataset.uid || extractUidFromRow(row);
-            if (!uid) continue;
-            
-            if (_headshotCache[uid]) {
-                img.src = _headshotCache[uid];
-                continue;
-            }
-
-            try {
-                const res = await fetch(`/api/userdata.js?userId=${uid}`);
-                if (!res.ok) continue;
-                const data = await res.json();
-                const url = data.headshot || data.avatar || '';
-                _headshotCache[uid] = url;
-                img.src = url;
-            } catch (e) {
-                // leave blank
-            }
-        }
-    }
-
-    function extractUidFromRow(row) {
-        for (let i = 0; i < allPlayers.length; i++) {
-            const p = allPlayers[i];
-            const cells = row.querySelectorAll('td');
-            if (cells[0] && cells[0].textContent.includes(p.displayName)) {
-                return p.uid;
-            }
-        }
-        return null;
-    }
-
-    // ── PROFILE MODAL ──
-    async function openProfile(uid) {
+    // ── DETAIL PANEL ──
+    function openDetail(uid) {
         const p = allPlayers.find(x => x.uid === uid);
         if (!p) return;
 
-        try {
-            const apiRes = await fetch(`/api/userdata.js?userId=${uid}`);
-            const apiData = apiRes.ok ? await apiRes.json() : {};
+        const sessions = p.sessions ? Object.entries(p.sessions) : [];
 
-            const sessions = p.sessions ? Object.entries(p.sessions) : [];
-            const sessionRows = sessions.length
-                ? sessions.map(([idx, s]) => `
-                    <div class="player-item">
-                        <span class="player-item-name">#${idx}</span> - ${fmtDateTime(s.joinedAt)} (${fmtSeconds(s.durationSeconds)})
-                    </div>`).join('')
-                : '<div style="padding: 10px; color: var(--text-dimmer); text-align: center;">No session data</div>';
-
-            document.getElementById('profileContent').innerHTML = `
-                <div class="profile-header">
-                    <img class="profile-avatar" src="${apiData.headshot || apiData.avatar || ''}" alt="${p.displayName}" onerror="this.style.opacity=0.3">
-                    <div class="profile-info">
-                        <div class="profile-name">${p.displayName || '—'}</div>
-                        <div class="profile-username">@${p.username || '—'}</div>
-                        <div class="profile-id">UID: ${uid}</div>
-                        <div class="profile-status">
-                            <div class="status-badge">Member since ${fmtDate(p.firstJoined)}</div>
-                            <div class="status-badge">${p.tutorialCompleted ? '✓ Tutorial Done' : '✗ Tutorial Pending'}</div>
-                        </div>
+        const sessionRows = sessions.length
+            ? sessions.map(([idx, s]) => `
+                <div class="session-item">
+                    <div class="session-num">#${idx}</div>
+                    <div>
+                        <div class="session-date">${fmtDateTime(s.joinedAt)}</div>
+                        ${s.leftAt ? `<div class="session-date" style="color:var(--text-dimmer)">↳ ${fmtDateTime(s.leftAt)}</div>` : '<div class="session-date" style="color:var(--green)">↳ Active now</div>'}
                     </div>
-                </div>
+                    <div class="session-dur">${s.durationSeconds != null ? fmtSeconds(s.durationSeconds) : '—'}</div>
+                </div>`).join('')
+            : '<div class="no-sessions">No session data recorded yet.</div>';
 
-                <div class="profile-stats">
-                    <div class="stat-box">
-                        <div class="stat-label">Play Count</div>
-                        <div class="stat-value accent">${p.playCount || 0}</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Total Playtime</div>
-                        <div class="stat-value accent">${fmtSeconds(p.totalPlaySeconds)}</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Last Seen</div>
-                        <div class="stat-value">${timeAgo(p.lastSeen)}</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Account Created</div>
-                        <div class="stat-value">${apiData.created ? fmtDate(apiData.created) : '—'}</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 20px;">
-                    <div class="form-label" style="margin-bottom: 10px;">Recent Sessions (${sessions.length})</div>
-                    <div class="player-list">${sessionRows}</div>
-                </div>
-
-                <div class="ban-section">
-                    <div class="ban-title">⛔ Ban Player</div>
-                    <div class="ban-form">
-                        <div class="form-group">
-                            <label class="form-label">Duration</label>
-                            <select class="form-input" id="banDuration">
-                                <option value="1h">1 Hour</option>
-                                <option value="24h">24 Hours</option>
-                                <option value="7d">7 Days</option>
-                                <option value="30d">30 Days</option>
-                                <option value="permanent">Permanent</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Reason</label>
-                            <textarea class="form-textarea" id="banReason" placeholder="Enter ban reason..."></textarea>
-                        </div>
-                        <div class="ban-buttons">
-                            <button class="ban-btn confirm" onclick="submitBan('${uid}')">Confirm Ban</button>
-                            <button class="ban-btn cancel" onclick="closeProfile()">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('profileModal').classList.add('active');
-        } catch (err) {
-            console.error('Failed to load profile:', err);
-        }
-    }
-
-    function closeProfile() {
-        document.getElementById('profileModal').classList.remove('active');
-    }
-
-    async function submitBan(uid) {
-        const duration = document.getElementById('banDuration').value;
-        const reason = document.getElementById('banReason').value;
-
-        if (!reason.trim()) {
-            alert('Please enter a ban reason');
-            return;
-        }
-
-        const p = allPlayers.find(x => x.uid === uid);
-        if (!p) return;
-
-        const durationMs = {
-            '1h': 3600000,
-            '24h': 86400000,
-            '7d': 604800000,
-            '30d': 2592000000,
-            'permanent': -1
-        }[duration];
-
-        const banData = {
-            identifier: uid,
-            reason: reason,
-            duration: duration,
-            bannedAt: new Date().toISOString(),
-            expiresAt: durationMs === -1 ? 'permanent' : new Date(Date.now() + durationMs).toISOString(),
-            active: true
-        };
-
-        try {
-            const res = await fetch(`${FIREBASE_URL}/bans/${uid}.json`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(banData)
-            });
-
-            if (res.ok) {
-                alert(`${p.displayName} has been banned`);
-                closeProfile();
-            } else {
-                alert('Failed to ban player');
-            }
-        } catch (err) {
-            console.error('Ban error:', err);
-            alert('Error banning player');
-        }
-    }
-
-    // ── SERVERS TAB ──
-    async function loadServers() {
-        // Mock server data - in production, fetch from your server management API
-        const mockServers = [
-            { id: 'srv-001', name: 'Main Server 1', online: true, players: ['NiceSkylerthecool', 'Player2', 'Player3'], maxPlayers: 10 },
-            { id: 'srv-002', name: 'Main Server 2', online: true, players: ['Player4', 'Player5'], maxPlayers: 10 },
-            { id: 'srv-003', name: 'Backup Server', online: false, players: [], maxPlayers: 10 }
-        ];
-
-        const html = mockServers.map(server => `
-            <div class="server-card">
-                <div class="server-status">
-                    <div class="status-dot ${server.online ? '' : 'offline'}"></div>
-                    <div style="flex: 1;">
-                        <div class="server-name">${server.name}</div>
-                        <div class="server-id">${server.id}</div>
-                    </div>
-                    <div style="color: ${server.online ? 'var(--green)' : 'var(--red)'}; font-size: 0.8em; font-weight: bold;">
-                        ${server.online ? 'ONLINE' : 'OFFLINE'}
-                    </div>
-                </div>
-                <div class="server-info">
-                    <div class="server-stat">
-                        <span class="server-stat-label">Player Count</span>
-                        <span class="server-stat-value">${server.players.length}/${server.maxPlayers}</span>
-                    </div>
-                </div>
-                ${server.players.length > 0 ? `
-                    <div class="player-list">
-                        ${server.players.map(p => `<div class="player-item"><span class="player-item-name">${p}</span></div>`).join('')}
-                    </div>
-                ` : ''}
-                <div class="server-actions">
-                    <button class="server-btn restart" onclick="restartServer('${server.id}')">Restart</button>
-                    <button class="server-btn info" onclick="alert('Server ID: ${server.id}')">Info</button>
+        document.getElementById('detailContent').innerHTML = `
+            <div class="detail-header">
+                <img class="detail-avatar" data-uid="${uid}" src="" alt="${p.displayName}" onerror="this.style.opacity=0.3">
+                <div>
+                    <div class="detail-name">${p.displayName || '—'}</div>
+                    <div class="detail-username">@${p.username || '—'}</div>
+                    <div class="detail-uid">UID: ${uid}</div>
                 </div>
             </div>
-        `).join('');
 
-        document.getElementById('serversGrid').innerHTML = html;
+            <div class="detail-section">
+                <div class="detail-section-title">Overview</div>
+                <div class="detail-grid">
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Play Count</div>
+                        <div class="detail-stat-value accent">${p.playCount || 0} sessions</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Total Playtime</div>
+                        <div class="detail-stat-value accent">${fmtSeconds(p.totalPlaySeconds)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">First Joined</div>
+                        <div class="detail-stat-value">${fmtDate(p.firstJoined)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Last Joined</div>
+                        <div class="detail-stat-value">${fmtDate(p.lastJoined)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Last Seen</div>
+                        <div class="detail-stat-value">${timeAgo(p.lastSeen)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Tutorial</div>
+                        <div class="detail-stat-value ${p.tutorialCompleted ? 'green' : ''}">${p.tutorialCompleted ? '✓ Completed' : '✗ Not done'}</div>
+                    </div>
+                    ${p.tutorialCompleted ? `
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Tutorial Date</div>
+                        <div class="detail-stat-value">${fmtDate(p.tutorialDate)}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">Time to Complete</div>
+                        <div class="detail-stat-value yellow">${fmtSeconds(p.tutorialSeconds)}</div>
+                    </div>` : ''}
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">Session History (${sessions.length})</div>
+                <div class="sessions-list">${sessionRows}</div>
+            </div>
+        `;
+
+        document.getElementById('detailOverlay').classList.add('active');
+        resolveHeadshots(document.querySelectorAll('.detail-avatar[data-uid]'));
     }
 
-    async function restartServer(serverId) {
-        if (confirm(`Restart server ${serverId}? All players will be disconnected.`)) {
-            alert(`Server ${serverId} restarting... (mock)`);
-            // In production: send restart command to your server management API
-        }
+    function closeDetail(e) {
+        if (e.target === document.getElementById('detailOverlay')) closeDetailPanel();
     }
 
-    async function restartAllServers() {
-        if (confirm('Restart ALL servers? All players will be disconnected. This cannot be undone.')) {
-            alert('All servers restarting... (mock)');
-            loadServers();
-        }
+    function closeDetailPanel() {
+        document.getElementById('detailOverlay').classList.remove('active');
     }
 
-    // ── TABS ──
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(tabName + '-tab').classList.add('active');
-        event.target.classList.add('active');
-
-        if (tabName === 'servers') {
-            loadServers();
-        }
-    }
-
-    // ── POLLING ──
-    const POLL_INTERVAL = 15000;
+    // ── REAL-TIME POLLING ──
+    const POLL_INTERVAL = 15000; // refresh every 15 seconds
     let pollTimer = null;
     let lastValues = {};
 
@@ -1483,6 +1055,7 @@
         }
     }
 
+    // Wrap loadData to flash changed stats and update the label
     const _origLoadData = loadData;
     loadData = async function() {
         const btn = document.getElementById('refreshBtn');
@@ -1490,6 +1063,7 @@
 
         await _origLoadData();
 
+        // Flash any header stats that changed
         flashChanged('hTotalPlayers', document.getElementById('hTotalPlayers').textContent);
         flashChanged('hTotalSessions', document.getElementById('hTotalSessions').textContent);
         flashChanged('hTutCompleted', document.getElementById('hTutCompleted').textContent);
@@ -1498,10 +1072,19 @@
         updateLastUpdatedLabel();
         if (btn) btn.classList.remove('loading');
 
+        // Re-schedule next poll
         clearTimeout(pollTimer);
         pollTimer = setTimeout(loadData, POLL_INTERVAL);
     };
 
+    // Countdown shown in the live dot tooltip
+    function startCountdown() {
+        let secs = POLL_INTERVAL / 1000;
+        const label = document.getElementById('lastUpdatedLabel');
+        // label is updated by loadData itself, countdown only between polls
+    }
+
+    // Auto-load if already authenticated — kicks off the polling loop
     if (sessionStorage.getItem('plrdata_auth') === '1') {
         loadData();
     }
