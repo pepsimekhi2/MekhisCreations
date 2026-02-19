@@ -604,7 +604,7 @@ function updateOverview(){
 
 function isRecentPing(ping){
   if(!ping)return false;
-  return (Date.now()-new Date(ping).getTime())<60000; // within 60s
+  return (Date.now()-new Date(ping).getTime())<90000; // within 90s (server pings every 20s)
 }
 
 // ── ACTIVITY FEED ──
