@@ -241,22 +241,28 @@ td{padding:13px 18px;font-size:0.88em;vertical-align:middle;}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
 .card-hdr{padding:18px 20px;border-bottom:1px solid var(--border);font-size:1em;color:#fff;}
 
-/* ─── MESSAGE BUBBLE ─── */
-.msg-bubble{
-  background:var(--panel);border:1px solid var(--border);border-radius:10px;
-  padding:11px 14px;margin-bottom:8px;
+/* ─── MESSAGE DISPLAY ─── */
+.msg-scroll{max-height:400px;overflow-y:auto;}
+.msg-item{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;margin-bottom:10px;transition:all .2s;
 }
-.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:0.78em;}
-.msg-author{color:var(--blue);font-weight:bold;}
-.msg-time{color:var(--dimmer);margin-left:auto;}
-.msg-content{font-size:0.85em;color:var(--text);word-wrap:break-word;}
-.msg-scroll{max-height:380px;overflow-y:auto;}
+.msg-item:hover{background:rgba(59,130,246,0.12);border-color:var(--border2);}
+.msg-item:last-child{margin-bottom:0;}
+.msg-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.msg-avatar{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;object-fit:cover;background:var(--bg3);}
+.msg-author-info{flex:1;}
+.msg-author{color:var(--blue);font-weight:bold;font-size:0.9em;}
+.msg-meta{display:flex;gap:10px;margin-top:1px;font-size:0.72em;}
+.msg-time{color:var(--dimmer);}
+.msg-server{color:var(--blue);opacity:0.8;}
+.msg-content{font-size:0.87em;color:var(--text);word-wrap:break-word;line-height:1.4;padding:8px 0;border-left:2px solid var(--border2);padding-left:12px;color:rgba(232,232,240,0.9);}
 
 /* SCROLLBAR */
-::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(59,130,246,.25);border-radius:3px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(59,130,246,.5);}
+::-webkit-scrollbar-thumb{background:rgba(59,130,246,.3);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(59,130,246,.6);}
 
 /* ─── DETAIL PANEL ─── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;justify-content:flex-end;backdrop-filter:blur(4px);}
@@ -540,13 +546,13 @@ async function fetchAll(){
     allPlayers=Object.entries(plrRes).map(([uid,d])=>({uid,...d}));
   allServers=srvRes && typeof srvRes==='object' ? srvRes : {};
   
-  // Extract messages from all servers
+  // Extract messages from all servers with server ID tracking
   allMessages={};
   if(srvRes && typeof srvRes==='object'){
-    Object.values(srvRes).forEach(server=>{
+    Object.entries(srvRes).forEach(([serverId,server])=>{
       if(server.chat && typeof server.chat==='object'){
         Object.entries(server.chat).forEach(([msgId,msg])=>{
-          allMessages[msgId]=msg;
+          allMessages[msgId]={...msg,serverId};
         });
       }
     });
@@ -664,21 +670,32 @@ function renderMessages(){
   const messages=Object.entries(allMessages)
     .map(([id,msg])=>({id,...msg}))
     .sort((a,b)=>new Date(b.timestamp).getTime()-new Date(a.timestamp).getTime())
-    .slice(0,15);
+    .slice(0,20);
   
   if(!messages.length){
     feed.innerHTML='<div class="state-box">No messages yet.</div>';
     return;
   }
   
-  feed.innerHTML=messages.map(msg=>`
-    <div class="msg-bubble">
+  feed.innerHTML=messages.map(msg=>{
+    const serverId=msg.serverId||'unknown';
+    const shortServerId=serverId.length>12?serverId.slice(0,6)+'…':serverId;
+    return`
+    <div class="msg-item">
       <div class="msg-header">
-        <span class="msg-author">${msg.displayName||msg.username||'Unknown'}</span>
-        <span class="msg-time">${ago(msg.timestamp)}</span>
+        <img class="msg-avatar" data-uid="${msg.userId}" src="" alt="">
+        <div class="msg-author-info">
+          <div class="msg-author">${msg.displayName||msg.username||'Unknown'}</div>
+          <div class="msg-meta">
+            <span class="msg-time">${ago(msg.timestamp)}</span>
+            <span class="msg-server">🖥️ ${shortServerId}</span>
+          </div>
+        </div>
       </div>
       <div class="msg-content">${escapeHtml(msg.message||'')}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  resolveAvatars(feed.querySelectorAll('.msg-avatar[data-uid]'));
 }
 
 function escapeHtml(text){
