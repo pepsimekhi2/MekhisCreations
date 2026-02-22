@@ -232,6 +232,7 @@ td{padding:13px 18px;font-size:0.88em;vertical-align:middle;}
 .activity-dot.join{background:var(--green);}
 .activity-dot.leave{background:var(--red);}
 .activity-dot.tut{background:var(--yellow);}
+.activity-dot.msg{background:var(--purple);}
 .activity-text{flex:1;font-size:0.88em;color:var(--text);}
 .activity-time{font-size:0.78em;color:var(--dimmer);white-space:nowrap;}
 
@@ -240,38 +241,22 @@ td{padding:13px 18px;font-size:0.88em;vertical-align:middle;}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
 .card-hdr{padding:18px 20px;border-bottom:1px solid var(--border);font-size:1em;color:#fff;}
 
-/* ─── ERROR ANALYSIS ─── */
-.error-upload{
-  background:var(--bg2);border:2px dashed var(--border2);border-radius:18px;
-  padding:40px;text-align:center;margin-bottom:28px;transition:all .2s;cursor:pointer;
+/* ─── MESSAGE BUBBLE ─── */
+.msg-bubble{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:11px 14px;margin-bottom:8px;
 }
-.error-upload:hover{border-color:var(--blue);background:rgba(59,130,246,0.05);}
-.error-upload.dragover{border-color:var(--blue);background:rgba(59,130,246,0.1);}
-.error-upload-icon{font-size:2.2em;margin-bottom:12px;display:block;}
-.error-upload-text{font-size:0.95em;color:var(--text);margin-bottom:6px;}
-.error-upload-sub{font-size:0.82em;color:var(--dim);}
-.error-upload input[type="file"]{display:none;}
-.chart-container{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:28px;position:relative;height:350px;}
-.error-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
-.error-breakdown-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:18px;
-  padding:20px;text-align:center;
-}
-.error-type-label{font-size:0.82em;color:var(--dim);margin-bottom:10px;}
-.error-type-value{font-size:2em;color:#fff;margin-bottom:4px;}
-.error-type-pct{font-size:0.8em;color:var(--blue);}
-.error-peaks{background:var(--bg2);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
-.error-peaks-hdr{padding:18px 20px;border-bottom:1px solid var(--border);font-size:1em;color:#fff;}
-.peaks-table{width:100%;}
-.peaks-table thead tr{background:rgba(59,130,246,0.08);}
-.peaks-table th{padding:12px 16px;text-align:left;color:var(--blue);font-size:0.78em;border-bottom:1px solid var(--border);}
-.peaks-table td{padding:12px 16px;border-bottom:1px solid rgba(59,130,246,0.06);font-size:0.85em;}
-.peaks-table tbody tr:hover{background:rgba(59,130,246,0.05);}
-.peaks-table tbody tr:last-child td{border-bottom:none;}
-.peak-value{color:#fff;font-weight:bold;}
-.peak-type{color:var(--blue);}
-.peak-time{color:var(--dim);}
-.no-data{padding:40px;text-align:center;color:var(--dim);}
+.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:0.78em;}
+.msg-author{color:var(--blue);font-weight:bold;}
+.msg-time{color:var(--dimmer);margin-left:auto;}
+.msg-content{font-size:0.85em;color:var(--text);word-wrap:break-word;}
+.msg-scroll{max-height:380px;overflow-y:auto;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(59,130,246,.25);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(59,130,246,.5);}
 
 /* ─── DETAIL PANEL ─── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;justify-content:flex-end;backdrop-filter:blur(4px);}
@@ -317,18 +302,11 @@ td{padding:13px 18px;font-size:0.88em;vertical-align:middle;}
 .session-info strong{color:var(--text);display:block;margin-bottom:2px;}
 .session-dur{font-size:0.85em;color:#fff;text-align:right;white-space:nowrap;}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(59,130,246,.25);border-radius:3px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(59,130,246,.5);}
-
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%);}
   .main{margin-left:0;}
   .stat-grid{grid-template-columns:1fr 1fr;}
   .ov-grid{grid-template-columns:1fr;}
-  .error-breakdown{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -368,9 +346,6 @@ td{padding:13px 18px;font-size:0.88em;vertical-align:middle;}
       <div class="nav-item" onclick="goPage('servers',this)">
         <span class="icon">🖥️</span> Live Servers
         <span class="nav-badge" id="navServerCount">0</span>
-      </div>
-      <div class="nav-item" onclick="goPage('errors',this)">
-        <span class="icon">⚠️</span> Error Analysis
       </div>
     </nav>
     <div class="sidebar-bottom">
@@ -443,10 +418,17 @@ td{padding:13px 18px;font-size:0.88em;vertical-align:middle;}
           </div>
         </div>
         <div class="card">
-          <div class="card-hdr">🏆 Most Played</div>
-          <div id="topPlayersList">
+          <div class="card-hdr">💬 Recent Messages</div>
+          <div class="msg-scroll" id="messagesFeed">
             <div class="state-box"><div class="spinner"></div>Loading...</div>
           </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-hdr">🏆 Most Played</div>
+        <div id="topPlayersList">
+          <div class="state-box"><div class="spinner"></div>Loading...</div>
         </div>
       </div>
     </div>
@@ -480,52 +462,6 @@ td{padding:13px 18px;font-size:0.88em;vertical-align:middle;}
       </div>
       <div class="server-grid" id="serverGrid">
         <div class="state-box"><div class="spinner"></div>Loading servers...</div>
-      </div>
-    </div>
-
-    <!-- ERROR ANALYSIS PAGE -->
-    <div class="page" id="page-errors">
-      <div class="error-upload" id="errorUpload" onclick="document.getElementById('csvFile').click();">
-        <span class="error-upload-icon">📁</span>
-        <div class="error-upload-text">Upload Error Log CSV</div>
-        <div class="error-upload-sub">Drag and drop your file here, or click to browse</div>
-        <input type="file" id="csvFile" accept=".csv" onchange="handleFileUpload(event)">
-      </div>
-
-      <div id="errorContent" style="display:none;">
-        <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px;">
-          <div class="stat-card blue">
-            <div class="stat-icon">⚠️</div>
-            <div class="stat-value" id="errorTotal">—</div>
-            <div class="stat-label">Total Errors</div>
-            <div class="stat-sub" id="errorTimeRange"></div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-icon">📊</div>
-            <div class="stat-value" id="errorAvg">—</div>
-            <div class="stat-label">Avg Per Interval</div>
-            <div class="stat-sub" id="errorIntervals">— time periods</div>
-          </div>
-          <div class="stat-card red" style="--red:#ef4444;">
-            <div class="stat-icon">📈</div>
-            <div class="stat-value" id="errorPeak">—</div>
-            <div class="stat-label">Peak Errors</div>
-            <div class="stat-sub" id="errorPeakTime">at —</div>
-          </div>
-        </div>
-
-        <div class="chart-container">
-          <canvas id="errorChart"></canvas>
-        </div>
-
-        <div class="error-breakdown" id="breakdownCards">
-        </div>
-
-        <div class="error-peaks">
-          <div class="error-peaks-hdr">⚡ Error Spikes (Top 10)</div>
-          <div id="peaksTableContainer">
-          </div>
-        </div>
       </div>
     </div>
 
@@ -574,12 +510,10 @@ if(sessionStorage.getItem('plrdata_v')==='1'){
 // ── CONSTANTS ──
 const FB='https://ban-cloud-d854d-default-rtdb.firebaseio.com';
 const POLL_MS=15000;
-let allPlayers=[],allServers={};
+let allPlayers=[],allServers={},allMessages={};
 let sortCol='lastJoined',sortDir=-1;
 let pollTimer=null;
 const avatarCache={};
-let errorChart=null;
-let currentErrorData=null;
 
 // ── NAV ──
 let currentPage='overview';
@@ -595,180 +529,28 @@ function goPage(id,el){
   document.getElementById('sortSel').style.display=showSearch?'':'none';
 }
 
-// ── ERROR ANALYSIS ──
-function handleFileUpload(e){
-  const file=e.target.files[0];
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=(ev)=>{
-    try{
-      parseCSV(ev.target.result);
-      document.getElementById('errorUpload').style.display='none';
-      document.getElementById('errorContent').style.display='block';
-    }catch(err){
-      alert('Error parsing CSV: '+err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-function parseCSV(text){
-  const lines=text.trim().split('\n').slice(1); // skip header
-  const data={total:[],server:[],client:[]};
-  lines.forEach(line=>{
-    const [breakdown,date,count]=line.split(',').map(s=>s.trim());
-    const countNum=parseInt(count)||0;
-    if(breakdown==='Total') data.total.push({date,count:countNum});
-    else if(breakdown==='Server') data.server.push({date,count:countNum});
-    else if(breakdown==='Client') data.client.push({date,count:countNum});
-  });
-  currentErrorData=data;
-  renderErrorAnalysis(data);
-}
-
-function renderErrorAnalysis(data){
-  const allEntries=data.total;
-  const totalErrors=allEntries.reduce((a,e)=>a+e.count,0);
-  const avgErrors=Math.round(totalErrors/allEntries.length);
-  const peakEntry=allEntries.reduce((max,e)=>e.count>max.count?e:max);
-  const peakTime=new Date(peakEntry.date).toLocaleString('en-GB',{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-  const timeRange=allEntries.length>0?`${allEntries[0].date.slice(0,10)} to ${allEntries[allEntries.length-1].date.slice(0,10)}`:'—';
-  
-  document.getElementById('errorTotal').textContent=totalErrors.toLocaleString();
-  document.getElementById('errorAvg').textContent=avgErrors.toLocaleString();
-  document.getElementById('errorPeak').textContent=peakEntry.count.toLocaleString();
-  document.getElementById('errorTimeRange').textContent=timeRange;
-  document.getElementById('errorIntervals').textContent=`${allEntries.length} time periods`;
-  document.getElementById('errorPeakTime').textContent=`at ${peakTime}`;
-
-  // Breakdown cards
-  const serverTotal=data.server.reduce((a,e)=>a+e.count,0);
-  const clientTotal=data.client.reduce((a,e)=>a+e.count,0);
-  const serverPct=totalErrors>0?Math.round(serverTotal/totalErrors*100):0;
-  const clientPct=totalErrors>0?Math.round(clientTotal/totalErrors*100):0;
-  document.getElementById('breakdownCards').innerHTML=`
-    <div class="error-breakdown-card">
-      <div class="error-type-label">🖥️ Server Errors</div>
-      <div class="error-type-value">${serverTotal.toLocaleString()}</div>
-      <div class="error-type-pct">${serverPct}% of total</div>
-    </div>
-    <div class="error-breakdown-card">
-      <div class="error-type-label">💻 Client Errors</div>
-      <div class="error-type-value">${clientTotal.toLocaleString()}</div>
-      <div class="error-type-pct">${clientPct}% of total</div>
-    </div>
-    <div class="error-breakdown-card">
-      <div class="error-type-label">⏱️ Avg Duration</div>
-      <div class="error-type-value">${allEntries.length}</div>
-      <div class="error-type-pct">30-min intervals</div>
-    </div>
-  `;
-
-  // Top peaks table
-  const sorted=[...allEntries].sort((a,b)=>b.count-a.count).slice(0,10);
-  const peaksHtml=sorted.map(e=>{
-    const dt=new Date(e.date);
-    const timeStr=dt.toLocaleString('en-GB',{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-    const srvMatch=data.server.find(x=>x.date===e.date);
-    const cliMatch=data.client.find(x=>x.date===e.date);
-    const srvCount=srvMatch?srvMatch.count:0;
-    const cliCount=cliMatch?cliMatch.count:0;
-    return`
-      <tr>
-        <td class="peak-time">${timeStr}</td>
-        <td class="peak-value">${e.count.toLocaleString()}</td>
-        <td><span style="color:var(--dim)">Server:</span> <span class="peak-type">${srvCount.toLocaleString()}</span></td>
-        <td><span style="color:var(--dim)">Client:</span> <span class="peak-type">${cliCount.toLocaleString()}</span></td>
-      </tr>`;
-  }).join('');
-  document.getElementById('peaksTableContainer').innerHTML=`
-    <table class="peaks-table">
-      <thead><tr><th>Time</th><th>Total</th><th>Breakdown</th><th></th></tr></thead>
-      <tbody>${peaksHtml||'<tr><td colspan="4" class="no-data">No data</td></tr>'}</tbody>
-    </table>`;
-
-  renderErrorChart(data);
-}
-
-function renderErrorChart(data){
-  const ctx=document.getElementById('errorChart').getContext('2d');
-  if(errorChart) errorChart.destroy();
-  
-  const labels=data.total.map(e=>{
-    const d=new Date(e.date);
-    return d.toLocaleString('en-GB',{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-  });
-  
-  errorChart=new Chart(ctx,{
-    type:'line',
-    data:{
-      labels:labels,
-      datasets:[
-        {
-          label:'Total Errors',
-          data:data.total.map(e=>e.count),
-          borderColor:'#3b82f6',
-          backgroundColor:'rgba(59,130,246,0.1)',
-          tension:0.4,
-          fill:true,
-          pointRadius:3,
-          pointBackgroundColor:'#3b82f6',
-        },
-        {
-          label:'Server',
-          data:data.server.map(e=>e.count),
-          borderColor:'#ef4444',
-          backgroundColor:'rgba(239,68,68,0.05)',
-          tension:0.4,
-          fill:true,
-          pointRadius:2,
-          pointBackgroundColor:'#ef4444',
-        },
-        {
-          label:'Client',
-          data:data.client.map(e=>e.count),
-          borderColor:'#22c55e',
-          backgroundColor:'rgba(34,197,94,0.05)',
-          tension:0.4,
-          fill:true,
-          pointRadius:2,
-          pointBackgroundColor:'#22c55e',
-        }
-      ]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{
-          labels:{color:'#e8e8f0',font:{family:"'Fredoka One',sans-serif"}},
-          position:'top'
-        }
-      },
-      scales:{
-        y:{
-          grid:{color:'rgba(59,130,246,0.1)'},
-          ticks:{color:'#e8e8f0'},
-          title:{display:true,text:'Error Count',color:'#e8e8f0'}
-        },
-        x:{
-          grid:{color:'rgba(59,130,246,0.1)'},
-          ticks:{color:'#e8e8f0'}
-        }
-      }
-    }
-  });
-}
-
 // ── DATA FETCH ──
 async function fetchAll(){
-  const [plrRes,srvRes]=await Promise.all([
+  const [plrRes,srvRes,msgRes]=await Promise.all([
     fetch(`${FB}/playertracking.json`).then(r=>r.json()).catch(()=>null),
+    fetch(`${FB}/servers.json`).then(r=>r.json()).catch(()=>null),
     fetch(`${FB}/servers.json`).then(r=>r.json()).catch(()=>null),
   ]);
   if(plrRes && typeof plrRes==='object')
     allPlayers=Object.entries(plrRes).map(([uid,d])=>({uid,...d}));
   allServers=srvRes && typeof srvRes==='object' ? srvRes : {};
+  
+  // Extract messages from all servers
+  allMessages={};
+  if(srvRes && typeof srvRes==='object'){
+    Object.values(srvRes).forEach(server=>{
+      if(server.chat && typeof server.chat==='object'){
+        Object.entries(server.chat).forEach(([msgId,msg])=>{
+          allMessages[msgId]=msg;
+        });
+      }
+    });
+  }
 }
 
 async function loadData(){
@@ -845,6 +627,7 @@ function updateOverview(){
   document.getElementById('ovTotalTime').textContent=`${Math.floor(totalSecs/3600).toLocaleString()} total hours played`;
 
   renderActivity();
+  renderMessages();
   renderTopPlayers();
 }
 
@@ -873,6 +656,34 @@ function renderActivity(){
       </div>
       <div class="activity-time">${ago(e.time)}</div>
     </div>`).join('');
+}
+
+// ── MESSAGES FEED ──
+function renderMessages(){
+  const feed=document.getElementById('messagesFeed');
+  const messages=Object.entries(allMessages)
+    .map(([id,msg])=>({id,...msg}))
+    .sort((a,b)=>new Date(b.timestamp).getTime()-new Date(a.timestamp).getTime())
+    .slice(0,15);
+  
+  if(!messages.length){
+    feed.innerHTML='<div class="state-box">No messages yet.</div>';
+    return;
+  }
+  
+  feed.innerHTML=messages.map(msg=>`
+    <div class="msg-bubble">
+      <div class="msg-header">
+        <span class="msg-author">${msg.displayName||msg.username||'Unknown'}</span>
+        <span class="msg-time">${ago(msg.timestamp)}</span>
+      </div>
+      <div class="msg-content">${escapeHtml(msg.message||'')}</div>
+    </div>`).join('');
+}
+
+function escapeHtml(text){
+  const map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};
+  return text.replace(/[&<>"']/g,m=>map[m]);
 }
 
 // ── TOP PLAYERS ──
