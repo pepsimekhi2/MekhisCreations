@@ -550,13 +550,21 @@ async function fetchAll(){
   allMessages={};
   if(srvRes && typeof srvRes==='object'){
     Object.entries(srvRes).forEach(([serverId,server])=>{
-      if(server.chat && typeof server.chat==='object'){
+      if(server && server.chat && typeof server.chat==='object'){
         Object.entries(server.chat).forEach(([msgId,msg])=>{
-          allMessages[msgId]={...msg,serverId};
+          if(msg && typeof msg==='object'){
+            allMessages[msgId]={...msg,serverId};
+          }
         });
       }
     });
   }
+  
+  console.log('📊 Dashboard Data Loaded:');
+  console.log('Players:', allPlayers.length);
+  console.log('Servers:', Object.keys(allServers).length);
+  console.log('Messages:', Object.keys(allMessages).length);
+  console.log('Message samples:', Object.values(allMessages).slice(0,3));
 }
 
 async function loadData(){
@@ -671,6 +679,11 @@ function renderMessages(){
     .map(([id,msg])=>({id,...msg}))
     .sort((a,b)=>new Date(b.timestamp).getTime()-new Date(a.timestamp).getTime())
     .slice(0,20);
+  
+  console.log('💬 Rendering messages:');
+  console.log('Total messages:', Object.keys(allMessages).length);
+  console.log('Filtered/sorted:', messages.length);
+  console.log('Sample:', messages[0]);
   
   if(!messages.length){
     feed.innerHTML='<div class="state-box">No messages yet.</div>';
