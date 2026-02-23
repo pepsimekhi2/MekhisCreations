@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Analytics - Mekhis Creations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka One', Arial, sans-serif;
+            background-color: #0a0a0f;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .floating-member {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+            animation: floatAnim linear infinite;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        @keyframes floatAnim {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        header {
+            background-color: #3b82f6;
+            padding: 30px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2em;
+            font-weight: normal;
+        }
+
+        main {
+            padding: 40px;
+            color: #e0e0e0;
+            position: relative;
+            z-index: 5;
+        }
+
+        .intro-text {
+            max-width: 900px;
+            margin: 30px auto 50px;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #e0e0e0;
+            padding: 25px 30px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .stat-frame {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .stat-frame.large {
+            flex: 1;
+            max-width: 500px;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-title {
+            font-size: 1.2em;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .counter {
+            font-size: 4em;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Fredoka One', Arial, sans-serif;
+        }
+
+        .analytics-section {
+            max-width: 1400px;
+            margin: 60px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .analytics-card {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .analytics-title {
+            font-size: 1.8em;
+            color: #3b82f6;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+
+        .blocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .block-card {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .block-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .block-name {
+            font-size: 1.2em;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .block-count {
+            font-size: 2.5em;
+            color: #3b82f6;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .block-percentage {
+            font-size: 0.9em;
+            color: rgba(224, 224, 224, 0.6);
+            margin-bottom: 15px;
+        }
+
+        .block-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .block-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .top-performers {
+            margin-top: 40px;
+        }
+
+        .top-performers-title {
+            font-size: 1.3em;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .rank-number {
+            font-size: 1.3em;
+            color: #3b82f6;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .rank-1 .rank-number { color: #ffd700; }
+        .rank-2 .rank-number { color: #c0c0c0; }
+        .rank-3 .rank-number { color: #cd7f32; }
+
+        .rank-info {
+            flex: 1;
+        }
+
+        .rank-name {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .rank-count {
+            font-size: 0.9em;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        .rank-value {
+            text-align: right;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        @media (max-width: 1200px) {
+            .analytics-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(224, 224, 224, 0.6);
+            font-size: 1.1em;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-stat {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 0.9em;
+            color: rgba(224, 224, 224, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 1.8em;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .time-range-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .time-btn {
+            background: rgba(59, 130, 246, 0.2);
+            color: rgba(224, 224, 224, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka One', Arial, sans-serif;
+        }
+
+        .time-btn:hover,
+        .time-btn.active {
+            background: rgba(59, 130, 246, 0.5);
+            color: white;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Block Analytics</h1>
+            <p class="tagline">Real-time Block Spawning Statistics</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="intro-text">
+            Track and analyze block spawning data across all Mekhis Creations games. Monitor block popularity, identify top performers, and gain insights into player behavior.
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-frame large">
+                <div class="stat-title">Total Blocks Spawned</div>
+                <div class="counter" id="totalBlocksCounter">0</div>
+            </div>
+        </div>
+
+        <div class="time-range-selector">
+            <button class="time-btn active" onclick="filterByTime('all')">All Time</button>
+            <button class="time-btn" onclick="filterByTime('month')">Last Month</button>
+            <button class="time-btn" onclick="filterByTime('week')">Last Week</button>
+            <button class="time-btn" onclick="filterByTime('day')">Today</button>
+        </div>
+
+        <div class="stats-summary" id="statsSummary"></div>
+
+        <div class="analytics-section">
+            <div class="analytics-card">
+                <h2 class="analytics-title">Block Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="blockChart"></canvas>
+                </div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="top-performers">
+                    <h3 class="top-performers-title">Top 10 Blocks</h3>
+                    <div id="topPerformers"></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="max-width: 1400px; margin: 60px auto;">
+            <div class="analytics-card">
+                <h2 class="analytics-title">Block Breakdown</h2>
+                <div class="blocks-grid" id="blocksGrid"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const FIREBASE_URL = 'https://block-cl-f30cf-default-rtdb.firebaseio.com';
+        let allBlockData = {};
+        let filteredBlockData = {};
+        let blockChart = null;
+        let currentTimeFilter = 'all';
+
+        async function fetchBlockData() {
+            try {
+                const response = await fetch(`${FIREBASE_URL}/servers.json`);
+                if (!response.ok) throw new Error('Failed to fetch data');
+                
+                const servers = await response.json();
+                if (!servers) return {};
+
+                const blockCounts = {};
+                const timestamps = [];
+
+                Object.values(servers).forEach(server => {
+                    if (server.batches) {
+                        Object.values(server.batches).forEach(batch => {
+                            if (batch.events && Array.isArray(batch.events)) {
+                                batch.events.forEach(event => {
+                                    const blockName = event.blockName || 'Unknown';
+                                    blockCounts[blockName] = (blockCounts[blockName] || 0) + 1;
+                                    if (event.timestamp) {
+                                        timestamps.push(new Date(event.timestamp));
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+                allBlockData = blockCounts;
+                filterByTime(currentTimeFilter);
+                updateDisplay();
+            } catch (error) {
+                console.error('Error fetching block data:', error);
+                showError('Failed to load block data');
+            }
+        }
+
+        function filterByTime(timeRange) {
+            currentTimeFilter = timeRange;
+            const now = new Date();
+            let startDate = new Date(0);
+
+            switch(timeRange) {
+                case 'day':
+                    startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                    break;
+                case 'week':
+                    startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+                case 'month':
+                    startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    break;
+                case 'all':
+                default:
+                    startDate = new Date(0);
+            }
+
+            filteredBlockData = { ...allBlockData };
+            updateDisplay();
+
+            document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateDisplay() {
+            updateCounter();
+            updateStatsSummary();
+            updateChart();
+            updateTopPerformers();
+            updateBlocksGrid();
+        }
+
+        function updateCounter() {
+            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
+            animateCounter('totalBlocksCounter', total);
+        }
+
+        function updateStatsSummary() {
+            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
+            const uniqueBlocks = Object.keys(filteredBlockData).length;
+            const avgPerBlock = uniqueBlocks > 0 ? Math.floor(total / uniqueBlocks) : 0;
+            const maxBlock = Object.values(filteredBlockData).reduce((a, b) => Math.max(a, b), 0);
+
+            const html = `
+                <div class="summary-stat">
+                    <div class="summary-label">Total Spawns</div>
+                    <div class="summary-value">${total.toLocaleString()}</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">Unique Blocks</div>
+                    <div class="summary-value">${uniqueBlocks}</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">Average Spawns</div>
+                    <div class="summary-value">${avgPerBlock.toLocaleString()}</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-label">Top Block</div>
+                    <div class="summary-value">${maxBlock.toLocaleString()}</div>
+                </div>
+            `;
+            document.getElementById('statsSummary').innerHTML = html;
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('blockChart').getContext('2d');
+            const sortedData = Object.entries(filteredBlockData)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 12);
+
+            const labels = sortedData.map(d => d[0]);
+            const data = sortedData.map(d => d[1]);
+            const colors = generateColors(labels.length);
+
+            if (blockChart) {
+                blockChart.destroy();
+            }
+
+            blockChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: 'rgba(59, 130, 246, 0.2)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#e0e0e0',
+                                font: { family: "'Fredoka One', Arial, sans-serif", size: 11 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTopPerformers() {
+            const sorted = Object.entries(filteredBlockData)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
+
+            const html = sorted.map((item, index) => {
+                const [blockName, count] = item;
+                const percentage = ((count / total) * 100).toFixed(1);
+                const medals = ['🥇', '🥈', '🥉'];
+                const medal = index < 3 ? medals[index] : `${index + 1}.`;
+
+                return `
+                    <div class="rank-item rank-${index + 1}">
+                        <div class="rank-number">${medal}</div>
+                        <div class="rank-info">
+                            <div class="rank-name">${blockName}</div>
+                            <div class="rank-count">${percentage}% of total</div>
+                        </div>
+                        <div class="rank-value">${count.toLocaleString()}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('topPerformers').innerHTML = html;
+        }
+
+        function updateBlocksGrid() {
+            const sorted = Object.entries(filteredBlockData)
+                .sort((a, b) => b[1] - a[1]);
+
+            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
+
+            const html = sorted.map((item, index) => {
+                const [blockName, count] = item;
+                const percentage = ((count / total) * 100).toFixed(1);
+                const colors = generateColors(sorted.length);
+
+                return `
+                    <div class="block-card">
+                        <div class="block-name">${blockName}</div>
+                        <div class="block-count">${count.toLocaleString()}</div>
+                        <div class="block-percentage">${percentage}% of spawns</div>
+                        <div class="block-bar">
+                            <div class="block-bar-fill" style="width: ${percentage}%; background: ${colors[index]};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('blocksGrid').innerHTML = html || '<div class="loading">No data available</div>';
+        }
+
+        function animateCounter(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const duration = 1500;
+            const increment = duration / 60;
+            let current = 0;
+            const start = parseInt(element.textContent.replace(/,/g, '')) || 0;
+            const diff = targetValue - start;
+
+            function update() {
+                current += diff / 60;
+                if (current >= targetValue) {
+                    element.textContent = targetValue.toLocaleString();
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                    setTimeout(update, increment);
+                }
+            }
+
+            update();
+        }
+
+        function generateColors(count) {
+            const baseColors = [
+                '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981',
+                '#06b6d4', '#f97316', '#6366f1', '#14b8a6', '#d946ef',
+                '#eab308', '#64748b', '#0891b2', '#7c3aed', '#dc2626'
+            ];
+
+            const colors = [];
+            for (let i = 0; i < count; i++) {
+                colors.push(baseColors[i % baseColors.length]);
+            }
+            return colors;
+        }
+
+        function showError(message) {
+            const main = document.querySelector('main');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'loading';
+            errorDiv.textContent = message;
+            main.appendChild(errorDiv);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('main').innerHTML = `
+                <div class="intro-text">
+                    Track and analyze block spawning data across all Mekhis Creations games. Monitor block popularity, identify top performers, and gain insights into player behavior.
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-frame large">
+                        <div class="stat-title">Total Blocks Spawned</div>
+                        <div class="counter" id="totalBlocksCounter">0</div>
+                    </div>
+                </div>
+
+                <div class="time-range-selector">
+                    <button class="time-btn active" onclick="filterByTime('all')">All Time</button>
+                    <button class="time-btn" onclick="filterByTime('month')">Last Month</button>
+                    <button class="time-btn" onclick="filterByTime('week')">Last Week</button>
+                    <button class="time-btn" onclick="filterByTime('day')">Today</button>
+                </div>
+
+                <div class="stats-summary" id="statsSummary"></div>
+
+                <div class="analytics-section">
+                    <div class="analytics-card">
+                        <h2 class="analytics-title">Block Distribution</h2>
+                        <div class="chart-container">
+                            <canvas id="blockChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <div class="top-performers">
+                            <h3 class="top-performers-title">Top 10 Blocks</h3>
+                            <div id="topPerformers"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="max-width: 1400px; margin: 60px auto;">
+                    <div class="analytics-card">
+                        <h2 class="analytics-title">Block Breakdown</h2>
+                        <div class="blocks-grid" id="blocksGrid"></div>
+                    </div>
+                </div>
+            `;
+            fetchBlockData();
+        });
+    </script>
+</body>
+</html>
