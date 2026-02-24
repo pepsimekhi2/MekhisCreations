@@ -320,32 +320,6 @@
             color: #3b82f6;
             font-weight: bold;
         }
-
-        .time-range-selector {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .time-btn {
-            background: rgba(59, 130, 246, 0.2);
-            color: rgba(224, 224, 224, 0.8);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Fredoka One', Arial, sans-serif;
-        }
-
-        .time-btn:hover,
-        .time-btn.active {
-            background: rgba(59, 130, 246, 0.5);
-            color: white;
-            border-color: #3b82f6;
-        }
     </style>
 </head>
 <body>
@@ -358,7 +332,7 @@
 
     <main>
         <div class="intro-text">
-            Track and analyze block spawning data across all Mekhis Creations games. Monitor block popularity, identify top performers, and gain insights into player behavior.
+            Track and analyze block spawning data across all Mekhis Creations games. Monitor block popularity and identify top performers.
         </div>
 
         <div class="stats-container">
@@ -366,13 +340,6 @@
                 <div class="stat-title">Total Blocks Spawned</div>
                 <div class="counter" id="totalBlocksCounter">0</div>
             </div>
-        </div>
-
-        <div class="time-range-selector">
-            <button class="time-btn active" onclick="filterByTime('all')">All Time</button>
-            <button class="time-btn" onclick="filterByTime('month')">Last Month</button>
-            <button class="time-btn" onclick="filterByTime('week')">Last Week</button>
-            <button class="time-btn" onclick="filterByTime('day')">Today</button>
         </div>
 
         <div class="stats-summary" id="statsSummary"></div>
@@ -403,72 +370,31 @@
 
     <script>
         const FIREBASE_URL = 'https://block-cl-f30cf-default-rtdb.firebaseio.com';
-        let allBlockData = {};
-        let filteredBlockData = {};
+        let blockData = {};
         let blockChart = null;
-        let currentTimeFilter = 'all';
 
         async function fetchBlockData() {
             try {
-                const response = await fetch(`${FIREBASE_URL}/servers.json`);
+                const response = await fetch(`${FIREBASE_URL}/blocks.json`);
                 if (!response.ok) throw new Error('Failed to fetch data');
                 
-                const servers = await response.json();
-                if (!servers) return {};
+                const data = await response.json();
+                if (!data) return;
 
-                const blockCounts = {};
-                const timestamps = [];
-
-                Object.values(servers).forEach(server => {
-                    if (server.batches) {
-                        Object.values(server.batches).forEach(batch => {
-                            if (batch.events && Array.isArray(batch.events)) {
-                                batch.events.forEach(event => {
-                                    const blockName = event.blockName || 'Unknown';
-                                    blockCounts[blockName] = (blockCounts[blockName] || 0) + 1;
-                                    if (event.timestamp) {
-                                        timestamps.push(new Date(event.timestamp));
-                                    }
-                                });
-                            }
-                        });
+                blockData = {};
+                
+                Object.values(data).forEach(event => {
+                    if (event.blockName) {
+                        const blockName = event.blockName;
+                        blockData[blockName] = (blockData[blockName] || 0) + 1;
                     }
                 });
 
-                allBlockData = blockCounts;
-                filterByTime(currentTimeFilter);
                 updateDisplay();
             } catch (error) {
                 console.error('Error fetching block data:', error);
-                showError('Failed to load block data');
+                document.querySelector('main').innerHTML += '<div class="loading">Failed to load block data. Check console.</div>';
             }
-        }
-
-        function filterByTime(timeRange) {
-            currentTimeFilter = timeRange;
-            const now = new Date();
-            let startDate = new Date(0);
-
-            switch(timeRange) {
-                case 'day':
-                    startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-                    break;
-                case 'week':
-                    startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    break;
-                case 'month':
-                    startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                    break;
-                case 'all':
-                default:
-                    startDate = new Date(0);
-            }
-
-            filteredBlockData = { ...allBlockData };
-            updateDisplay();
-
-            document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
         }
 
         function updateDisplay() {
@@ -480,15 +406,15 @@
         }
 
         function updateCounter() {
-            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
+            const total = Object.values(blockData).reduce((a, b) => a + b, 0);
             animateCounter('totalBlocksCounter', total);
         }
 
         function updateStatsSummary() {
-            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
-            const uniqueBlocks = Object.keys(filteredBlockData).length;
+            const total = Object.values(blockData).reduce((a, b) => a + b, 0);
+            const uniqueBlocks = Object.keys(blockData).length;
             const avgPerBlock = uniqueBlocks > 0 ? Math.floor(total / uniqueBlocks) : 0;
-            const maxBlock = Object.values(filteredBlockData).reduce((a, b) => Math.max(a, b), 0);
+            const maxBlock = Object.values(blockData).reduce((a, b) => Math.max(a, b), 0);
 
             const html = `
                 <div class="summary-stat">
@@ -513,7 +439,7 @@
 
         function updateChart() {
             const ctx = document.getElementById('blockChart').getContext('2d');
-            const sortedData = Object.entries(filteredBlockData)
+            const sortedData = Object.entries(blockData)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 12);
 
@@ -555,11 +481,11 @@
         }
 
         function updateTopPerformers() {
-            const sorted = Object.entries(filteredBlockData)
+            const sorted = Object.entries(blockData)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10);
 
-            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
+            const total = Object.values(blockData).reduce((a, b) => a + b, 0);
 
             const html = sorted.map((item, index) => {
                 const [blockName, count] = item;
@@ -583,10 +509,10 @@
         }
 
         function updateBlocksGrid() {
-            const sorted = Object.entries(filteredBlockData)
+            const sorted = Object.entries(blockData)
                 .sort((a, b) => b[1] - a[1]);
 
-            const total = Object.values(filteredBlockData).reduce((a, b) => a + b, 0);
+            const total = Object.values(blockData).reduce((a, b) => a + b, 0);
 
             const html = sorted.map((item, index) => {
                 const [blockName, count] = item;
@@ -643,59 +569,7 @@
             return colors;
         }
 
-        function showError(message) {
-            const main = document.querySelector('main');
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'loading';
-            errorDiv.textContent = message;
-            main.appendChild(errorDiv);
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('main').innerHTML = `
-                <div class="intro-text">
-                    Track and analyze block spawning data across all Mekhis Creations games. Monitor block popularity, identify top performers, and gain insights into player behavior.
-                </div>
-
-                <div class="stats-container">
-                    <div class="stat-frame large">
-                        <div class="stat-title">Total Blocks Spawned</div>
-                        <div class="counter" id="totalBlocksCounter">0</div>
-                    </div>
-                </div>
-
-                <div class="time-range-selector">
-                    <button class="time-btn active" onclick="filterByTime('all')">All Time</button>
-                    <button class="time-btn" onclick="filterByTime('month')">Last Month</button>
-                    <button class="time-btn" onclick="filterByTime('week')">Last Week</button>
-                    <button class="time-btn" onclick="filterByTime('day')">Today</button>
-                </div>
-
-                <div class="stats-summary" id="statsSummary"></div>
-
-                <div class="analytics-section">
-                    <div class="analytics-card">
-                        <h2 class="analytics-title">Block Distribution</h2>
-                        <div class="chart-container">
-                            <canvas id="blockChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="analytics-card">
-                        <div class="top-performers">
-                            <h3 class="top-performers-title">Top 10 Blocks</h3>
-                            <div id="topPerformers"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="max-width: 1400px; margin: 60px auto;">
-                    <div class="analytics-card">
-                        <h2 class="analytics-title">Block Breakdown</h2>
-                        <div class="blocks-grid" id="blocksGrid"></div>
-                    </div>
-                </div>
-            `;
             fetchBlockData();
         });
     </script>
