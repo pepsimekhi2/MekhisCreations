@@ -136,62 +136,6 @@
         .btn-refresh.spinning svg { animation: spinSvg 0.6s linear; }
         @keyframes spinSvg { to { transform: rotate(360deg); } }
 
-        .btn-upload {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(16,185,129,0.12);
-            border: 1px solid rgba(16,185,129,0.3);
-            border-radius: 10px;
-            padding: 10px 20px;
-            color: #10b981;
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.9em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .btn-upload:hover {
-            background: rgba(16,185,129,0.2);
-            border-color: #10b981;
-            transform: translateY(-1px);
-        }
-
-        .btn-upload input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .csv-badge {
-            display: none;
-            align-items: center;
-            gap: 6px;
-            background: rgba(16,185,129,0.1);
-            border: 1px solid rgba(16,185,129,0.25);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 0.8em;
-            color: #10b981;
-            font-weight: 700;
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .csv-dot {
-            width: 7px;
-            height: 7px;
-            min-width: 7px;
-            background: #10b981;
-            border-radius: 50%;
-        }
-
         .last-updated {
             font-size: 0.78em;
             color: var(--text-muted);
@@ -204,52 +148,6 @@
             padding: 40px 48px;
             max-width: 1500px;
             margin: 0 auto;
-        }
-
-        .csv-banner {
-            background: rgba(16,185,129,0.08);
-            border: 1px solid rgba(16,185,129,0.2);
-            border-radius: 12px;
-            padding: 14px 20px;
-            margin-bottom: 24px;
-            font-size: 0.9em;
-            color: #10b981;
-            display: none;
-        }
-
-        .csv-banner.visible { display: block; }
-
-        /* Source tabs */
-        .source-tabs {
-            display: none;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .source-tabs.visible { display: flex; }
-
-        .source-tab {
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 700;
-            cursor: pointer;
-            border: 1px solid var(--card-border);
-            background: transparent;
-            color: var(--text-muted);
-            font-family: 'Nunito', sans-serif;
-            transition: all 0.2s;
-        }
-
-        .source-tab.active {
-            background: rgba(59,130,246,0.15);
-            border-color: var(--blue);
-            color: var(--blue);
-        }
-
-        .source-tab:hover:not(.active) {
-            border-color: rgba(59,130,246,0.3);
-            color: var(--text);
         }
 
         /* Stats row */
@@ -543,16 +441,6 @@
     </div>
 
     <div class="header-actions">
-        <div class="csv-badge" id="csvBadge">
-            <div class="csv-dot"></div>
-            <span id="csvBadgeText">CSV</span>
-        </div>
-
-        <label class="btn-upload">
-            📂 Upload CSV
-            <input type="file" id="csvInput" accept=".csv" />
-        </label>
-
         <button class="btn-refresh" id="refreshBtn" onclick="refreshData()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
@@ -566,15 +454,6 @@
 </header>
 
 <main>
-    <!-- CSV notice -->
-    <div class="csv-banner" id="csvBanner"></div>
-
-    <!-- Source tabs (shown after CSV load) -->
-    <div class="source-tabs" id="sourceTabs">
-        <button class="source-tab active" id="tab-firebase" onclick="switchSource('firebase')">🔥 Firebase</button>
-        <button class="source-tab" id="tab-csv"      onclick="switchSource('csv')">📄 CSV</button>
-        <button class="source-tab" id="tab-merged"   onclick="switchSource('merged')">🔀 Merged</button>
-    </div>
 
     <!-- Summary -->
     <div class="stats-row">
@@ -586,7 +465,7 @@
         <div class="stat-card">
             <div class="stat-label">Total Value</div>
             <div class="stat-value green" id="totalValue">—</div>
-            <div class="stat-sub">coins earned</div>
+            <div class="stat-sub">Cash earned</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Unique Blocks</div>
@@ -596,7 +475,7 @@
         <div class="stat-card">
             <div class="stat-label">Avg Value / Spawn</div>
             <div class="stat-value" id="avgValue">—</div>
-            <div class="stat-sub">coins per block</div>
+            <div class="stat-sub">Cash per block</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Top Block</div>
@@ -641,9 +520,6 @@
     ];
 
     let firebaseData = {};  // { blockName: { count, value } }
-    let csvData      = {};  // { blockName: { count, value } }
-    let activeSource = 'firebase';
-    let csvLoaded    = false;
 
     // ── Firebase fetch ──────────────────────────────────────────────────
     async function fetchFirebase() {
